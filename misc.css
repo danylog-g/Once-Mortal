@@ -1,226 +1,277 @@
 :root {
+    /* main colours */
+    --black: rgb(40, 40, 43); /* matte black */
+    --black-light: rgb(52, 52, 52); /* jet black */
+    --black-dark: rgb(0, 0, 0);
+    --black2: rgb(15,15,40); /* neon black */
+
     --blue: rgb(0,0,255);
-    --blue-light: rgb(0,128,255);
+    --blue-light: rgb(0,128,255); /* dodger blue */
     --blue-dark: rgb(0,0,128);
 
+    /* no clue gang */
     --brown: rgb(123,63,0);
     --brown-light: rgb(150,105,25);
     --brown-dark: rgb(92,64,51);
 
+    --gray: rgb(128,128,128);
+    --gray-light: rgb(211,211,211);
+    --gray-dark: rgb(64, 64, 64);
+
     --green: rgb(0,128,0);
-    --green-light: rgb(0,255,0);
+    --green-light: rgb(50,205,50); /* lime */
     --green-dark: rgb(0,64,0);
+
+    --orange: rgb(255,165,0);
+    --orange-light: rgb(255,170,51); /* yellow-orange */
+    --orange-dark: rgb(139,64,0);
+
+    --pink: rgb(255,105,180); /* hot pink */
+    --pink-light: rgb(255,182,193);
+    --pink-dark: rgb(170,51,106);
+
+    --purple: rgb(128,0,128);
+    --purple-light: rgb(192,64,192);
+    --purple-dark: rgb(64,0,64);
+
+    --red: rgb(255,0,0);
+    --red-light: rgb(238,75,43); /* bright red */
+    --red-dark: rgb(139,0,0); /* maroon */
+    --red-dark2: rgb(136,8,8); /* blood red */
+
+    --white: rgba(249,246,238); /* bone white */
+    --white-light: rgb(255,255,255);
+    --white-dark: rgb(170,170,170);
+
+    --yellow: rgb(255,192,0); /* golden yellow */
+    --yellow-light: rgb(255,255,0);
+    --yellow-dark: rgb(139,128,0);
+
+    /* niche colours */
+    --rBlue: rgb(65,105,255); /* royal blue */
+    --rBlue-bg: rgba(65,105,255,0.2);
+    --cWhite: rgb(220,240,255); /* cold white */
+    --cBlue-bg: rgba(95,165,195,0.2); /* cold blue */
+    --pink-bg: rgba(170,51,106,0.2);
+    --rBrown: rgba(120,85,60,0.2); /* brass/bronze */
+    --white-bg: rgba(255,255,255,0.2);
+    --gold: rgba(210,180,60);
+    --gold-bg: rgba(210,180,60,0.2);
+    --red-bg: rgba(130,35,35,0.2); /* saloon */
+    --yRed-bg: rgba(155,90,60,0.2); /* yucky red */
+    --gray-bg: rgba(140,150,160,0.2);
+    --rPurple: rgb(105,50,110); /* royal purple */
+    --purple-bg: rgba(64,0,128,0.2);
+    --orange-bg: rgba(205,150,30,0.2);
+    --yellow-bg: rgba(255,245,200,0.2);
 }
-/* CHARACTER DB */
+/* FACTIONS + AFFILIATIONS */
 .faction-vpf {
     background-color: var(--dark);
-    color: #aaaaaa;
+    color: var(--white-dark);
     padding: 2px 8px;
     border-radius: 12px;
     display: inline-block;
     font-size: 0.85rem;
 } 
 .faction-neprad {
-    background-color: #800080;
-    color: #aaaaaa;
+    background-color: var(--purple);
+    color: var(--white);
     padding: 2px 8px;
     border-radius: 12px;
     display: inline-block;
     font-size: 0.85rem;
 }
 .faction-shaire {
-    background-color: green;
-    color: #aaaaaa;
+    background-color: var(--green);
+    color: var(--white);
     padding: 2px 8px;
     border-radius: 12px;
     display: inline-block;
     font-size: 0.85rem;
 }
 .faction-trapped {
-    background-color: #999999;
-    color: #333333;
+    background-color: var(--gray);
+    color: var(--black);
     padding: 2px 8px;
     border-radius: 12px;
     display: inline-block;
     font-size: 0.85rem;
 }
 .faction-neutral {
-    background-color: var(--light);
-    color: var(--dark);
+    background-color: var(--gray);
+    color: var(--black-dark);
     padding: 2px 8px;
     border-radius: 12px;
     display: inline-block;
     font-size: 0.85rem;
 }
 .affiliation-grayhair {
-    background-color: #c41e3a;
-    color: #000000;
+    background-color: var(--red-dark2);
+    color: var(--black-dark);
     padding: 2px 8px;
     border-radius: 12px;
     display: inline-block;
     font-size: 0.85rem;
 }
 .affiliation-always {
-    background-color: #1434a4;
-    color: #ffc000;
+    background-color: var(--blue);
+    color: var(--yellow);
     padding: 2px 8px;
     border-radius: 12px;
     display: inline-block;
     font-size: 0.85rem;
 }
 .affiliation-white_sam {
-    background-color: #ffffff;
-    color: #1434a4;
+    background-color: var(--white-light);
+    color: var(--blue-dark);
     padding: 2px 8px;
     border-radius: 12px;
     display: inline-block;
     font-size: 0.85rem;
 }
 .affiliation-neprad {
-    background-color: #800080;
-    color: #aaaaaa;
+    background-color: var(--purple);
+    color: var(--white);
     padding: 2px 8px;
     border-radius: 12px;
     display: inline-block;
     font-size: 0.85rem;
 }
+/* LOCATIONS */
 .loc-garna {
-
+    background-color: var(--gray-light);
+    color: var(--green);
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 0.85rem;
 }
 .loc-jotunheim {
-    
+    background-color: var(--brown);
+    color: var(--orange-light);
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 0.85rem;
 }
 .loc-city {
-    background-color: #999999;
-    color: #333333;
+    background-color: var(--gray);
+    color: var(--black);
     padding: 2px 8px;
     border-radius: 12px;
     display: inline-block;
     font-size: 0.85rem;
 }
 .loc-felled {
-    
+    background-color: var(--green);
+    color: var(--yellow);
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 0.85rem;
 }
 .loc-feywild {
-    
+    background-color: var(--green-light);
+    color: var(--purple-dark);
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 0.85rem;
 }
 .loc-aerialis {
-    
+    background-color: var(--orange-dark);
+    color: var(--red-dark);
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 0.85rem;
 }
 .loc-kyofu {
-    
+    background-color: var(--red);
+    color: var(--brown-dark);
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 0.85rem;
 }
 .loc-rob {
-    
+    background-color: var(--brown-light);
+    color: var(--green-light);
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 0.85rem;
 }
 .loc-sea {
-    background-color: #5d3fd3;
-    color: #89cff0;
+    background-color: var(--purple-light);
+    color: var(--blue-light);
     padding: 2px 8px;
     border-radius: 12px;
     display: inline-block;
     font-size: 0.85rem;
 }
 .loc-divine {
-    
+    background-color: var(--orange);
+    color: var(--yellow-light);
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 0.85rem;
 }
 /* CHARACTER GEN */
 .tag-general {
-    background: rgba(34, 164, 255, 0.2);
-    color: var(--general);
+    background: var(--rBlue-bg);
+    color: var(--gray-light);
 }
 .tag-nordic {
-    background: rgba(179,124,87, 0.2);
-    color: var(--nordic);
-}
-.tag-cold {
-    background: rgba(154,172,184, 0.2);
-    color: var(--cold);
+    background: var(--cBlue-bg);
+    color: var(--cWhite);
 }
 .tag-cyberpunk {
-    background: rgba(255, 0, 200, 0.2);
-    color: var(--cyberpunk);
+    background: var(--pink-bg);
+    color: var(--black2);
 }
 .tag-steampunk {
-    background: rgba(193, 154, 107, 0.2);
-    color: var(--steampunk);
-}
-.tag-aerial {
-    background: rgba(193, 154, 107, 0.2);
-    color: var(--steampunk);
+    background: var(--rBrown);
+    color: var(--green-light);
 }
 .tag-modern {
-    background: rgba(0, 191, 255, 0.2);
-    color: var(--modern);
+    background: var(--white-bg);
+    color: var(--red-dark2);
 }
 .tag-pirate {
-    background: rgba(210, 180, 140, 0.2);
-    color: var(--pirate);
+    background: var(--gold-bg);
+    color: var(--blue-dark);
 }
 .tag-wild-west {
-    background: rgba(218, 160, 109, 0.2);
-    color: var(--wild-west);
+    background: var(--red-bg);
+    color: var(--yellow);
 }
 .tag-medieval {
-    background: rgba(139, 69, 19, 0.2);
-    color: var(--medieval);
+    background: var(--yRed-bg);
+    color: var(--gray);
 }
 .tag-knightly {
-    background: rgba(128, 130, 177, 0.2);
-    color: var(--knightly);
+    background: var(--gray-bg);
+    color: var(--rPurple);
 }
 .tag-fey {
-    background: rgba(160,255,219, 0.2);
-    color: var(--fey);
+    background: var(--pink-bg);
+    color: var(--green-light);
 }
 .tag-magical {
-    background: rgba(161,95,216, 0.2);
+    background: var(--purple-bg);
     color: var(--magical);
 }
 .tag-primitive {
-    background: rgba(212,171,49, 0.2);
-    color: var(--primitive);
-}
-.tag-natural {
-    background: rgba(134,173,63, 0.2);
-    color: var(--natural);
-}
-.tag-futuristic {
-    background: rgba(174,228,237, 0.2);
-    color: var(--futuristic);
-}
-.tag-holy {
-    background: rgba(253,199,35, 0.2);
-    color: var(--holy);
+    background: var(--orange-bg);
+    color: var(--brown-dark);
 }
 .tag-divine {
-    background: rgba(255, 215, 0, 0.2);
-    color: var(--divine);
+    background: var(--yellow-bg);
+    color: var(--gold);
 }
-/*.cyberpunk {
-    --primary: #ff00c8;
-    --primary-light: #ff66d9;
-}
-.steampunk {
-    --primary: #c19a6b;
-    --primary-light: #d2b48c;
-}
-.modern {
-    --primary: #00bfff;
-    --primary-light: #87ceeb;
-}
-.pirate {
-    --primary: #d2b48c;
-    --primary-light: #f5deb3;
-}
-.medieval {
-    --primary: #8b4513;
-    --primary-light: #a0522d;
-}
-.divine {
-    --primary: #ffd700;
-    --primary-light: #ffec8b;
-}*/
 /* CAMPAIGN INFO */
 #race-human {
     padding: 1.33rem;
