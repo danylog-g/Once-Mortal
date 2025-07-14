@@ -1,0 +1,248 @@
+:root {
+    --blue: rgb(0,0,255);
+    --blue-light: rgb(0,128,255);
+    --blue-dark: rgb(0,0,128);
+
+    --brown: rgb(123,63,0);
+    --brown-light: rgb(150,105,25);
+    --brown-dark: rgb(92,64,51);
+
+    --green: rgb(0,128,0);
+    --green-light: rgb(0,255,0);
+    --green-dark: rgb(0,64,0);
+}
+/* CHARACTER DB */
+.faction-vpf {
+    background-color: var(--dark);
+    color: #aaaaaa;
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 0.85rem;
+} 
+.faction-neprad {
+    background-color: #800080;
+    color: #aaaaaa;
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 0.85rem;
+}
+.faction-shaire {
+    background-color: green;
+    color: #aaaaaa;
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 0.85rem;
+}
+.faction-trapped {
+    background-color: #999999;
+    color: #333333;
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 0.85rem;
+}
+.faction-neutral {
+    background-color: var(--light);
+    color: var(--dark);
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 0.85rem;
+}
+.affiliation-grayhair {
+    background-color: #c41e3a;
+    color: #000000;
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 0.85rem;
+}
+.affiliation-always {
+    background-color: #1434a4;
+    color: #ffc000;
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 0.85rem;
+}
+.affiliation-white_sam {
+    background-color: #ffffff;
+    color: #1434a4;
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 0.85rem;
+}
+.affiliation-neprad {
+    background-color: #800080;
+    color: #aaaaaa;
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 0.85rem;
+}
+.loc-garna {
+
+}
+.loc-jotunheim {
+    
+}
+.loc-city {
+    background-color: #999999;
+    color: #333333;
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 0.85rem;
+}
+.loc-felled {
+    
+}
+.loc-feywild {
+    
+}
+.loc-aerialis {
+    
+}
+.loc-kyofu {
+    
+}
+.loc-rob {
+    
+}
+.loc-sea {
+    background-color: #5d3fd3;
+    color: #89cff0;
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 0.85rem;
+}
+.loc-divine {
+    
+}
+/* CHARACTER GEN */
+.tag-general {
+    background: rgba(34, 164, 255, 0.2);
+    color: var(--general);
+}
+.tag-nordic {
+    background: rgba(179,124,87, 0.2);
+    color: var(--nordic);
+}
+.tag-cold {
+    background: rgba(154,172,184, 0.2);
+    color: var(--cold);
+}
+.tag-cyberpunk {
+    background: rgba(255, 0, 200, 0.2);
+    color: var(--cyberpunk);
+}
+.tag-steampunk {
+    background: rgba(193, 154, 107, 0.2);
+    color: var(--steampunk);
+}
+.tag-aerial {
+    background: rgba(193, 154, 107, 0.2);
+    color: var(--steampunk);
+}
+.tag-modern {
+    background: rgba(0, 191, 255, 0.2);
+    color: var(--modern);
+}
+.tag-pirate {
+    background: rgba(210, 180, 140, 0.2);
+    color: var(--pirate);
+}
+.tag-wild-west {
+    background: rgba(218, 160, 109, 0.2);
+    color: var(--wild-west);
+}
+.tag-medieval {
+    background: rgba(139, 69, 19, 0.2);
+    color: var(--medieval);
+}
+.tag-knightly {
+    background: rgba(128, 130, 177, 0.2);
+    color: var(--knightly);
+}
+.tag-fey {
+    background: rgba(160,255,219, 0.2);
+    color: var(--fey);
+}
+.tag-magical {
+    background: rgba(161,95,216, 0.2);
+    color: var(--magical);
+}
+.tag-primitive {
+    background: rgba(212,171,49, 0.2);
+    color: var(--primitive);
+}
+.tag-natural {
+    background: rgba(134,173,63, 0.2);
+    color: var(--natural);
+}
+.tag-futuristic {
+    background: rgba(174,228,237, 0.2);
+    color: var(--futuristic);
+}
+.tag-holy {
+    background: rgba(253,199,35, 0.2);
+    color: var(--holy);
+}
+.tag-divine {
+    background: rgba(255, 215, 0, 0.2);
+    color: var(--divine);
+}
+/*.cyberpunk {
+    --primary: #ff00c8;
+    --primary-light: #ff66d9;
+}
+.steampunk {
+    --primary: #c19a6b;
+    --primary-light: #d2b48c;
+}
+.modern {
+    --primary: #00bfff;
+    --primary-light: #87ceeb;
+}
+.pirate {
+    --primary: #d2b48c;
+    --primary-light: #f5deb3;
+}
+.medieval {
+    --primary: #8b4513;
+    --primary-light: #a0522d;
+}
+.divine {
+    --primary: #ffd700;
+    --primary-light: #ffec8b;
+}*/
+/* CAMPAIGN INFO */
+#race-human {
+    padding: 1.33rem;
+    border-radius: 2.5rem;
+    border-style: 1px solid;
+    border-color: var(--blue);
+    box-shadow: 0 0 7px var(--blue-light),
+                0 0 21px var(--blue-dark);
+}
+#race-dwarf {
+    padding: 1.33rem;
+    border-radius: 2.5rem;
+    border-style: 1px solid;
+    border-color: var(--brown);
+    box-shadow: 0 0 7px var(--brown-light),
+                0 0 42px var(--brown-dark);
+}
+#race-elf {
+    padding: 1.33rem;
+    border-radius: 2.5rem;
+    border-style: 1px solid;
+    border-color: var(--green);
+    box-shadow: 0 0 7px var(--green-light),
+                0 0 21px var(--green-dark);
+}
