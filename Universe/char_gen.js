@@ -100,7 +100,7 @@ const masterEquipment = [
     // Steampunk items
     { name: "Steam-Powered Gauntlet", type: "Weapon", details: "Damage: 1d10 bludgeoning + 1d6 fire", tags: ["steampunk"] },
     { name: "Clockwork Rifle", type: "Firearm", details: "Damage: 2d6 piercing", tags: ["steampunk"] },
-    { name: "Goggles of Night", type: "Wondrous Item", details: "See in darkness up to 60ft", tags: ["steampunk"] },
+    { name: "Goggles of Night", type: "Wondrous Item", details: "See in darkness for an additional 60ft", tags: ["steampunk"] },
     { name: "Tesla Coil", type: "Gadget", details: "Shock nearby enemies once per day", tags: ["steampunk"] },
 
     // Primitive items
@@ -240,13 +240,15 @@ const locationRaceWeights = {
 
 // Theme classes for different locations
 const locationThemes = {
-    "Neo-Neprad": "cyberpunk",
-    "Kyofu": "steampunk",
+    "Default": "medieval",
+    "Garna": "wild-west",
+    "Jotunheim": "nordic",
     "Endless City": "modern",
-    "Garna": "pirate",
+    "Kyofu": "steampunk",
+    "Realm of Beasts": "primitive",
+    "Neo-Neprad": "cyberpunk",
     "Astral Sea": "pirate",
     "Divine Realm": "divine",
-    "Default": "medieval"
 };
 
 // DOM Elements
@@ -260,7 +262,7 @@ generateCharacter();
 // Event Listeners
 generateBtn.addEventListener('click', generateCharacter);
 saveBtn.addEventListener('click', () => {
-    alert('Character saved! (This is a demo - character data would be saved to localStorage in a real application)');
+    alert('Character saved! (This does nothing, maybe will do something in the future)');
 });
 locationSelect.addEventListener('change', generateCharacter);
 
@@ -352,7 +354,8 @@ function applyTheme(location) {
     // Remove all theme classes
     bodyElement.classList.remove(
         'cyberpunk', 'steampunk', 'modern',
-        'pirate', 'medieval', 'divine'
+        'pirate', 'medieval', 'divine', 'wild-west',
+        'nordic', 'primitive',
     );
 
     // Add the appropriate theme class
@@ -382,7 +385,7 @@ function getLocationLastName(location) {
 
 // Get weighted race based on location
 function getWeightedRace(location) {
-    const weights = locationRaceWeights[location] || locationRaceWeights["Felled Realm"];
+    const weights = locationRaceWeights[location] || locationRaceWeights["Garna"];
     const races = Object.keys(weights);
     const totalWeight = Object.values(weights).reduce((a, b) => a + b, 0);
 

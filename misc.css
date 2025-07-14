@@ -52,17 +52,16 @@
     --rBlue-bg: rgba(65,105,255,0.2);
     --cWhite: rgb(220,240,255); /* cold white */
     --cBlue-bg: rgba(95,165,195,0.2); /* cold blue */
-    --pink-bg: rgba(170,51,106,0.2);
-    --rBrown: rgba(120,85,60,0.2); /* brass/bronze */
+    --pink-bg: rgba(170,51,106,0.6);
+    --rBrown-bg: rgba(120,85,60,0.25); /* brass/bronze */
     --white-bg: rgba(255,255,255,0.2);
     --gold: rgba(210,180,60);
-    --gold-bg: rgba(210,180,60,0.2);
+    --gold-bg: rgba(210,180,60,0.3);
     --red-bg: rgba(130,35,35,0.2); /* saloon */
-    --yRed-bg: rgba(155,90,60,0.2); /* yucky red */
-    --gray-bg: rgba(140,150,160,0.2);
-    --rPurple: rgb(105,50,110); /* royal purple */
+    --yRed-bg: rgba(155,90,60,0.25); /* yucky red */
+    --gray-bg: rgba(140,150,160,0.25);
     --purple-bg: rgba(64,0,128,0.2);
-    --orange-bg: rgba(205,150,30,0.2);
+    --orange-bg: rgba(205,150,30,0.15);
     --yellow-bg: rgba(255,245,200,0.2);
 }
 /* FACTIONS + AFFILIATIONS */
@@ -233,12 +232,12 @@
     color: var(--black2);
 }
 .tag-steampunk {
-    background: var(--rBrown);
+    background: var(--rBrown-bg);
     color: var(--green-light);
 }
 .tag-modern {
     background: var(--white-bg);
-    color: var(--red-dark2);
+    color: var(--red);
 }
 .tag-pirate {
     background: var(--gold-bg);
@@ -250,11 +249,11 @@
 }
 .tag-medieval {
     background: var(--yRed-bg);
-    color: var(--gray);
+    color: var(--gray-light);
 }
 .tag-knightly {
     background: var(--gray-bg);
-    color: var(--rPurple);
+    color: var(--purple-light);
 }
 .tag-fey {
     background: var(--pink-bg);
@@ -266,7 +265,7 @@
 }
 .tag-primitive {
     background: var(--orange-bg);
-    color: var(--brown-dark);
+    color: var(--orange-dark);
 }
 .tag-divine {
     background: var(--yellow-bg);
