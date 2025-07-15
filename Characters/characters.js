@@ -131,11 +131,40 @@ const CHARACTER_DB = [
         "Depicted in many different forms, all of them different, but cute, sea monsters."
     },
     {
-        name: "Lerranmoraxitro", loc: "Aerialis", faction: "Curseborne", affiliation: "Curseborne", race: "Elder God", subrace: "None", status: "Active",
+        name: "Lerranmoraxitro", loc: "Aerialis", faction: "Curseborne", affiliation: "Curseborne", race: "Elder God", subrace: "None", status: "Inactive",
         desc: "An Elder God who is known as the "+'"God of Freedom." '+
         "He once ruled the Fourth and Fifth Realms, but quit, and allowed the populous complete freedom from His rule."+
         "He is depicted as the sky itself, and thought to be the creator of Dragons and all other avian creatures. "+
         "His freedom inspired Aurum to explore the Realms. Lerranmoraxitro now lounges inside of a temple in Aerialis."
+    },
+    {
+        name: "Lucifer", loc: "Kyofu", faction: "The Council", affiliation: "The Council", race: "Devil", subrace: "Lord", status: "Active",
+        desc: "An extremely powerful Devil Lord, who reached the rank of a Lord before maturity. "+
+        "After founding The Council with his twin sister, Beelzebub, they pose one of the greatest threats to the Divine Realm."
+    },
+    {
+        name: "Beelzebub", loc: "Endless City", faction: "The Council", affiliation: "The Council", race: "Devil", subrace: "Lord", status: "Active",
+        desc: "The most powerful member of The Council. She can become a Wild God, but chooses not to. As becoming a God would put a target on her."+
+        "After founding The Council with her twin brother, Lucifer, she left to enjoy the luxuries of The Endless City."
+    },
+    {
+        name: "Eleth", loc: "Divine Realm", faction: "The Council", affiliation: "The Council", race: "Angel", subrace: "Archangel", status: "Active",
+        desc: "She is one of the strongest angels in the Divine Realm. She is near the qualifications to become a Wild God."
+    },
+    {
+        name: "Octo", loc: "Felled Realm", faction: "The Council", affiliation: "The Council", race: "Lich", subrace: "Elder", status: "Active",
+        desc: "A Lich who believes that Oterum is unfit for ruling over the Felled Realm. "+
+        "After joining the council, he began a war to dethrone Oterum."
+    },
+    {
+        name: "Phobos", loc: "Kyofu", faction: "The Council", affiliation: "The Council", race: "Devil", subrace: "Archdevil", status: "Active",
+        desc: "A near omniscient mage. He manages all of The Councils interests."
+    },
+    {
+        name: "Aurem Regem", loc: "Garna", faction: "None", affiliation: "None", race: "Wild God", subrace: "Ancient Gold Dragon", status: "Deceased",
+        desc: "An Ancient Dragon, Older than some gods. "+
+        "After Lerranmoraxitro decided to free everything which He ruled, Aurem decided to use the freedom He was granted to explore, learn, and experience everything. "+
+        "In His final years, He would create elaborate and complex puzzles for Himself to solve, before wiping His memories and enjoy the experience of learning all over again."
     },
     {
         name: "Jolly Roger", loc: "Astral Sea", faction: "VPF", affiliation: "Tortuga", race: "Lich", subrace: "Overlord", status: "Inactive",
@@ -195,6 +224,8 @@ const CLASS_MAP = {
         "Blessed Ring": "faction-blessed-ring",
         "Winter's Embrace": "faction-xornoren",
         "Duskborne": "faction-duskborne",
+        "Curseborne": "faction-curseborne",
+        "The Council": "faction-council",
     },
     affiliation: {
         "Curious Wanderers": "aff-curious-wanderers",
