@@ -51,7 +51,8 @@
     --rBlue: rgb(65,105,255); /* royal blue */
     --rBlue-bg: rgba(65,105,255,0.2);
     --cWhite: rgb(220,240,255); /* cold white */
-    --cBlue-bg: rgba(95,165,195,0.2); /* cold blue */
+    --cBlue: rgb(95,165,195); /* cold blue */
+    --cBlue-bg: rgba(95,165,195,0.2);
     --pink-bg: rgba(170,51,106,0.6);
     --rBrown-bg: rgba(120,85,60,0.25); /* brass/bronze */
     --white-bg: rgba(255,255,255,0.2);
@@ -97,6 +98,39 @@
     display: inline-block;
     font-size: 0.85rem;
 }
+.faction-order {
+    background-color: var(--white);
+    color: var(--gold);
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 0.85rem;
+}
+.faction-blessed-ring {
+    background-color: var(--pink);
+    color: var(--black2);
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 0.85rem;
+}
+.faction-xornoren {
+    background-color: var(--cWhite);
+    color: var(--blue-light);
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 0.85rem;
+}
+.faction-duskborne {
+    background-color: var(--black-light);
+    color: var(--gold);
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 0.85rem;
+}
 .faction-neutral {
     background-color: var(--gray);
     color: var(--black-dark);
@@ -105,7 +139,7 @@
     display: inline-block;
     font-size: 0.85rem;
 }
-.affiliation-grayhair {
+.aff-grayhair {
     background-color: var(--red-dark2);
     color: var(--black-dark);
     padding: 2px 8px;
@@ -113,7 +147,7 @@
     display: inline-block;
     font-size: 0.85rem;
 }
-.affiliation-always {
+.aff-always {
     background-color: var(--blue);
     color: var(--yellow);
     padding: 2px 8px;
@@ -121,7 +155,7 @@
     display: inline-block;
     font-size: 0.85rem;
 }
-.affiliation-white_sam {
+.aff-white-sam {
     background-color: var(--white-light);
     color: var(--blue-dark);
     padding: 2px 8px;
@@ -129,9 +163,25 @@
     display: inline-block;
     font-size: 0.85rem;
 }
-.affiliation-neprad {
+.aff-neprad {
     background-color: var(--purple);
     color: var(--white);
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 0.85rem;
+}
+.aff-curious-wanderers {
+    background-color: var(--blue-dark);
+    color: var(--purple-light);
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 0.85rem;
+}
+.aff-cod {
+    background-color: var(--black2);
+    color: var(--gold);
     padding: 2px 8px;
     border-radius: 12px;
     display: inline-block;
@@ -203,7 +253,7 @@
     font-size: 0.85rem;
 }
 .loc-sea {
-    background-color: var(--purple-light);
+    background-color: var(--purple-dark);
     color: var(--blue-light);
     padding: 2px 8px;
     border-radius: 12px;
@@ -218,7 +268,12 @@
     display: inline-block;
     font-size: 0.85rem;
 }
-/* CHARACTER GEN */
+/* RACES */
+.race-neutral {}
+.race-wg { color: var(--cBlue) }
+.race-ng { color: var(--gold) }
+.race-eg { color: var(--white-light) }
+/* EQUIPMENT TAGS */
 .tag-general {
     background: var(--rBlue-bg);
     color: var(--gray-light);
@@ -275,24 +330,77 @@
 #race-human {
     padding: 1.33rem;
     border-radius: 2.5rem;
-    border-style: 1px solid;
-    border-color: var(--blue);
+    border: 1px solid var(--blue);
     box-shadow: 0 0 7px var(--blue-light),
-                0 0 21px var(--blue-dark);
+                0 0 28px var(--blue-dark);
+}
+#race-halfling {
+    padding: 1.33rem;
+    border-radius: 2.5rem;
+    border: 1px solid var(--brown-light);
+    box-shadow: 0 0 7px var(--brown-light),
+                0 0 28px var(--green-dark);
+}
+#race-orc {
+    padding: 1.33rem;
+    border-radius: 2.5rem;
+    border: 1px double var(--green);
+    box-shadow: 0 0 7px var(--green-light),
+                0 0 21px var(--orange-dark);
 }
 #race-dwarf {
     padding: 1.33rem;
     border-radius: 2.5rem;
-    border-style: 1px solid;
-    border-color: var(--brown);
+    border: 1px solid var(--brown);
     box-shadow: 0 0 7px var(--brown-light),
                 0 0 42px var(--brown-dark);
+}
+#race-goliath {
+    padding: 1.33rem;
+    border-radius: 2.5rem;
+    border: 1px solid var(--white);
+    box-shadow: 0 0 7px var(--cWhite),
+                0 0 21px var(--cBlue);
+}
+#race-gnome {
+    padding: 1.33rem;
+    border-radius: 2.5rem;
+    border: 1px solid var(--green-dark);
+    box-shadow: 0 0 7px var(--cWhite),
+                0 0 28px var(--green-dark);
+}
+#race-warforged {
+    padding: 1.33rem;
+    border-radius: 2.5rem;
+    border: 1px solid var(--gray);
+    box-shadow: 0 0 7px var(--orange-light),
+                0 0 28px var(--gray);
 }
 #race-elf {
     padding: 1.33rem;
     border-radius: 2.5rem;
-    border-style: 1px solid;
-    border-color: var(--green);
+    border: 1px solid var(--green);
     box-shadow: 0 0 7px var(--green-light),
                 0 0 21px var(--green-dark);
+}
+#race-birdman {
+    padding: 1.33rem;
+    border-radius: 2.5rem;
+    border: 1px solid var(--yellow-dark);
+    box-shadow: 0 0 7px var(--orange),
+                0 0 28px var(--red-dark);
+}
+#race-strig {
+    padding: 1.33rem;
+    border-radius: 2.5rem;
+    border: 1px solid var(--cBlue);
+    box-shadow: 0 0 7px var(--cWhite),
+                0 0 21px var(--blue-light);
+}
+#race-dragonborn {
+    padding: 1.33rem;
+    border-radius: 2.5rem;
+    border: 1px solid var(--gold);
+    box-shadow: 0 0 7px var(--red-light),
+                0 0 28px var(--red-dark);
 }

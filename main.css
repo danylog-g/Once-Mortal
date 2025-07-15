@@ -10,7 +10,7 @@
     --primary-lighter: skyblue;
     --background: #000000;
     --bg-low: rgba(0,0,0,0.3);
-    --bg-llow: rgba(0,0,0,0.66);
+    --bg-llow: rgba(0,0,0,0.8);
     --card-bg: #3f3f3f;
     --text: #2b61ac;
     --text-light: #aaaaaa;
@@ -45,7 +45,7 @@ header {
     top: 0;
     z-index: 10;
 }
-h2  {
+h2 {
     margin-bottom: 20px;
     padding-bottom: 10px;
     border-bottom: 2px solid var(--primary);
