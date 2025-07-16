@@ -105,17 +105,139 @@ const weaponData = {
             accuracy: 0
         },
     ],
-
+    snipers: [
+        {
+            name: "NIS - Standard",
+            damage: "4d8",
+            range: "500/2000/4000",
+            ammo: 10,
+            weight: 12,
+            decibels: 170,
+            accuracy: 2
+        },
+        {
+            name: "NIS - Heavy",
+            damage: "4d12",
+            range: "1000/6600/13000",
+            ammo: 5,
+            weight: 31.2,
+            decibels: 175,
+            accuracy: 0
+        },
+        {
+            name: "NIS - Light",
+            damage: "4d6",
+            range: "250/1000/2000",
+            ammo: 10,
+            weight: 10.5,
+            decibels: 160,
+            accuracy: 3
+        },
+        {
+            name: "NIS - Tactical",
+            damage: "5d8",
+            range: "250/4100/8200",
+            ammo: 5,
+            weight: 14.2,
+            decibels: 165,
+            accuracy: 1
+        },
+        {
+            name: "DEW - SnV-V6",
+            damage: "4d20",
+            range: "100/13000",
+            ammo: 999,
+            weight: 37.4,
+            decibels: 280,
+            accuracy: 0
+        },
+    ],
+    lmgs: [
+        {
+            name: "CIM - Standard",
+            damage: "1d6",
+            range: "50/1000",
+            ammo: 50,
+            weight: 27,
+            decibels: 175,
+            accuracy: -3
+        },
+        {
+            name: "CIM - Light",
+            damage: "1d4",
+            range: "30/2000",
+            ammo: 30,
+            weight: 13,
+            decibels: 170,
+            accuracy: -2
+        },
+        {
+            name: "CIM - Heavy",
+            damage: "3d4",
+            range: "50/1000",
+            ammo: 100,
+            weight: 49,
+            decibels: 180,
+            accuracy: 0
+        },
+        {
+            name: "CIM - SpecOps",
+            damage: "1d6",
+            range: "30/2000",
+            ammo: 50,
+            weight: 18,
+            decibels: 165,
+            accuracy: -1
+        },
+        {
+            name: "DEW - LMG-P1",
+            damage: "1d20",
+            range: "30/4000",
+            ammo: 999,
+            weight: 44.82,
+            decibels: 300,
+            accuracy: -3
+        },
+    ],
+    atws: [
+        {
+            name: "CIAT - Standard",
+            damage: "2d12",
+            range: "160/1100",
+            ammo: 3,
+            weight: 22,
+            decibels: 300,
+            accuracy: -3
+        },
+        {
+            name: "CIAT - Light",
+            damage: "1d20",
+            range: "160/8200",
+            ammo: 1,
+            weight: 14,
+            decibels: 275,
+            accuracy: -3
+        },
+        {
+            name: "CIAT - Heavy",
+            damage: "2d20",
+            range: "100/8200",
+            ammo: 3,
+            weight: 49,
+            decibels: 325,
+            accuracy: -3
+        },
+    ],
 };
 
 // Attachment data
 const attachmentData = {
     silencer: [
         { name: "No Suppressor", damage: "0", decibels: 0, weight: 0 },
-        { name: "RC-Su Standard", damage: "-1 die size", decibels: -25, weight: 0.5 },
-        { name: "RC-Su Premium", damage: "-1 die size", decibels: -35, weight: 1 },
-        { name: "RC-Su Tactical", damage: "0", decibels: -30, weight: 1 },
-        { name: "RC-Su Spec-Ops", damage: "0", decibels: -50, weight: 2 },
+        { name: "RC-Su Standard", damage: "-1 die size", decibels: "-30", weight: 0.5 },
+        { name: "RC-Su Premium", damage: "-1 die size", decibels: "-40", weight: 1 },
+        { name: "RC-Su Tactical", damage: "0", decibels: "-35", weight: 1 },
+        { name: "RC-Su Spec-Ops", damage: "0", decibels: "-60", weight: 2 },
     ],
     frame: [
         { name: "RC-F Standard", weight: 0, accuracy: 0 },
@@ -132,37 +254,54 @@ const attachmentData = {
         { name: "RC-St Heavy", weight: 5, accuracy: 6 },
         { name: "RC-St Spec-Ops", weight: 3.5, accuracy: 3 },
     ],
+    grip: [
+        { name: "No Grip", weight: 0, accuracy: 0 },
+        { name: "RC-G Collapsible", weight: 1.0, accuracy: 1 },
+        { name: "RC-G Tactical", weight: 1.5, accuracy: 2 },
+        { name: "RC-G Heavy", weight: 5, accuracy: 6 },
+        { name: "RC-G Spec-Ops", weight: 3.5, accuracy: 3 },
+    ],
     barrel: [
-        { name: "Standard Barrel", damage: "0", range: "0", decibels: 0, weight: 0 },
-        { name: "RC-B Standard", damage: "0", range: "+10/20", decibels: 0, weight: 0.2 },
-        { name: "RC-B Heavy", damage: "+1 die size", range: "+20/40", decibels: -10, weight: 0.35 },
-        { name: "RC-B Light", damage: "0", range: "0", decibels: -20, weight: 0.05 },
+        { name: "Standard Barrel", damage: "0", range: "0", decibels: "0", weight: 0 },
+        { name: "RC-B Standard", damage: "0", range: "+10/20/40", decibels: "0", weight: 0.2 },
+        { name: "RC-B Heavy", damage: "+1 die size", range: "+20/40/80", decibels: "-10", weight: 0.35 },
+        { name: "RC-B Light", damage: "0", range: "0", decibels: "-20", weight: 0.05 },
     ],
     magazine: [
         { name: "Standard Mag", ammo: "0", damage: "0", weight: 0 },
         { name: "RC-M Standard", ammo: "+25%", damage: "0", weight: 0.2 },
         { name: "RC-M Tactical", ammo: "+50%", damage: "0", weight: 0.4 },
         { name: "RC-M Spec-Ops", ammo: "+100%", damage: "0", weight: 0.6 },
-        { name: "RC-M Drum", ammo: "+200%", damage: "0", weight: 1.8 }
+        { name: "RC-M Drum", ammo: "+200%", damage: "0", weight: 1.8 },
+        { name: "RC-M FeedStrip", ammo: "0", damage: "+1 dice", weight: 1.13 },
+        { name: "RC-M Chain", ammo: "0", damage: "+2 dice", weight: 2.05 },
+        { name: "RC-M Belt", ammo: "0", damage: "+3 dice", weight: 3.1 },
     ],
     scope: [
         { name: "No Scope", range: "0", weight: 0, accuracy: 0 },
-        { name: "RC-Sc Standard", range: "+5%/+5%", weight: 0.75, accuracy: 1 },
-        { name: "RC-Sc Halo", range: "0/+100%", weight: 1.4, accuracy: 2 },
-        { name: "RC-Sc Predator", range: "-5%/-30", weight: 1.1, accuracy: 4 },
-        { name: "RC-Sc Spec-Ops", range: "+15/+50%", weight: 1.9, accuracy: 3 },
+        { name: "RC-Sc Standard", range: "+5%/+5%/+5%", weight: 0.75, accuracy: 1 },
+        { name: "RC-Sc Halo", range: "0/+100%/50%", weight: 1.4, accuracy: 2 },
+        { name: "RC-Sc Predator", range: "-25%/-30%/-50%", weight: 1.1, accuracy: 4 },
+        { name: "RC-Sc Spec-Ops", range: "+15%/+50%/+25%", weight: 1.9, accuracy: 3 },
     ],
     bullet: [
-        { name: "RC-B Standard", ammo: "0", range: "0", damage: "0", decibels: 0, weight: 0 },
-        { name: "RC-B-9", ammo: "+33%", range: "-10%/-10%", damage: "-1 die size", decibels: 10, weight: -0.05 },
-        { name: "RC-B-45", ammo: "-10%", range: "-5%/+10%", damage: "0", decibels: -5, weight: 0.0 },
-        { name: "RC-B-22", ammo: "+50%", range: "+20%/+10%", damage: "+1 dice -1 die size", decibels: -5, weight: 0.05 },
-        { name: "RC-B-3O8", ammo: "-20%", range: "+0/+75%", damage: "+1 die size", decibels: 20, weight: 0.1 },
-        { name: "RC-B 12-Slug", ammo: "-50%", range: "-10%/-15%", damage: "+1 dice +1 die size", decibels: 20, weight: 0.075 },
-        { name: "RC-B T-Slug", ammo: "0", range: "-10%/-15%", damage: "+1 die size", decibels: -15, weight: 1.8 },
-        { name: "RC-BE Laser", ammo: "0", range: "0", damage: "0", decibels: 0, weight: 0 },
-        { name: "RC-BE Plasma", ammo: "0", range: "-25%/-50%", damage: "+1 dice", decibels: 5, weight: 0.1 },
-        { name: "RC-BE Ion", ammo: "0", range: "0/+25%", damage: "0", decibels: 10, weight: -0.05 },
+        { name: "RC-B Standard", ammo: "0", range: "0", damage: "0", decibels: 0, weight: 0, type: "Piercing" },
+        { name: "RC-B-9", ammo: "+33%", range: "-10%/-10%/-50%", damage: "-1 die size", decibels: "10%", weight: -0.05, type: "Piercing" },
+        { name: "RC-B-45", ammo: "-10%", range: "-5%/+10%/+10%", damage: "0", decibels: "-5%", weight: 0.0, type: "Piercing" },
+        { name: "RC-B-22", ammo: "+50%", range: "+20%/+10%/+20%", damage: "+1 dice -1 die size", decibels: "-5%", weight: 0.05, type: "Piercing" },
+        { name: "RC-B-3O8", ammo: "-20%", range: "+0/+75%/+25%", damage: "+1 die size", decibels: "20%", weight: 0.1, type: "Piercing" },
+        { name: "RC-B 12-Slug", ammo: "-50%", range: "-10%/-15%/-75%", damage: "+1 dice +1 die size", decibels: "20%", weight: 0.075, type: "Piercing" },
+        { name: "RC-B T-Slug", ammo: "0", range: "-10%/-15%/-75%", damage: "+1 die size", decibels: "-15%", weight: 1.8, type: "Piercing" },
+        { name: "RC-B-22-Segmented", ammo: "0", range: "-10%/-15%/-30%", damage: "-2 die size", decibels: "-75%", weight: 0.1, type: "Piercing" },
+        { name: "RC-E Laser", ammo: "0", range: "0", damage: "0", decibels: 0, weight: 0, type: "Radiant" },
+        { name: "RC-E Plasma", ammo: "0", range: "-25%/-50%/-75%", damage: "+1 dice", decibels: "10%", weight: 0.1, type: "Fire" },
+        { name: "RC-E Ion", ammo: "0", range: "0/+25%/+50%", damage: "0", decibels: "20%", weight: -0.05, type: "Radiant" },
+        { name: "RC-E Particles", ammo: "0", range: "0/-50%/-75%", damage: "+1 dice size", decibels: "-33%", weight: -0.1, type: "Fire" },
+        { name: "RC-W Warhead", ammo: "0", range: "0/0/0", damage: "0", decibels: "0", weight: 0.0, type: "Bludgeoning" },
+        { name: "RC-W Wasp", ammo: "+50%", range: "0/-50%/-50%", damage: "+2 dice -1 dice size", decibels: "-20%", weight: -3.0, type: "Piercing" },
+        { name: "RC-W HEAT", ammo: "0", range: "+15%/0/0", damage: "+1 dice, +1 dice size", decibels: "+20%", weight: 1.0, type: "Force" },
+        { name: "RC-W NF", ammo: "-50%", range: "0/0/0", damage: "0", decibels: "0", weight: 3.0, type: "Necrotic" },
+        { name: "RC-W NG", ammo: "-25%", range: "0/0/0", damage: "0", decibels: "-33%", weight: -2.0, type: "Poison" },
     ],
     sight: [
         { name: "No Sight", accuracy: 0, range: "0", damage: "0", decibels: 0, weight: 0 },
@@ -173,6 +312,7 @@ const attachmentData = {
     light: [
         { name: "No Light", weight: 0 },
         { name: "RC-L Standard", weight: 0.2 },
+        { name: "RC-L 1000L", weight: 1 },
     ],
 };
 
@@ -346,6 +486,7 @@ function updateGun() {
     let weight = weapon.weight;
     let decibels = weapon.decibels;
     let accuracy = weapon.accuracy;
+    let dmg_type;
 
     // Parse base damage into dice count and die size
     let [baseDiceCount, baseDieSize] = weapon.damage.split('d').map(Number);
@@ -359,7 +500,8 @@ function updateGun() {
         ammo,
         weight,
         decibels,
-        accuracy
+        accuracy,
+        dmg_type
     };
 
     // Update attachment list
@@ -383,48 +525,59 @@ function updateGun() {
         if (attachment) {
             // Enhanced damage handling
             if (attachment.damage && attachment.damage !== "0") {
-                // Handle die count modifications (+X dice, -X dice)
+                // Handle die count modifications
                 const diceCountMatch = attachment.damage.match(/([+-]?\d+)\s*dice?s?/i);
                 if (diceCountMatch) {
                     const diceChange = parseInt(diceCountMatch[1]);
                     currentDiceCount += diceChange;
-                    currentDiceCount = Math.max(1, currentDiceCount); // Minimum 1 die
+                    currentDiceCount = Math.max(1, currentDiceCount);
                 }
-
-                // Handle die size modifications (+X die size, -X die size)
+                // Handle die size modifications (regex handles all cases)
                 const dieSizeMatch = attachment.damage.match(/([+-]?\d+)\s*die\s*size/i);
                 if (dieSizeMatch) {
                     const sizeSteps = parseInt(dieSizeMatch[1]);
                     currentDieSize = modifyDieSize(currentDieSize, sizeSteps);
                 }
-
-                // Handle simple die size changes (backward compatibility)
-                if (attachment.damage === "-1 die size") {
-                    currentDieSize = modifyDieSize(currentDieSize, -1);
-                } else if (attachment.damage === "+1 die size") {
-                    currentDieSize = modifyDieSize(currentDieSize, 1);
-                }
             }
 
             if (attachment.range && attachment.range.includes('%')) {
-                const [shortMod, longMod] = attachment.range.split('/');
-                const [baseShort, baseLong] = range.split('/').map(Number);
-
-                const applyPercentage = (base, mod) => {
-                    const percent = parseInt(mod);
-                    return Math.round(base * (1 + percent / 100));
-                };
-
-                range = `${applyPercentage(baseShort, shortMod)}/${applyPercentage(baseLong, longMod)}`;
+                const mods = attachment.range.split('/');
+                const baseParts = range.split('/');
+                
+                const newValues = [];
+                for (let i = 0; i < 3; i++) {
+                    const baseVal = i < baseParts.length ? Number(baseParts[i]) : 0;
+                    let modified = baseVal;
+                    if (i < mods.length) {
+                        const mod = mods[i];
+                        const match = mod.match(/([+-]?\d+)%/);
+                        if (match) {
+                            const percent = parseInt(match[1]);
+                            modified = Math.round(baseVal * (1 + percent / 100));
+                        }
+                    }
+                    newValues.push(modified);
+                }
+                range = newValues.join('/');
             }
             else if (attachment.range) {
                 if (attachment.range.startsWith("+") || attachment.range.startsWith("-")) {
-                    const [addShort, addLong] = attachment.range.split('/').map(part => {
-                        const num = parseInt(part);
-                        return isNaN(num) ? 0 : num;
-                    });
-                    const [baseShort, baseLong] = range.split('/').map(Number);
-                    range = `${baseShort + addShort}/${baseLong + addLong}`;
+                    const mods = attachment.range.split('/');
+                    const baseParts = range.split('/');
+                    
+                    const newValues = [];
+                    for (let i = 0; i < 3; i++) {
+                        const baseVal = i < baseParts.length ? Number(baseParts[i]) : 0;
+                        let change = 0;
+                        if (i < mods.length) {
+                            const num = parseInt(mods[i]);
+                            if (!isNaN(num)) {
+                                change = num;
+                            }
+                        }
+                        newValues.push(baseVal + change);
+                    }
+                    range = newValues.join('/');
                 }
             }
 
@@ -443,8 +596,19 @@ function updateGun() {
                 }
             }
 
-            if (attachment.decibels) {
-                decibels += attachment.decibels;
+            if (attachment.decibels && attachment.decibels !== "0") {
+                if (attachment.decibels.includes('%')) {
+                    const percent = parseInt(attachment.decibels);
+                    if (!isNaN(percent)) {
+                        decibels = Math.round(decibels * (1 + percent / 100));
+                    }
+                }
+                else {
+                    const fixed = parseInt(attachment.decibels);
+                    if (!isNaN(fixed)) {
+                        decibels += fixed;
+                    }
+                }
             }
 
             if (attachment.weight) {
@@ -453,6 +617,10 @@ function updateGun() {
 
             if (attachment.accuracy) {
                 accuracy += attachment.accuracy;
+            }
+
+            if (attachment.type) {
+                dmg_type = attachment.type;
             }
 
             // Add to attachment list
@@ -471,7 +639,7 @@ function updateGun() {
     });
 
     // Format final damage string
-    const __damage = `${currentDiceCount}d${currentDieSize}`;
+    const __damage = `${currentDiceCount}d${currentDieSize} (${dmg_type})`;
     // Update stats display
     statDamage.textContent = __damage;
     statRange.textContent = `${range} ft`;
@@ -603,7 +771,52 @@ const cyberneticsData = {
                 "Advantage on Perception Checks",
                 "Cannot be surprised in combat"
             ]
-        }
+        },
+        {
+            name: "NC - Cerebral Uplink",
+            cost: 4000,
+            capacity: 2,
+            humanity: 6,
+            effects: [
+                "Advantage on Intelligence saving throws",
+                "Advantage on Wisdom saving throws",
+                "Learn 2 languages or tool proficiencies",
+                "Reroll 1 failed knowledge check per hour"
+            ]
+        },
+        {
+            name: "NC - Reflex Optimization",
+            cost: 4500,
+            capacity: 2,
+            humanity: 7,
+            effects: [
+                "+1 reaction per combat",
+                "Advantage on Dexterity saves vs area effects",
+                "Ignite difficult terrain when moving"
+            ]
+        },
+        {
+            name: "NC - Cognitive Accelerator",
+            cost: 5800,
+            capacity: 3,
+            humanity: 7,
+            effects: [
+                "Double proficiency bonus on Intelligence checks",
+                "Cast Detect Thoughts once per long rest",
+                "Understand any written language"
+            ]
+        },
+        {
+            name: "NC - Zen Focus Processor",
+            cost: 4200,
+            capacity: 2,
+            humanity: 5,
+            effects: [
+                "Advantage on concentration checks",
+                "Immunity to fear effects",
+                "Meditate to gain temporary hit points (1d10)"
+            ]
+        },
     ],
     sensory: [
         {
@@ -612,9 +825,54 @@ const cyberneticsData = {
             capacity: 1,
             humanity: 4,
             effects: [
-                "Darkvision 60 ft",
+                "Darkvision 60ft or extend existing 30ft.",
                 "+2 to Perception checks",
                 "Zoom capability (can see details 10x further)"
+            ]
+        },
+        {
+            name: "NC - X-Ray Vision Implant",
+            cost: 8900,
+            capacity: 3,
+            humanity: 12,
+            effects: [
+                "See through up to 1 foot of solid material",
+                "Detect structural weaknesses in objects",
+                "Advantage on Investigation checks",
+                "Detect hidden compartments and traps",
+            ]
+        },
+        {
+            name: "NC - Thermal Vision Implant",
+            cost: 4100,
+            capacity: 2,
+            humanity: 5,
+            effects: [
+                "See heat signatures through obstacles",
+                "Detect invisible creatures",
+                "Advantage on sight-based Perception in darkness"
+            ]
+        },
+        {
+            name: "NC - Oculus System",
+            cost: 3500,
+            capacity: 1,
+            humanity: 4,
+            effects: [
+                "Darkvision 60ft or extend existing by 30ft",
+                "See invisible creatures 1x/combat",
+                "Analyze weak points (+1d4 damage 3x/day)"
+            ]
+        },
+        {
+            name: "NC - Aural Processor",
+            cost: 2800,
+            capacity: 1,
+            humanity: 3,
+            effects: [
+                "Hear through soundproofing",
+                "Sonic pulse (15ft cone, DC13 CON save or stunned)",
+                "Advantage on detecting illusions"
             ]
         },
         {
@@ -640,14 +898,14 @@ const cyberneticsData = {
             ]
         },
         {
-            name: "NC - Thermal Vision Implant",
-            cost: 4100,
-            capacity: 2,
-            humanity: 5,
+            name: "NC - Chrono-Sense",
+            cost: 7500,
+            capacity: 3,
+            humanity: 9,
             effects: [
-                "See heat signatures through obstacles",
-                "Detect invisible creatures",
-                "Advantage on sight-based Perception in darkness"
+                "Always act first in surprise rounds",
+                "Predict enemy movements (+2 AC against ranged attacks)",
+                "Always know exact time of day"
             ]
         }
     ],
@@ -664,6 +922,17 @@ const cyberneticsData = {
             ]
         },
         {
+            name: "NC-TA-I",
+            cost: 5200,
+            capacity: 2,
+            humanity: 8,
+            effects: [
+                "Integrated toolset (lockpick, multitool, etc)",
+                "Grapple hook (30ft range)",
+                "Magnetic grip (climb metal surfaces)"
+            ]
+        },
+        {
             name: "NC-ML-Ω",
             cost: 6200,
             capacity: 3,
@@ -672,6 +941,17 @@ const cyberneticsData = {
                 "Movement speed increased by 10 ft",
                 "Jump distance doubled",
                 "Land safely from falls up to 50 ft"
+            ]
+        },
+        {
+            name: "NC-KL-I",
+            cost: 5800,
+            capacity: 3,
+            humanity: 9,
+            effects: [
+                "Movement speed increased by 10ft",
+                "Wall-running capability on successful DC12 Acrobatics check",
+                "Fall damage reduced by 50%"
             ]
         },
         {
@@ -752,7 +1032,41 @@ const cyberneticsData = {
                 "Cure one disease or poison per long rest",
                 "Stabilize automatically when dying"
             ]
-        }
+        },
+        {
+            name: "NC - Bio-Regulator",
+            cost: 7500,
+            capacity: 3,
+            humanity: 12,
+            effects: [
+                "Resistance to one damage type (chosen daily)",
+                "Stabilize automatically at 0 HP",
+                "Advantage on saving throws against disease and poison"
+            ]
+        },
+        {
+            name: "NC - Adrenal-Regulator",
+            cost: 4800,
+            capacity: 2,
+            humanity: 10,
+            effects: [
+                "Bonus action dash/disengage 3x/day",
+                "When reduced to 50% HP: +2 AC for two turns",
+                "Ignore exhaustion penalties 1x/day"
+            ]
+        },
+        {
+            name: "NC - Metabolic Regulator",
+            cost: 6800,
+            capacity: 3,
+            humanity: 15,
+            effects: [
+                "Require only 4 hours of sleep for long rest",
+                "Reduced need for eating and drinking",
+                "Advantage on Constitution saving throws",
+                "Meditation takes only 1 hour"
+            ]
+        },
     ],
     dermal: [
         {
@@ -789,6 +1103,17 @@ const cyberneticsData = {
             ]
         },
         {
+            name: "NC - Reactive Plating",
+            cost: 6200,
+            capacity: 3,
+            humanity: 11,
+            effects: [
+                "+1 AC",
+                "When hit by a melee attack, you can retaliate with 1d6 lightning damage",
+                "Resistance to critical hits"
+            ]
+        },
+        {
             name: "NC - Bio-electric Defense",
             cost: 4100,
             capacity: 2,
@@ -798,7 +1123,18 @@ const cyberneticsData = {
                 "Shock attackers on contact (1D4 lightning damage)",
                 "Cannot be paralyzed"
             ]
-        }
+        },
+        {
+            name: "NC - Photosynthetic Skin",
+            cost: 3800,
+            capacity: 2,
+            humanity: 5,
+            effects: [
+                "Regenerate 1 HP per hour in sunlight",
+                "Resistance to radiant damage",
+                "Glow softly in darkness (5ft radius)"
+            ]
+        },
     ],
     special: [
         {
@@ -824,14 +1160,47 @@ const cyberneticsData = {
             ]
         },
         {
+            name: "NC - Infiltrator Suite",
+            cost: 6900,
+            capacity: 2,
+            humanity: 9,
+            effects: [
+                "Advantage on Stealth checks",
+                "Advantage on Sleight of Hand checks",
+                "Crit on surprised targets"
+            ]
+        },
+        {
+            name: "NC - Meditech Suite",
+            cost: 5300,
+            capacity: 2,
+            humanity: 4,
+            effects: [
+                "Stabilize creatures as a bonus action",
+                "Heal 1d4 + Intelligence modifier per rest (self or ally)",
+                "Advantage on Medicine checks"
+            ]
+        },
+        {
+            name: "NC - Assault Suite",
+            cost: 7200,
+            capacity: 3,
+            humanity: 10,
+            effects: [
+                "Proficiency with all weapons",
+                "When you take the Dash action, your Speed increases by 10 feet for that action",
+                "You can attack twice instead of once whenever you take the Attack action on your turn"
+            ]
+        },
+        {
             name: "NC - Holographic Projector",
             cost: 6800,
             capacity: 2,
             humanity: 10,
             effects: [
-                "Create realistic holographic illusions",
-                "Distract enemies (Wis save DC 14)",
-                "Communicate silently with teammates"
+                "Project disguise (Advantage on deception rolls)",
+                "Create realistic holographic illusions (Wis save DC 14)",
+                "Communicate silently with teammates (30ft range)"
             ]
         },
         {
@@ -1073,7 +1442,7 @@ function updateEffectsSummary() {
 // Function to generate a random gun build
 function generateRandomGun() {
     // Random weapon category
-    const categories = ['pistols', 'rifles', 'shotguns'];
+    const categories = ['pistols', 'rifles', 'shotguns', 'snipers', 'lmgs', 'atws'];
     const randomCategory = categories[Math.floor(Math.random() * categories.length)];
 
     // Random weapon from category
