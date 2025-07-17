@@ -1219,7 +1219,7 @@ const cyberneticsData = {
 
 // Current cybernetics configuration
 let installedCybernetics = [];
-let maxCapacity = 12;
+let maxCapacity = 24;
 let currentCapacity = 0;
 let humanityLoss = 0;
 
