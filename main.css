@@ -175,7 +175,8 @@ strong {
     border: 1px solid var(--border);
     position: relative;
     overflow: hidden;
-    gap: 1;
+    gap: 1.5rem;
+    margin: auto;
 }
 button {
     background-color: var(--background);
@@ -428,6 +429,7 @@ h1 {
     color: var(--text);
 }
 .cyber-effects ul {
+    color: var(--text-light);
     padding-left: 20px;
     margin: 8px 0;
 }
@@ -631,6 +633,7 @@ tr:hover {
 }
 .modal {
     display: none;
+    flex-direction: column;
     position: fixed;
     top: 0;
     left: 0;
@@ -646,18 +649,24 @@ tr:hover {
     color: var(--text-bright);
     padding: 25px;
     border-radius: 10px;
-    width: 80%;
-    max-width: 600px;
+    width: 120%;
+    max-width: 700px;
     max-height: 80vh;
     overflow-y: auto;
-    box-shadow: 0 5px 15px var(--shadow);
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    background-size:contain; 
+    background-position: center; 
+    background-repeat: no-repeat;
+    justify-content: flex-end;
     border: 1px solid var(--border);
 }
 .modal-header {
     display: flex;
     justify-content: space-between;
+    gap: 25rem;
     align-items: center;
-    border-bottom: 1px solid var(--shadow);
     padding-bottom: 15px;
     margin-bottom: 15px;
 }
@@ -675,7 +684,7 @@ tr:hover {
     transition: color 0.2s;
 }
 .close-btn:hover { color: var(--text-bright); }
-.modal-body { line-height: 1.6; }
+.modal-body { line-height: 1.6; display: flex; align-items: flex-start; }
 @media (max-width: 768px) {
     .dashboard-grid {
         grid-template-columns: 1fr;

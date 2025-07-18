@@ -14,7 +14,12 @@
         </div>
     </header>
     
-    <div class="container">
+    <br>
+    <div class="dashboard-cock">
+        <button id="bestiary-btn">Bestiary Database</button>
+    </div> <br>
+
+    <div class="container" id="character-container">
         <div class="dashboard-title">
             <h1>Character Database</h1>
             <p>Character Database for the Campaign.</p>
@@ -115,25 +120,141 @@
             <tbody id="character-list"></tbody>
         </table>
     </div>
+    <!-- Bestiary Container -->
+    <div class="container" id="bestiary-container" style="display: none;">
+        <div class="dashboard-title">
+            <h1>Bestiary Database</h1>
+            <p>Bestiary Database for the Campaign.</p>
+        </div>
+
+        <div class="controls">
+            <div class="search-container">
+                <label for="search-beast">Search Beasts</label>
+                <input type="text" id="search-beast" placeholder="Enter any attribute...">
+            </div>
+
+            <div class="control-group">
+                <label for="type">Type</label>
+                <select id="type">
+                    <option value="">All Types</option>
+                    <option value="Beast">Beast</option>
+                    <option value="Undead">Undead</option>
+                    <option value="Aberration">Aberration</option>
+                    <option value="Elemental">Elemental</option>
+                    <option value="Fiend">Fiend</option>
+                    <option value="Construct">Construct</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="threat">Threat Level</label>
+                <select id="threat">
+                    <option value="">All Levels</option>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                    <option value="Very High">Very High</option>
+                    <option value="Extreme">Extreme</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="beast-location">Location</label>
+                <select id="beast-location">
+                    <option value="">All Locations</option>
+                    <option value="Garna">Garna</option>
+                    <option value="Jotunheim">Jotunheim</option>
+                    <option value="Endless City">Endless City</option>
+                    <option value="Felled Realm">Felled Realm</option>
+                    <option value="Feywild">Feywild</option>
+                    <option value="Aerialis">Aerialis</option>
+                    <option value="Kyofu">Kyofu</option>
+                    <option value="Realm of Beasts">Realm of Beasts</option>
+                    <option value="Astral Sea">Astral Sea</option>
+                    <option value="Divine Realm">Divine Realm</option>
+                </select>
+            </div>
+
+            <button class="reset-btn" id="reset-beast">Reset Filters</button>
+        </div>
+
+        <div class="results-header">
+            <div class="results-count">Showing <span id="results-count-beast">0</span> creatures</div>
+            <div class="sort-control">
+                <label for="sort-beast">Sort by:</label>
+                <select id="sort-beast">
+                    <option value="name-asc" selected>Name (A-Z)</option>
+                    <option value="name-desc">Name (Z-A)</option>
+                    <option value="type">Type</option>
+                    <option value="threat">Threat Level</option>
+                    <option value="location">Location</option>
+                </select>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th data-sort="name">Name</th>
+                    <th data-sort="type">Type</th>
+                    <th data-sort="location">Location</th>
+                    <th data-sort="status">Status</th>
+                </tr>
+            </thead>
+            <tbody id="bestiary-list"></tbody>
+        </table>
+    </div>
 
     <!-- Character Detail Modal -->
     <div id="character-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title" id="modal-character-name">Character Name</h2>
-                <button class="close-btn" id="close-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div id="modal-character-details">
+        <div class="modal-header">
+            <h2 class="modal-title" id="modal-character-name">Character Name</h2>
+            <button class="close-btn" id="close-modal">&times;</button>
+        </div>
+        <div class="modal-content" id="modal-content">
+            <br><br><br><br><br>
+            <br><br><br><br><br>
+            <br><br><br><br><br>
+            <br><br><br><br><br>
+        </div>
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-body" id="modal-character-details">
+                <div style="flex:1;">
                     <p><strong>Location:</strong> <span id="modal-location"></span></p>
                     <p><strong>Faction:</strong> <span id="modal-faction"></span></p>
                     <p><strong>Affiliation:</strong> <span id="modal-affiliation"></span></p>
                     <p><strong>Race:</strong> <span id="modal-race"></span> (<span id="modal-subRace"></span>)</p>
                     <p><strong>Status:</strong> <span id="modal-status"></span></p>
-                    <div style="margin-top: 20px;">
-                        <h3 style="margin-bottom: 10px;">Description</h3>
-                        <p id="modal-description"></p>
-                    </div>
+                </div>
+                <div style="flex:1; margin-top: 20px;">
+                    <h3 style="margin-bottom: 10px;">Description</h3>
+                    <p id="modal-description"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bestiary Detail Modal -->
+    <div id="bestiary-modal" class="modal">
+        <div class="modal-header">
+            <h2 class="modal-title" id="modal-beast-name">Beast Name</h2>
+            <button class="close-btn" id="close-bmodal">&times;</button>
+        </div>
+        <div class="modal-content" id="modal-content">
+            <br><br><br><br><br>
+            <br><br><br><br><br>
+            <br><br><br><br><br>
+            <br><br><br><br><br>
+        </div>
+        <div class="modal-content" style="max-width:600px">
+            <div class="modal-body" id="modal-beast-details">
+                <div style="flex:1;">
+                    <p><strong>Location:</strong> <span id="bmodal-location"></span></p>
+                    <p><strong>Race:</strong> <span id="bmodal-race"></span> (<span id="bmodal-subRace"></span>)</p>
+                    <p><strong>Status:</strong> <span id="bmodal-status"></span></p>
+                </div>
+                <div style="flex:1; margin-top: 20px;">
+                    <h3 style="margin-bottom: 10px;">Description</h3>
+                    <p id="bmodal-description"></p>
                 </div>
             </div>
         </div>

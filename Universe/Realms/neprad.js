@@ -241,24 +241,24 @@ const attachmentData = {
     ],
     frame: [
         { name: "RC-F Standard", weight: 0, accuracy: 0 },
-        { name: "RC-F Light", weight: -0.5, accuracy: 0 },
+        { name: "RC-F Light", weight: -0.5, accuracy: -1 },
         { name: "RC-F Heavy", weight: 2.5, accuracy: 3 },
         { name: "RC-F Alloy", weight: 1.6, accuracy: 1 },
-        { name: "RC-F Tungsten", weight: 8, accuracy: 7 },
+        { name: "RC-F Tungsten", weight: 8, accuracy: 4 },
         { name: "RC-F Spec-Ops", weight: 1.4, accuracy: 2 },
     ],
     stock: [
         { name: "No Stock", weight: 0, accuracy: 0 },
         { name: "RC-St Collapsible", weight: 1.0, accuracy: 1 },
         { name: "RC-St Tactical", weight: 1.5, accuracy: 2 },
-        { name: "RC-St Heavy", weight: 5, accuracy: 6 },
+        { name: "RC-St Heavy", weight: 5, accuracy: 4 },
         { name: "RC-St Spec-Ops", weight: 3.5, accuracy: 3 },
     ],
     grip: [
         { name: "No Grip", weight: 0, accuracy: 0 },
         { name: "RC-G Collapsible", weight: 1.0, accuracy: 1 },
         { name: "RC-G Tactical", weight: 1.5, accuracy: 2 },
-        { name: "RC-G Heavy", weight: 5, accuracy: 6 },
+        { name: "RC-G Heavy", weight: 5, accuracy: 4 },
         { name: "RC-G Spec-Ops", weight: 3.5, accuracy: 3 },
     ],
     barrel: [
@@ -314,6 +314,11 @@ const attachmentData = {
         { name: "RC-L Standard", weight: 0.2 },
         { name: "RC-L 1000L", weight: 1 },
     ],
+    switch: [
+        { name: "Semi-Automatic", accuracy: 0, weight: 0 },
+        { name: "Burst-Fire", accuracy: -2, weight: -0.5 },
+        { name: "Fully Automatic", accuracy: -4, weight: -1 },
+    ],
 };
 
 // Current configuration
@@ -326,12 +331,14 @@ let currentConfig = {
         silencer: "No Suppressor",
         frame: "RC-F Standard",
         stock: "No Stock",
+        grip: "No Grip",
         barrel: "Standard Barrel",
         magazine: "Standard Mag",
         scope: "No Scope",
         bullet: "RC-B Standard",
         sight: "No Sight",
         light: "No Light",
+        switch: "Semi-Automatic",
     }
 };
 
@@ -1219,7 +1226,7 @@ const cyberneticsData = {
 
 // Current cybernetics configuration
 let installedCybernetics = [];
-let maxCapacity = 24;
+let maxCapacity = 18;
 let currentCapacity = 0;
 let humanityLoss = 0;
 
@@ -1474,6 +1481,62 @@ function generateRandomGun() {
     updateGun();
 }
 
+// Function to export gun config as a json file
+function exportGun() {
+    const data = JSON.stringify(currentConfig);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'gun-config.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    addChange("Gun configuration exported");
+}
+
+// Function to import gun config from a json file
+function importGun() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    
+    input.onchange = e => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = event => {
+            try {
+                const newConfig = JSON.parse(event.target.result);
+                
+                // Validate the imported config
+                if (newConfig.weapon && newConfig.attachments) {
+                    currentConfig = newConfig;
+                    
+                    // Update UI
+                    weaponCategorySelect.value = currentConfig.weapon.category;
+                    loadWeaponOptions(currentConfig.weapon.category);
+                    loadAttachmentOptions(attachmentCategorySelect.value);
+                    updateGun();
+                    
+                    addChange("Gun configuration imported");
+                } else {
+                    alert("Invalid gun configuration file");
+                }
+            } catch (error) {
+                alert("Error parsing file: " + error.message);
+            }
+        };
+        
+        reader.readAsText(file);
+    };
+    
+    input.click();
+}
+
 // Function to generate random cybernetics build
 function generateRandomCybernetics() {
     // Clear existing cybernetics
@@ -1506,6 +1569,84 @@ function generateRandomCybernetics() {
 
     // Add change
     addChange(`Random cybernetics build created`);
+}
+
+// Function to export a cybernetics config as a JSON file
+function exportCybernetics() {
+    const data = {
+        installed: installedCybernetics.map(c => c.name),
+        maxCapacity,
+        currentCapacity,
+        humanityLoss
+    };
+    
+    const json = JSON.stringify(data);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'cybernetics-config.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    addChange("Cybernetics configuration exported");
+}
+
+// Function to import a cybernetics config from a JSON file
+function importCybernetics() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    
+    input.onchange = e => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = event => {
+            try {
+                const data = JSON.parse(event.target.result);
+                
+                // Validate the imported data
+                if (data.installed && data.maxCapacity !== undefined) {
+                    // Reset current state
+                    installedCybernetics = [];
+                    currentCapacity = 0;
+                    humanityLoss = 0;
+                    
+                    // Look up each cybernetic by name
+                    data.installed.forEach(name => {
+                        for (const category in cyberneticsData) {
+                            const cyber = cyberneticsData[category].find(c => c.name === name);
+                            if (cyber) {
+                                installedCybernetics.push(cyber);
+                                currentCapacity += cyber.capacity;
+                                humanityLoss += cyber.humanity;
+                                break;
+                            }
+                        }
+                    });
+                    
+                    // Update UI
+                    updateCyberneticsList();
+                    updateEffectsSummary();
+                    updateCapacityDisplay();
+                    
+                    addChange("Cybernetics configuration imported");
+                } else {
+                    alert("Invalid cybernetics configuration file");
+                }
+            } catch (error) {
+                alert("Error parsing file: " + error.message);
+            }
+        };
+        
+        reader.readAsText(file);
+    };
+    
+    input.click();
 }
 
 // Initialize the builder

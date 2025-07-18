@@ -18,10 +18,7 @@
             <h1>Wiki</h1>
             <p>Main page for viewing information about Neo-Neprad.</p>
         </div>
-        <div class="dashboard-cock">
-            <button onclick="generateRandomGun()">Randomize Gun</button>
-            <button onclick="generateRandomCybernetics()">Randomize Cybernetics</button>
-        </div>
+
         <div class="dashboard-balls">
             <img class="card-icon" src="../../ico/cyber gun.png" alt="Gun Icon"></img>
             <h3 class="card-title">Guns</h3>
@@ -53,6 +50,7 @@
                         <option value="sight">Sight</option>
                         <option value="bullet">Bullet</option>
                         <option value="light">Light</option>
+                        <option value="switch">Switch</option>
                     </select>
                 </div>
             </div>
@@ -121,17 +119,28 @@
                     </div>
                 </div>
             </div>
+
+            <div class="dashboard-cock">
+                <button onclick="generateRandomGun()">Randomize Gun</button>
+                <button onclick="exportGun()">Export Gun</button>
+                <button onclick="importGun()">Import Gun</button>
+            </div> <br>
+
             <div class="dashboard-balls">
                 <h2>Firearms Rules</h2>
                 <p class="card-description">
                     <strong>Burst Fire</strong>: As an action, you can expend 10 pieces of a Burst Fire weapon's ammunition to spray shots at n number of targets (proficiency modifier) within the weapon's normal range. 
                     Each creature in that area must succeed on a DC 15 Dexterity saving throw or take damage. Roll the weapon's damage once, and apply it to each creature that failed the save.
                     <br>
+                    <strong>Fully Automatic</strong>: As an action, you can expend the entirity of a Fully Automatic weapon's ammunition to spray shots at n number of targets (proficiency modifier) within the weapon's normal range. 
+                    Each creature in that area must succeed on a DC 18 Dexterity saving throw or take damage. Roll the weapon's damage once, and apply it to each creature that failed the save.
+                    <br>
                     <strong>Reload</strong>: You can make a limited number of shots with a Reload weapon. You must then reload the weapon as an action or a Bonus Action.
                     All non-energy weapons have a specified number of shots per reload, see Ammo Capacity. 
                 </p>
             </div>
-        </div>
+        </div> <br>
+        
         <div class="dashboard-balls">
             <img class="card-icon" src="../../ico/cyber guy.png" alt="Gun Icon"></img>
             <h3 class="card-title">Characters</h3>
@@ -176,6 +185,12 @@
                         Total Cost: <span id="totalCost">0</span> ₵
                     </div>
                 </div>
+            </div> <br>
+
+            <div class="dashboard-cock">
+                <button onclick="generateRandomCybernetics()">Randomize Cybernetics</button>
+                <button onclick="exportCybernetics()">Export Cybernetics</button>
+                <button onclick="importCybernetics()">Import Cybernetics</button>
             </div>
         </div>
     </div>

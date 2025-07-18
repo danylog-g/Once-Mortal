@@ -251,7 +251,8 @@ const CLASS_MAP = {
         "Wild God": "race-wg",
         "Natural God": "race-ng",
         "Elder God": "race-eg",
-    }
+        "Titan": "race-titan",
+    },
 };
 
 // Get DOM Elements
@@ -278,6 +279,7 @@ const modalRace = document.getElementById('modal-race');
 const modalSubRace = document.getElementById('modal-subRace');
 const modalStatus = document.getElementById('modal-status');
 const modalDescription = document.getElementById('modal-description');
+const modalContent = document.getElementById('modal-content');
 
 // Initial render
 resetFilters();
@@ -463,6 +465,8 @@ function showCharacterDetails(character) {
 // Close modal
 function closeModal() {
     modal.style.display = 'none';
+    modalContent.style.backgroundImage = 'none';
+    beastModal.style.display = 'none';
 }
 
 // Reset filters
@@ -476,4 +480,222 @@ function resetFilters() {
     sortSelect.value = 'name-asc';
 
     filterCharacters();
+}
+
+const BESTIARY_DB = [
+    { name: "Stalkers", type: "Unknown", subrace: null, loc: "Endless City", status: "Active", img: "img/stalker.webp",
+        desc: "An unknown creature native, and isolated to the Endless City. Nothing is known about this creature. The image provided is speculation, on what the stalkers might look like."
+    },
+    { name: "Tarrasque", type: "Titan", subrace: "Monstrosity", loc: "Astral Sea", status: "Active", img: "img/tarrasque.webp",
+        desc: "Among the most devastating creatures in existence, the tarrasque is an engine of catastrophe and a ruiner of nations. A terror of massive size and overwhelming might, this primeval destroyer survives from the earliest epochs of the Material Plane, when it served as a weapon of immortal forces. Since then, the tarrasque has slumbered in secret, rising every few ages to usher in eras of destruction."
+    },
+    { name: "Zetalpa", type: "Titan", subrace: "Dinosaur", loc: "Realm of Beasts", status: "Active", img: "img/zetalpa.webp",
+        desc: "A gargantuan Dinosaur Titan, shaped like a Pterodactyl, who rules the majority of the skies of the Third Realm."
+    },
+    { name: "Zacama", type: "Titan", subrace: "Dinosaur", loc: "Realm of Beasts", status: "Active", img: "img/zacama.webp",
+        desc: "A gargantuan Three-Headed Dinosaur Titan, shaped like a T-Rex, it rules the outsides of the Stronghold that Soniya rules."
+    },
+    { name: "Tetzimoc", type: "Titan", subrace: "Dinosaur", loc: "Realm of Beasts", status: "Active", img: "img/tetzimoc.webp",
+        desc: "A gargantuan Dinosaur Titan, shaped like an Ankylosaurus, it picks fights with other beasts and Titans."
+    },
+    { name: "Nezahal", type: "Titan", subrace: "Dinosaur", loc: "Realm of Beasts", status: "Active", img: "img/nezahal.webp",
+        desc: "A gargantuan Dinosaur Titan, shaped like a Mosasaur, it rules the Great Ocean in the Realm of Beasts."
+    },
+    { name: "Ghalta", type: "Titan", subrace: "Dinosaur", loc: "Realm of Beasts", status: "Active", img: "img/ghalta.webp",
+        desc: "A gargantuan Dinosaur Titan, shaped like a T-Rex, it picks fights with other beasts and Titans."
+    },
+    { name: "Etali", type: "Titan", subrace: "Dinosaur", loc: "Realm of Beasts", status: "Active", img: "img/etali.webp",
+        desc: "A gargantuan Dinosaur Titan, shaped like a Spinosaurus, it rules over a large jungle and uses electricity to hunt prey."
+    },
+    { name: "Stronmaus", type: "Titan", subrace: "Giant", loc: "Jotunheim", status: "Active", img: "img/stronmaus.webp",
+        desc: "Stronmaus often slumbers high in the sky or deep in the ocean, where the tumult caused by the scion's restless sleep has little effect on the world. If it drifts too near the ground or the ocean surface, it causes mighty storms or fierce maelstroms."
+    },
+    { name: "Tromokratis", type: "Titan", subrace: "Monstrosity", loc: "Realm of Beasts", status: "Active", img: "img/tromokratis.webp",
+        desc: "Most krakens live in the oceans or seas, Tromokratis fled the sea due to the Nezahal. It now lives on the coastlines, attacking small towns and villages."
+    },
+    { name: "Memnor", type: "Titan", subrace: "Giant", loc: "Jotunheim", status: "Active", img: "img/memnor.webp",
+        desc: "Memnor appears as a dense, slowly drifting tower of clouds that never dissipates. Often, this cloud lingers over a remote valley, creating a constantly overcast sky."
+    },
+    { name: "Surtur", type: "Titan", subrace: "Giant", loc: "Jotunheim", status: "Active", img: "img/surtur.webp",
+        desc: "Surtur slumbering at the peak of a volcano causes an unending plume of smoke to rise, sometimes lit from below by fiery bursts of lava. As the scion dreams of battle, the volcano rumbles and spews molten rage."
+    },
+    { name: "Colossus", type: "Titan", subrace: "Construct", loc: "Any / All", status: "Active", img: "img/colossus.webp",
+        desc: "Colossi are massive constructs, mostly built on Jotunheim and Garna. These titans are mostly used in the Realm of Beasts, to combat the natural Titans."
+    },
+    { name: "Thrym", type: "Titan", subrace: "Giant", loc: "Jotunheim", status: "Active", img: "img/thrym.webp",
+        desc: "Thrym encased in its cradle is functionally identical to a glacier or iceberg, nestled in an alpine valley or drifting in a polar sea. In its wintry seclusion, the scion dreams of battle and glory."
+    },
+    { name: "Ulamog", type: "Titan", subrace: "Celestial", loc: "Realm of Beasts", status: "Active", img: "img/ulamog.webp",
+        desc: "A huge humanoid celestial. It has the body of a skinless human, with a featureless skull. It's arms are split at the elbows, giving it 4 forearms and 4 hands. It's feet are a bunch of tentacles."
+    },
+    { name: "Skoraeus", type: "Titan", subrace: "Giant", loc: "Jotunheim", status: "Active", img: "img/skoraeus.webp",
+        desc: "Skoraeus typically slumbers deep in the heart of a towering mountain, almost becoming one with the earth. While the scion dreams, the mountain's minerals are transformed into fine carving stones and brilliant gems."
+    },
+    { name: "Kraken", type: "Titan", subrace: "Monstrosity", loc: "Astral Sea", status: "Active", img: "img/kraken.webp",
+        desc: "Is a kraken, made by Bahgyel."
+    },
+    { name: "Empyrean", type: "Titan", subrace: "Celestial", loc: "Astral Sea", status: "Active", img: "img/empyrean.webp",
+        desc: "Empyreans are idealized, human-shaped beings of godly power. They are created from Primal forces, both Celestial and Infernal."
+    },
+    { name: "Empyrean", type: "Titan", subrace: "Fiend", loc: "Astral Sea", status: "Active", img: "img/empyrean.webp",
+        desc: "Empyreans are idealized, human-shaped beings of godly power. They are created from Primal forces, both Infernal and Celestial."
+    },
+    { name: "The Blob", type: "Titan", subrace: "Ooze", loc: "Realm of Beasts", status: "Active", img: "img/blob.webp",
+        desc: "The Blob is a coagulation of cosmic energy and the remains of dead Gods and Titans. It drifts across the damp underground of the Realm of Beasts."
+    },
+    { name: "Grolantor", type: "Titan", subrace: "Giant", loc: "Jotunheim", status: "Active", img: "img/grolantor.webp",
+        desc: "Grolantor is often mistaken for a hill, and sometimes people erect standing stones, a village, or a city on a scion's back, unaware of the mighty power beneath them. Such settlements can thrive for centuries, as the scion's magic causes crops to flourish and livestock to thrive in the surrounding region."
+    },
+    { name: "Daemogoth", type: "Titan", subrace: "Fiend", loc: "Any / All", status: "Active", img: "img/daemogoth.webp",
+        desc: "Daemogoth titans are towering monsters that blight the land around them. A daemogoth grows in power over the course of decades spent feeding on sorrow and draining life from nature. Eventually that growth turns the daemogoth into a titan."
+    },
+    { name: "Emrakul", type: "Titan", subrace: "Monstrosity", loc: "Realm of Beasts", status: "Active", img: "img/emrakul.webp",
+        desc: "A massive monstrosity the size of town. It is shaped like a floating disc, with hundreds of tentacles stemming from the nucleus of the disk. Before Soniya, the natives of the Realm named Emrakul "+'"The Promised End."'
+    },
+    { name: "Tiamat", type: "Titan", subrace: "Dragon", loc: "Aerialis", status: "Active", img: "img/tiamat.webp",
+        desc: "The five-headed progenitor of chromatic dragons, Tiamat embodies the vices of evil dragons."
+    },
+    { name: "Bahamut", type: "Titan", subrace: "Dragon", loc: "Aerialis", status: "Active", img: "img/bahamut.webp",
+        desc: "Known as the Platinum Dragon, Bahamut is the patron and progenitor of metallic dragons."
+    },
+    { name: "Archaic", type: "Titan", subrace: "Celestial", loc: "Any / All", status: "Active", img: "img/archaic.webp",
+        desc: "Archaics are towering, multi-armed creatures overflowing with magic. Despite their solitude, archaics carry vast understanding of magic and the world's history, as well as the ability to warp the fabric of the world around them."
+    },
+    { name: "Tyrant Shadow", type: "Aberration", subrace: "Dinosaur", loc: "Astral Sea", status: "Active", img: "img/tyrant_shadow.jpg",
+        desc: "Raw negative emotion can be personified in the darkest islands of the Astral Sea. Congealing into a shape that knows only hunger and the need to hunt. It stalks those filled with fears and insecurities that they refuse to acknowledge."
+    },
+];
+
+// DOM Elements
+const bestiaryBtn = document.getElementById('bestiary-btn');
+const characterContainer = document.getElementById('character-container');
+const bestiaryContainer = document.getElementById('bestiary-container');
+const beastSearch = document.getElementById('search-beast');
+const beastType = document.getElementById('type');
+const beastLocation = document.getElementById('beast-location');
+const beastSort = document.getElementById('sort-beast');
+const beastReset = document.getElementById('reset-beast');
+const beastList = document.getElementById('bestiary-list');
+const beastResultsCount = document.getElementById('results-count-beast');
+const beastTableHeaders = document.querySelectorAll('#bestiary-container th[data-sort]');
+// MODAL Elements
+const beastModal = document.getElementById('bestiary-modal');
+const closeBeastModalBtn = document.getElementById('close-bmodal');
+const beastModalName = document.getElementById('modal-beast-name');
+const beastModalLocation = document.getElementById('bmodal-location');
+const beastModalRace = document.getElementById('bmodal-race');
+const beastModalSubRace = document.getElementById('bmodal-subRace');
+const beastModalStatus = document.getElementById('bmodal-status');
+const beastModalDesc = document.getElementById('bmodal-description');
+
+beastSearch.addEventListener('input', filterBeasts);
+beastType.addEventListener('change', filterBeasts);
+beastLocation.addEventListener('change', filterBeasts);
+beastSort.addEventListener('change', filterBeasts);
+beastReset.addEventListener('click', resetBeastFilters);
+
+// Close modal when clicking outside content
+beastModal.addEventListener('click', (e) => {
+    if (e.target === beastModal) {
+        closeModal();
+    }
+});
+
+// Close modal with button
+closeBeastModalBtn.addEventListener('click', closeModal);
+
+beastTableHeaders.forEach(header => {
+    header.addEventListener('click', () => {
+        const sortField = header.getAttribute('data-sort');
+        sortBeastsByField(sortField);
+    });
+});
+
+bestiaryBtn.addEventListener('click', () => {
+    const isBestiaryOpen = bestiaryContainer.style.display === 'block';
+    bestiaryContainer.style.display = isBestiaryOpen ? 'none' : 'block';
+    characterContainer.style.display = isBestiaryOpen ? 'block' : 'none';
+    bestiaryBtn.textContent = isBestiaryOpen ? 'Open Bestiary' : 'Back to Characters';
+    if (!isBestiaryOpen) filterBeasts();
+});
+
+function resetBeastFilters() {
+    beastSearch.value = '';
+    beastType.value = '';
+    beastLocation.value = '';
+    beastSort.value = 'name-asc';
+    filterBeasts();
+}
+
+function filterBeasts() {
+    const searchTerm = beastSearch.value.toLowerCase();
+    const typeVal = beastType.value;
+    const locVal = beastLocation.value;
+    const sortVal = beastSort.value;
+
+    let filtered = BESTIARY_DB.filter(b => {
+        const matchSearch = b.name.toLowerCase().includes(searchTerm) ||
+                            b.type.toLowerCase().includes(searchTerm) ||
+                            b.location.toLowerCase().includes(searchTerm)
+        const matchType = typeVal ? b.type === typeVal : true;
+        const matchLoc = locVal ? b.location === locVal : true;
+        return matchSearch && matchType && matchLoc;
+    });
+
+    sortBeastsFromValue(filtered, sortVal);
+    renderBeasts(filtered);
+}
+
+function sortBeastsFromValue(data, sortVal) {
+    const [field, direction] = sortVal.split('-');
+    data.sort((a, b) => {
+        let valA = a[field]?.toLowerCase() || '';
+        let valB = b[field]?.toLowerCase() || '';
+        return direction === 'desc' ? valB.localeCompare(valA) : valA.localeCompare(valB);
+    });
+}
+
+function sortBeastsByField(field) {
+    const [currentField, currentDir] = beastSort.value.split('-');
+    const newDir = (field === currentField && currentDir === 'asc') ? 'desc' : 'asc';
+    beastSort.value = `${field}-${newDir}`;
+    filterBeasts();
+}
+
+function renderBeasts(beasts) {
+    beastList.innerHTML = '';
+    if (beasts.length === 0) {
+        beastList.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 30px;">No beasts found.</td></tr>';
+        beastResultsCount.textContent = '0';
+        return;
+    }
+
+    beasts.forEach(beast => {
+        const row = document.createElement('tr');
+        const locClass = CLASS_MAP.location[beast.loc] || 'loc-neutral';
+        const raceClass = CLASS_MAP.race[beast.type] || 'epic';
+
+        row.innerHTML = `
+            <td>${beast.name}</td>
+            <td><span class="${raceClass}">${beast.type}</span>${beast.subrace ? ` (${beast.subrace})` : ''}</td>
+            <td><span class="${locClass}">${beast.loc || "Any / All"}</span></td>
+            <td>${beast.status}</td>
+        `;
+
+        row.addEventListener('click', () => showBeastDetails(beast));
+        beastList.appendChild(row);
+    });
+
+    beastResultsCount.textContent = beasts.length;
+}
+
+function showBeastDetails(beast) {
+    beastModalName.textContent = beast.name;
+    beastModalLocation.textContent = beast.loc;
+    beastModalRace.textContent = beast.type;
+    beastModalSubRace.textContent = beast.subrace || "";
+    beastModalStatus.textContent = beast.status;
+    beastModalDesc.textContent = beast.desc || 'No description available.';
+    beastModal.style.display = 'flex';
+    modalContent.style.backgroundImage = `url("${beast.img}")`;
 }
