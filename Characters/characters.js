@@ -279,7 +279,6 @@ const modalRace = document.getElementById('modal-race');
 const modalSubRace = document.getElementById('modal-subRace');
 const modalStatus = document.getElementById('modal-status');
 const modalDescription = document.getElementById('modal-description');
-const modalContent = document.getElementById('modal-content');
 
 // Initial render
 resetFilters();
@@ -465,7 +464,7 @@ function showCharacterDetails(character) {
 // Close modal
 function closeModal() {
     modal.style.display = 'none';
-    modalContent.style.backgroundImage = 'none';
+    bModalContent.style.backgroundImage = 'none';
     beastModal.style.display = 'none';
 }
 
@@ -587,6 +586,7 @@ const beastModalRace = document.getElementById('bmodal-race');
 const beastModalSubRace = document.getElementById('bmodal-subRace');
 const beastModalStatus = document.getElementById('bmodal-status');
 const beastModalDesc = document.getElementById('bmodal-description');
+const bModalContent = document.getElementById('bmodal-content');
 
 beastSearch.addEventListener('input', filterBeasts);
 beastType.addEventListener('change', filterBeasts);
@@ -697,5 +697,5 @@ function showBeastDetails(beast) {
     beastModalStatus.textContent = beast.status;
     beastModalDesc.textContent = beast.desc || 'No description available.';
     beastModal.style.display = 'flex';
-    modalContent.style.backgroundImage = `url("${beast.img}")`;
+    bModalContent.style.backgroundImage = `url("${beast.img}")`;
 }
