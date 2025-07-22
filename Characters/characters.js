@@ -209,7 +209,27 @@ const CHARACTER_DB = [
         name: "Gabriel Capulet", loc: "Endless City", faction: "Trapped", affiliation: "Chiraq", race: "Nephilim", subrace: "None", status: "Active",
         desc: "A Half-Angel who believes the Endless City is the corpse of a deceased God. " +
             "He believes that with enough prayer towards the City, or prayer directed towards the Stalkers, they can get free."
-    }
+    },
+    {
+        name:"Saam Husain", loc:"Astral Sea", faction:"Neo-Neprad", affiliation:"Voices", race:"Human", status:"Active",
+        desc: "A Voice elected with a high approval rating. He is an incredibly proud nationalist. He spreads a lot of propaganda against the other Realms and Gods."
+    },
+    {
+        name:"James Stellan", loc:"Astral Sea", faction:"Neo-Neprad", affiliation:"Lantern", race:"Human", status:"Active",
+        desc: "A Lantern chosen by Sylvar for his revolutionary ideas about job creation and society. He assists Saam with his research on the Realms for propaganda."
+    },
+    {
+        name:"Adolphous Gitler", loc:"Astral Sea", faction:"Neo-Neprad", affiliation:"Voices", race:"Human", status:"Active",
+        desc: "An incredibly proud nationalist with a high approval rating. He is the main proponent for a Neo-Neprad first, who cares about anyone else, mentality."
+    },
+    {
+        name:"Usamu Ben HLhaden", loc:"Astral Sea", faction:"Neo-Neprad", affiliation:"Voices", race:"Human", status:"Active",
+        desc: "An incredibly religious person who, despite being a Voice, supports the majority of Lantern decisions."
+    },
+    {
+        name:"Donnovan Steelarm", loc:"Astral Sea", faction:"Neo-Neprad", affiliation:"Lantern", race:"Human", status:"Active",
+        desc: "A Lantern chosen by Sylvar, who was selected for his brilliant military strategy."
+    },
 ];
 
 // Class mapping configuration
