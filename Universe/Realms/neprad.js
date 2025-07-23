@@ -530,42 +530,35 @@ function updateGun() {
         const attachment = attachmentData[category].find(a => a.name === attachmentName);
 
         if (attachment) {
-            // Enhanced damage handling
-            if (attachment.damage && attachment.damage !== "0") {
-                // Handle die count modifications
-                const diceCountMatch = attachment.damage.match(/([+-]?\d+)\s*dice?s?/i);
-                if (diceCountMatch) {
-                    const diceChange = parseInt(diceCountMatch[1]);
-                    currentDiceCount += diceChange;
-                    currentDiceCount = Math.max(1, currentDiceCount);
-                }
-                // Handle die size modifications (regex handles all cases)
+            // Damage handling
+            if (attachment.damage) {
+                const diceCountMatch = attachment.damage.match(/([+-]?\d+)\s*dice/i);
                 const dieSizeMatch = attachment.damage.match(/([+-]?\d+)\s*die\s*size/i);
-                if (dieSizeMatch) {
-                    const sizeSteps = parseInt(dieSizeMatch[1]);
-                    currentDieSize = modifyDieSize(currentDieSize, sizeSteps);
+                
+                if (diceCountMatch) currentDiceCount += parseInt(diceCountMatch[1]);
+                if (dieSizeMatch) currentDieSize = modifyDieSize(currentDieSize, parseInt(dieSizeMatch[1]));
+                
+                // Handle combined modifiers like "+1 dice -1 die size"
+                const combinedMatch = attachment.damage.match(/\+(\d+)\s*dice\s*-\s*(\d+)\s*die\s*size/i);
+                if (combinedMatch) {
+                    currentDiceCount += parseInt(combinedMatch[1]);
+                    currentDieSize = modifyDieSize(currentDieSize, -parseInt(combinedMatch[2]));
                 }
             }
-
+            // Range handling
             if (attachment.range && attachment.range.includes('%')) {
-                const mods = attachment.range.split('/');
-                const baseParts = range.split('/');
+                const rangeParts = range.split('/');
+                const modParts = attachment.range.split('/');
                 
-                const newValues = [];
-                for (let i = 0; i < 3; i++) {
-                    const baseVal = i < baseParts.length ? Number(baseParts[i]) : 0;
-                    let modified = baseVal;
-                    if (i < mods.length) {
-                        const mod = mods[i];
-                        const match = mod.match(/([+-]?\d+)%/);
-                        if (match) {
-                            const percent = parseInt(match[1]);
-                            modified = Math.round(baseVal * (1 + percent / 100));
-                        }
-                    }
-                    newValues.push(modified);
-                }
-                range = newValues.join('/');
+                range = rangeParts.map((part, i) => {
+                    const baseVal = parseInt(part);
+                    const mod = modParts[i] || modParts[0];
+                    const percentMatch = mod.match(/([+-]?\d+)%/);
+                    
+                    return percentMatch 
+                        ? Math.round(baseVal * (1 + parseInt(percentMatch[1])/100))
+                        : baseVal;
+                }).join('/');
             }
             else if (attachment.range) {
                 if (attachment.range.startsWith("+") || attachment.range.startsWith("-")) {
