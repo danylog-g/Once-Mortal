@@ -1168,7 +1168,7 @@ const cyberneticsData = {
             effects: [
                 "Advantage on Stealth checks",
                 "Can change skin color and texture",
-                "AC increased by =1"
+                "AC increased by +1"
             ]
         },
         {
