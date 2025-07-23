@@ -725,6 +725,97 @@ function highlightChanges(oldStats, newStats) {
     }
 }
 
+// Function to generate a random gun build
+function generateRandomGun() {
+    // Random weapon category
+    const categories = ['pistols', 'rifles', 'shotguns', 'snipers', 'lmgs', 'atws'];
+    const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+
+    // Random weapon from category
+    const weapons = weaponData[randomCategory];
+    const randomWeapon = weapons[Math.floor(Math.random() * weapons.length)];
+
+    // Update weapon configuration
+    currentConfig.weapon = {
+        category: randomCategory,
+        selection: randomWeapon.name
+    };
+
+    // Add change
+    addChange(`Random weapon: ${randomWeapon.name}`);
+
+    // Random attachments for each category
+    const attachmentTypes = Object.keys(attachmentData);
+    attachmentTypes.forEach(type => {
+        const attachments = attachmentData[type];
+        const randomAttachment = attachments[Math.floor(Math.random() * attachments.length)];
+        currentConfig.attachments[type] = randomAttachment.name;
+        addChange(`Random ${type}: ${randomAttachment.name}`);
+    });
+
+    // Refresh UI
+    weaponCategorySelect.value = randomCategory;
+    loadWeaponOptions(randomCategory);
+    loadAttachmentOptions(attachmentCategorySelect.value);
+    updateGun();
+}
+
+// Function to export gun config as a json file
+function exportGun() {
+    const data = JSON.stringify(currentConfig);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'gun-config.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    addChange("Gun configuration exported");
+}
+
+// Function to import gun config from a json file
+function importGun() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    
+    input.onchange = e => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = event => {
+            try {
+                const newConfig = JSON.parse(event.target.result);
+                
+                // Validate the imported config
+                if (newConfig.weapon && newConfig.attachments) {
+                    currentConfig = newConfig;
+                    
+                    // Update UI
+                    weaponCategorySelect.value = currentConfig.weapon.category;
+                    loadWeaponOptions(currentConfig.weapon.category);
+                    loadAttachmentOptions(attachmentCategorySelect.value);
+                    updateGun();
+                    
+                    addChange("Gun configuration imported");
+                } else {
+                    alert("Invalid gun configuration file");
+                }
+            } catch (error) {
+                alert("Error parsing file: " + error.message);
+            }
+        };
+        
+        reader.readAsText(file);
+    };
+    
+    input.click();
+}
+
 // Cybernetics Data
 const cyberneticsData = {
     neural: [
@@ -1077,7 +1168,7 @@ const cyberneticsData = {
             effects: [
                 "Advantage on Stealth checks",
                 "Can change skin color and texture",
-                "+1 to AC"
+                "AC increased by =1"
             ]
         },
         {
@@ -1108,7 +1199,7 @@ const cyberneticsData = {
             capacity: 3,
             humanity: 11,
             effects: [
-                "+1 AC",
+                "AC increased by +1",
                 "When hit by a melee attack, you can retaliate with 1d6 lightning damage",
                 "Resistance to critical hits"
             ]
@@ -1222,6 +1313,7 @@ let installedCybernetics = [];
 let maxCapacity = 18;
 let currentCapacity = 0;
 let humanityLoss = 0;
+let humanityMax = 100;
 
 // DOM Elements
 const cyberCategories = document.querySelectorAll('.cyber-category');
@@ -1437,97 +1529,6 @@ function updateEffectsSummary() {
 
         effectsSummary.appendChild(effectItem);
     }
-}
-
-// Function to generate a random gun build
-function generateRandomGun() {
-    // Random weapon category
-    const categories = ['pistols', 'rifles', 'shotguns', 'snipers', 'lmgs', 'atws'];
-    const randomCategory = categories[Math.floor(Math.random() * categories.length)];
-
-    // Random weapon from category
-    const weapons = weaponData[randomCategory];
-    const randomWeapon = weapons[Math.floor(Math.random() * weapons.length)];
-
-    // Update weapon configuration
-    currentConfig.weapon = {
-        category: randomCategory,
-        selection: randomWeapon.name
-    };
-
-    // Add change
-    addChange(`Random weapon: ${randomWeapon.name}`);
-
-    // Random attachments for each category
-    const attachmentTypes = Object.keys(attachmentData);
-    attachmentTypes.forEach(type => {
-        const attachments = attachmentData[type];
-        const randomAttachment = attachments[Math.floor(Math.random() * attachments.length)];
-        currentConfig.attachments[type] = randomAttachment.name;
-        addChange(`Random ${type}: ${randomAttachment.name}`);
-    });
-
-    // Refresh UI
-    weaponCategorySelect.value = randomCategory;
-    loadWeaponOptions(randomCategory);
-    loadAttachmentOptions(attachmentCategorySelect.value);
-    updateGun();
-}
-
-// Function to export gun config as a json file
-function exportGun() {
-    const data = JSON.stringify(currentConfig);
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'gun-config.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    
-    addChange("Gun configuration exported");
-}
-
-// Function to import gun config from a json file
-function importGun() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
-    
-    input.onchange = e => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        
-        reader.onload = event => {
-            try {
-                const newConfig = JSON.parse(event.target.result);
-                
-                // Validate the imported config
-                if (newConfig.weapon && newConfig.attachments) {
-                    currentConfig = newConfig;
-                    
-                    // Update UI
-                    weaponCategorySelect.value = currentConfig.weapon.category;
-                    loadWeaponOptions(currentConfig.weapon.category);
-                    loadAttachmentOptions(attachmentCategorySelect.value);
-                    updateGun();
-                    
-                    addChange("Gun configuration imported");
-                } else {
-                    alert("Invalid gun configuration file");
-                }
-            } catch (error) {
-                alert("Error parsing file: " + error.message);
-            }
-        };
-        
-        reader.readAsText(file);
-    };
-    
-    input.click();
 }
 
 // Function to generate random cybernetics build
