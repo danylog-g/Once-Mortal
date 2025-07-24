@@ -1313,7 +1313,6 @@ let installedCybernetics = [];
 let maxCapacity = 18;
 let currentCapacity = 0;
 let humanityLoss = 0;
-let humanityMax = 100;
 
 // DOM Elements
 const cyberCategories = document.querySelectorAll('.cyber-category');
@@ -1352,23 +1351,29 @@ function loadCyberneticsOptions(category) {
     const cybernetics = cyberneticsData[category] || [];
 
     cybernetics.forEach(cyber => {
+        const isInstalled = installedCybernetics.some(c => c.name === cyber.name);
+        
         const option = document.createElement('div');
-        option.className = 'cyber-option';
-        option.dataset.name = cyber.name; // id -> name
+        option.className = `cyber-option ${isInstalled ? 'installed' : ''}`;
+        option.dataset.name = cyber.name;
 
         option.innerHTML = `
-                    <h4>${cyber.name}</h4>
-                    <div class="cost">${cyber.cost} ₵ | Capacity: ${cyber.capacity}</div>
-                    <div class="cyber-effects">
-                        <ul>
-                            ${cyber.effects.map(effect => `<li>${effect}</li>`).join('')}
-                        </ul>
-                    </div>
-                `;
+            <h4>${cyber.name}</h4>
+            <div class="cost">${cyber.cost} ₵ | Capacity: ${cyber.capacity} | Humanity: ${cyber.humanity}%</div>
+            <div class="cyber-effects">
+                <ul>
+                    ${cyber.effects.map(effect => `<li>${effect}</li>`).join('')}
+                </ul>
+            </div>
+        `;
 
-        option.addEventListener('click', function () {
-            installCybernetics(cyber);
-        });
+        if (!isInstalled) {
+            option.addEventListener('click', function() {
+                installCybernetics(cyber);
+            });
+        } else {
+            option.classList.add('disabled');
+        }
 
         cyberOptions.appendChild(option);
     });
@@ -1376,9 +1381,19 @@ function loadCyberneticsOptions(category) {
 
 // Install cybernetics
 function installCybernetics(cyber) {
+    // Check if already installed
+    if (installedCybernetics.some(c => c.name === cyber.name)) {
+        alert(`${cyber.name} is already installed.`);
+        return;
+    }
     // Check capacity
     if (currentCapacity + cyber.capacity > maxCapacity) {
         alert(`Not enough cybernetics capacity! You need ${cyber.capacity} but only have ${maxCapacity - currentCapacity} available.`);
+        return;
+    }
+    // Check Humanity
+    if (humanityLoss + cyber.humanity > 100) {
+        alert(`Not enough humanity to spare! You are basically a Cyborg already.`);
         return;
     }
 
@@ -1393,6 +1408,12 @@ function installCybernetics(cyber) {
     updateCyberneticsList();
     updateEffectsSummary();
     updateCapacityDisplay();
+    
+    // Reload options to update installed status
+    const activeCategory = document.querySelector('.cyber-category.active');
+    if (activeCategory) {
+        loadCyberneticsOptions(activeCategory.dataset.category);
+    }
 }
 
 // Update the installed cybernetics list
@@ -1411,31 +1432,31 @@ function updateCyberneticsList() {
         // Find category for this cybernetic
         let category = '';
         for (const [cat, cyberArray] of Object.entries(cyberneticsData)) {
-            if (cyberArray.find(c => c.name === cyber.name)) { // id -> name
+            if (cyberArray.find(c => c.name === cyber.name)) {
                 category = cat.charAt(0).toUpperCase() + cat.slice(1);
                 break;
             }
         }
 
         item.innerHTML = `
-                    <div class="cyber-item-header">
-                        <div class="cyber-name">${cyber.name}</div>
-                        <div class="cyber-category-label">${category}</div>
-                    </div>
-                    <div class="cyber-effects">
-                        <ul>
-                            ${cyber.effects.map(effect => `<li>${effect}</li>`).join('')}
-                        </ul>
-                    </div>
-                    <button class="cyber-button remove-button" data-index="${index}">Remove</button>
-                `;
+            <div class="cyber-item-header">
+                <div class="cyber-name">${cyber.name}</div>
+                <div class="cyber-category-label">${category}</div>
+            </div>
+            <div class="cyber-effects">
+                <ul>
+                    ${cyber.effects.map(effect => `<li>${effect}</li>`).join('')}
+                </ul>
+            </div>
+            <button class="cyber-button remove-button" data-index="${index}">Remove</button>
+        `;
 
         cyberneticsList.appendChild(item);
     });
 
     // Add event listeners to remove buttons
     document.querySelectorAll('.remove-button').forEach(button => {
-        button.addEventListener('click', function () {
+        button.addEventListener('click', function() {
             const index = parseInt(this.dataset.index);
             removeCybernetics(index);
         });
@@ -1457,6 +1478,12 @@ function removeCybernetics(index) {
     updateCyberneticsList();
     updateEffectsSummary();
     updateCapacityDisplay();
+    
+    // Reload options to update installed status
+    const activeCategory = document.querySelector('.cyber-category.active');
+    if (activeCategory) {
+        loadCyberneticsOptions(activeCategory.dataset.category);
+    }
 }
 
 // Update capacity display
@@ -1476,59 +1503,51 @@ function updateEffectsSummary() {
     effectsSummary.innerHTML = '';
     effectsToKeep.forEach(effect => effectsSummary.appendChild(effect));
 
-    // Create a map to group effects by type
-    const effectGroups = {};
+    // Create a map to aggregate effects
+    const effectMap = new Map();
 
     // Collect all effects from installed cybernetics
     installedCybernetics.forEach(cyber => {
         cyber.effects.forEach(effect => {
-            // Extract effect type (first few words before a colon or verb)
-            let effectType = effect.split(':')[0] || effect;
-            effectType = effectType.split(' ')[0] + ' ' + effectType.split(' ')[1];
-
-            // Special handling for common effect types
-            if (effect.includes('AC')) effectType = 'AC';
-            if (effect.includes('damage')) effectType = 'Damage Resistance';
-            if (effect.includes('Advantage') || effect.includes('disadvantage')) effectType = 'Advantage';
-            if (effect.includes('saving throw')) effectType = 'Saving Throws';
-
-            // Initialize group if needed
-            if (!effectGroups[effectType]) {
-                effectGroups[effectType] = [];
+            // Try to parse numeric values
+            const numericMatch = effect.match(/([+-]\d+)/);
+            let value = 0;
+            let description = effect;
+            
+            if (numericMatch) {
+                value = parseInt(numericMatch[1]);
+                description = effect.replace(numericMatch[0], '').trim();
             }
-
-            // Add effect to group
-            effectGroups[effectType].push(effect);
+            
+            // Initialize group if needed
+            if (!effectMap.has(description)) {
+                effectMap.set(description, { total: value, sources: [cyber.name] });
+            } else {
+                const existing = effectMap.get(description);
+                existing.total += value;
+                existing.sources.push(cyber.name);
+            }
         });
     });
 
-    // Create summary items for each effect group
-    for (const [groupName, effects] of Object.entries(effectGroups)) {
+    // Create summary items for each effect
+    effectMap.forEach((data, description) => {
         const effectItem = document.createElement('div');
         effectItem.className = 'effect-item';
-
-        // For single effect, show it directly
-        if (effects.length === 1) {
-            effectItem.innerHTML = `
-                        <span class="effect-name">${groupName}:</span>
-                        <span class="effect-value">${effects[0].replace(/^.*?:/, '')}</span>
-                    `;
+        
+        let displayValue = '';
+        if (data.total !== 0) {
+            displayValue = data.total > 0 ? `+${data.total}` : data.total;
         }
-        // For multiple effects in same group, show as list
-        else {
-            const uniqueEffects = [...new Set(effects)]; // Remove duplicates
-            effectItem.innerHTML = `
-                        <span class="effect-name">${groupName}:</span>
-                        <ul class="effect-list">
-                            ${uniqueEffects.map(effect =>
-                `<li>${effect.replace(/^.*?:/, '')}</li>`
-            ).join('')}
-                        </ul>
-                    `;
-        }
-
+        
+        effectItem.innerHTML = `
+            <span class="effect-name">${description}:</span>
+            <span class="effect-value">${displayValue}</span>
+            <div class="effect-sources">From: ${data.sources.join(', ')}</div>
+        `;
+        
         effectsSummary.appendChild(effectItem);
-    }
+    });
 }
 
 // Function to generate random cybernetics build
