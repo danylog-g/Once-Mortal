@@ -836,8 +836,8 @@ function importGun() {
 }
 
 // Function to save gun configuration
-function saveGun() {
-    const name = prompt("Enter a name for this gun configuration:");
+function saveGun(share = false) {
+    const name = prompt(`Enter a name for this ${share ? 'shared' : ''} gun configuration:`);
     if (!name) return;
     
     // Compute stats directly
@@ -966,17 +966,25 @@ function saveGun() {
         volume: getVolumeDescription(decibels)
     };
     
-    const savedGuns = JSON.parse(localStorage.getItem('savedGuns') || '[]');
+    const savedData = JSON.parse(localStorage.getItem('savedData') || '{"private":[],"shared":[]}');
     
-    savedGuns.push({
+    const build = {
+        type: 'gun',
         name,
         timestamp: new Date().toISOString(),
         config: currentConfig,
-        stats: stats
-    });
+        stats: stats,
+        shared: share
+    };
     
-    localStorage.setItem('savedGuns', JSON.stringify(savedGuns));
-    addChange(`Gun configuration saved as "${name}"`);
+    if (share) {
+        savedData.shared.push(build);
+    } else {
+        savedData.private.push(build);
+    }
+    
+    localStorage.setItem('savedData', JSON.stringify(savedData));
+    addChange(`Gun configuration ${share ? 'shared' : 'saved'} as "${name}"`);
 }
 
 // Cybernetics Data
@@ -1826,8 +1834,8 @@ function importCybernetics() {
 }
 
 // Function to save cybernetics configuration
-function saveCybernetics() {
-    const name = prompt("Enter a name for this cybernetics configuration:");
+function saveCybernetics(share = false) {
+    const name = prompt(`Enter a name for this ${share ? 'shared' : ''} cybernetics configuration:`);
     if (!name) return;
     
     // Always ensure effects array exists
@@ -1869,9 +1877,10 @@ function saveCybernetics() {
         effectSummaries.push(`${description}: ${displayValue}`);
     });
     
-    const savedCybernetics = JSON.parse(localStorage.getItem('savedCybernetics') || '[]');
+    const savedData = JSON.parse(localStorage.getItem('savedData') || '{"private":[],"shared":[]}');
     
-    savedCybernetics.push({
+    const build = {
+        type: 'cybernetics',
         name,
         timestamp: new Date().toISOString(),
         config: {
@@ -1879,12 +1888,19 @@ function saveCybernetics() {
             currentCapacity,
             humanityLoss
         },
-        installedCybernetics: installedCybernetics,  // Store full objects
-        effects: effectSummaries
-    });
+        installedCybernetics: installedCybernetics,
+        effects: effectSummaries,
+        shared: share
+    };
     
-    localStorage.setItem('savedCybernetics', JSON.stringify(savedCybernetics));
-    addChange(`Cybernetics configuration saved as "${name}"`);
+    if (share) {
+        savedData.shared.push(build);
+    } else {
+        savedData.private.push(build);
+    }
+    
+    localStorage.setItem('savedData', JSON.stringify(savedData));
+    addChange(`Cybernetics configuration ${share ? 'shared' : 'saved'} as "${name}"`);
 }
 
 // Initialize the builder
