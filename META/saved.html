@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Configurations</title>
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    <style>
+        .tabs { display: flex; margin-bottom: 20px; }
+        .tab-button { 
+            padding: 10px 20px; 
+            background: #2c2c54; 
+            border: none; 
+            color: white; 
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        .tab-button.active { background: #474787; }
+        .tab-content { display: none; color:#aaaaaa; }
+        .tab-content.active { display: block; }
+        .saved-item { 
+            background: #1e1e2e; 
+            padding: 15px; 
+            margin-bottom: 10px; 
+            border-radius: 5px;
+        }
+        .details-container { 
+            margin-top: 15px; 
+            padding: 15px; 
+            background: #2d2d44; 
+            border-radius: 5px;
+            display: none;
+        }
+        .details-container.active { display: block; }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .stat-item {
+            background: #3a3a5a;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        .attachment-item {
+            padding: 8px;
+            margin-bottom: 8px;
+            background: #3a3a5a;
+            border-radius: 4px;
+        }
+        .cyber-item {
+            padding: 8px;
+            margin-bottom: 8px;
+            background: #3a3a5a;
+            border-radius: 4px;
+        }
+        .toggle-details {
+            background: #474787;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .delete-button { 
+            background: #ff5252; 
+            border: none; 
+            color: white; 
+            padding: 5px 10px; 
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="../Universe/Realms/neprad.html" class="logo">Neo-Neprad</a>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="dashboard-title">
+            <h1>Saved Configurations</h1>
+            <p>Manage your saved gun and cybernetics builds</p>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab-button active" data-tab="guns">Saved Guns</button>
+            <button class="tab-button" data-tab="cybernetics">Saved Cybernetics</button>
+        </div>
+        
+        <div id="guns-list" class="tab-content active">
+            <!-- Saved guns will appear here -->
+        </div>
+        
+        <div id="cybernetics-list" class="tab-content">
+            <!-- Saved cybernetics will appear here -->
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2025 Once Mortal | Saved Characters | Danylo Gula </p>
+    </footer>
+    
+    <script src="saved.js"></script>
+</body>
+</html>

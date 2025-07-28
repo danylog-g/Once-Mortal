@@ -238,51 +238,69 @@ const attachmentData = {
         { name: "RC-Su Premium", damage: "-1 die size", decibels: "-40", weight: 1 },
         { name: "RC-Su Tactical", damage: "0", decibels: "-35", weight: 1 },
         { name: "RC-Su Spec-Ops", damage: "0", decibels: "-60", weight: 2 },
+        { name: "RC-Su Loudencer", damage: "+1 die size", decibels:"+40", weight:1 },
     ],
     frame: [
         { name: "RC-F Standard", weight: 0, accuracy: 0 },
-        { name: "RC-F Light", weight: -0.5, accuracy: -1 },
+        { name: "RC-F Light", weight: -1, accuracy: -1 },
         { name: "RC-F Heavy", weight: 2.5, accuracy: 3 },
-        { name: "RC-F Alloy", weight: 1.6, accuracy: 1 },
+        { name: "RC-F Alloy", weight: 1.6, accuracy: 2 },
         { name: "RC-F Tungsten", weight: 8, accuracy: 4 },
-        { name: "RC-F Spec-Ops", weight: 1.4, accuracy: 2 },
+        { name: "RC-F Spec-Ops", weight: 0.7, accuracy: 1 },
     ],
     stock: [
         { name: "No Stock", weight: 0, accuracy: 0 },
         { name: "RC-St Collapsible", weight: 1.0, accuracy: 1 },
         { name: "RC-St Tactical", weight: 1.5, accuracy: 2 },
-        { name: "RC-St Heavy", weight: 5, accuracy: 4 },
-        { name: "RC-St Spec-Ops", weight: 3.5, accuracy: 3 },
+        { name: "RC-St Heavy", range: "+10/+20%/+20%", weight: 5, accuracy: 4 },
+        { name: "RC-St Spec-Ops", range: "+10/+10%/+10%", weight: 3.5, accuracy: 3 },
     ],
     grip: [
         { name: "No Grip", weight: 0, accuracy: 0 },
         { name: "RC-G Collapsible", weight: 1.0, accuracy: 1 },
         { name: "RC-G Tactical", weight: 1.5, accuracy: 2 },
-        { name: "RC-G Heavy", weight: 5, accuracy: 4 },
-        { name: "RC-G Spec-Ops", weight: 3.5, accuracy: 3 },
+        { name: "RC-G Heavy", range: "+10/+20%/+20%", weight: 5, accuracy: 4 },
+        { name: "RC-G Spec-Ops", range: "+10/+10%/+10%", weight: 3.5, accuracy: 3 },
     ],
     barrel: [
-        { name: "Standard Barrel", damage: "0", range: "0", decibels: "0", weight: 0 },
-        { name: "RC-B Standard", damage: "0", range: "+10/20/40", decibels: "0", weight: 0.2 },
-        { name: "RC-B Heavy", damage: "+1 die size", range: "+20/40/80", decibels: "-10", weight: 0.35 },
-        { name: "RC-B Light", damage: "0", range: "0", decibels: "-20", weight: 0.05 },
+        { name: "RC-B Standard", damage: "0", range: "0", decibels: "0", weight: 0 },
+        { name: "RC-B Light", damage: "0", range: "0", decibels: "-10", weight: -0.25 },
+        { name: "RC-B Heavy", damage: "+1 die size", range: "+20/40/80", decibels: "-10", weight: 0.25 },
+        { name: "RC-B Alloy", damage: "0", range: "+20/40/80", decibels: "0", weight: -0.05 },
+        { name: "RC-B Tungsten", damage: "+1 die size", range: "+20/40/80", decibels: "-20", weight: 3 },
+        { name: "RC-B Spec-Ops", damage: "0", range: "0", decibels: "-20", weight: -0.05 },
     ],
     magazine: [
-        { name: "Standard Mag", ammo: "0", damage: "0", weight: 0 },
-        { name: "RC-M Standard", ammo: "+25%", damage: "0", weight: 0.2 },
+        { name: "RC-M Standard", ammo: "0", damage: "0", weight: 0 },
+        { name: "RC-M Common", ammo: "+25%", damage: "0", weight: 0.2 },
         { name: "RC-M Tactical", ammo: "+50%", damage: "0", weight: 0.4 },
-        { name: "RC-M Spec-Ops", ammo: "+100%", damage: "0", weight: 0.6 },
-        { name: "RC-M Drum", ammo: "+200%", damage: "0", weight: 1.8 },
-        { name: "RC-M FeedStrip", ammo: "0", damage: "+1 dice", weight: 1.13 },
-        { name: "RC-M Chain", ammo: "0", damage: "+2 dice", weight: 2.05 },
-        { name: "RC-M Belt", ammo: "0", damage: "+3 dice", weight: 3.1 },
+        { name: "RC-M Spec-Ops", ammo: "+100%", damage: "0", weight: 0.8 },
+        { name: "RC-M Drum", ammo: "+200%", damage: "0", weight: 2 },
+        { name: "RC-Ab Feed Strip", ammo: "0", damage: "+1 dice", weight: 1.13 },
+        { name: "RC-Ab Chain", ammo: "0", damage: "+2 dice", weight: 2.05 },
+        { name: "RC-Ab Belt", ammo: "0", damage: "+3 dice", weight: 3.1 },
+        { name: "RC-Ab A-Strip", ammo: "+25%", damage: "+1 dice", weight: 1.35 },
+        { name: "RC-Ab D-Strip", ammo: "+50%", damage: "+1 dice", weight: 3.1 },
+        { name: "RC-Ab D-Belt", ammo: "+25%", damage: "+3 dice", weight: 6.3 },
     ],
     scope: [
-        { name: "No Scope", range: "0", weight: 0, accuracy: 0 },
-        { name: "RC-Sc Standard", range: "+5%/+5%/+5%", weight: 0.75, accuracy: 1 },
-        { name: "RC-Sc Halo", range: "0/+100%/50%", weight: 1.4, accuracy: 2 },
-        { name: "RC-Sc Predator", range: "-25%/-30%/-50%", weight: 1.1, accuracy: 4 },
-        { name: "RC-Sc Spec-Ops", range: "+15%/+50%/+25%", weight: 1.9, accuracy: 3 },
+        { name: "RC-Sc Standard", range: "0", weight: 0, accuracy: 0 },
+        { name: "RC-Sc Premium", range: "+5%/+10%/+5%", weight: 0.75, accuracy: 1 },
+        { name: "RC-Sc Halo", range: "0/+100%/+50%", weight: 1.4, accuracy: 0 },
+        { name: "RC-Sc Predator", range: "-25%/-50%/-75%", weight: 1.1, accuracy: 4 },
+        { name: "RC-Sc S-Tactical", range: "0/+25%/+50%", weight: 0.6, accuracy: 1 },
+        { name: "RC-Sc FR-Tactical", range: "0/+50%/+25%", weight: 0.6, accuracy: 2 },
+        { name: "RC-Sc S-Spec-Ops", range: "+15%/+50%/+25%", weight: 1, accuracy: 2 },
+        { name: "RC-Sc FR-Spec-Ops", range: "-20%/-10%/-10%", weight: 1, accuracy: 3 },
+        { name: "RC-Sc Thermal", range: "0", weight: 1, accuracy: 0 },
+        { name: "RC-Sc T-Thermal", range: "+5%/+10%/+5%", weight: 1.5, accuracy: 0 },
+        { name: "RC-Sc S-Thermal", range: "+15%/+30%/+15%", weight: 1.4, accuracy: 0 },
+    ],
+    sight: [
+        { name: "No Sight", accuracy: 0, range: "0", damage: "0", decibels: 0, weight: 0 },
+        { name: "RC-Si Laser", accuracy: 1, range: "-10%/+10%", damage: "0", decibels: 0, weight: 0.2 },
+        { name: "RC-Si Int-Laser", accuracy: 1, range: "-10%/0", damage: "0", decibels: 0, weight: 0.1 },
+        { name: "RC-Si Predator", accuracy: 2, range: "-5%/-30%", damage: "+1 dice", decibels: 0, weight: 0.33 },
     ],
     bullet: [
         { name: "RC-B Standard", ammo: "0", range: "0", damage: "0", decibels: 0, weight: 0, type: "Piercing" },
@@ -303,20 +321,16 @@ const attachmentData = {
         { name: "RC-W NF", ammo: "-50%", range: "0/0/0", damage: "0", decibels: "0", weight: 3.0, type: "Necrotic" },
         { name: "RC-W NG", ammo: "-25%", range: "0/0/0", damage: "0", decibels: "-33%", weight: -2.0, type: "Poison" },
     ],
-    sight: [
-        { name: "No Sight", accuracy: 0, range: "0", damage: "0", decibels: 0, weight: 0 },
-        { name: "RC-Si Laser", accuracy: 1, range: "-10%/+10%", damage: "0", decibels: 0, weight: 0.5 },
-        { name: "RC-Si T-Laser", accuracy: 1, range: "-10%/0", damage: "0", decibels: 0, weight: 0.2 },
-        { name: "RC-Si Predator", accuracy: 2, range: "-5%/-30%", damage: "+1 dice", decibels: 0, weight: 0.75 },
-    ],
     light: [
         { name: "No Light", weight: 0 },
         { name: "RC-L Standard", weight: 0.2 },
-        { name: "RC-L 1000L", weight: 1 },
+        { name: "RC-L 1000L", weight: 0.6 },
+        { name: "RC-L A-1KL", weight: 1.2 },
+        { name: "RC-L TA-1KL", weight: 1.8 },
     ],
     switch: [
         { name: "Semi-Automatic", accuracy: 0, weight: 0 },
-        { name: "Burst-Fire", accuracy: -2, weight: -0.5 },
+        { name: "Burst Fire", accuracy: -2, weight: -0.5 },
         { name: "Fully Automatic", accuracy: -4, weight: -1 },
     ],
 };
@@ -332,9 +346,9 @@ let currentConfig = {
         frame: "RC-F Standard",
         stock: "No Stock",
         grip: "No Grip",
-        barrel: "Standard Barrel",
-        magazine: "Standard Mag",
-        scope: "No Scope",
+        barrel: "RC-B Standard",
+        magazine: "RC-M Standard",
+        scope: "RC-Sc Standard",
         bullet: "RC-B Standard",
         sight: "No Sight",
         light: "No Light",
@@ -648,18 +662,7 @@ function updateGun() {
     statWeight.textContent = `${weight.toFixed(1)} lb`;
 
     // Get volume description based on decibels
-    let volumeDesc = "Quiet";
-    if (decibels > 140) volumeDesc = "Deafening"; // Jet Engine
-    else if (decibels > 125) volumeDesc = "Very Loud";
-    else if (decibels > 120) volumeDesc = "Loud";
-    else if (decibels > 100) volumeDesc = "Noisy";
-    else if (decibels > 85) volumeDesc = "City Noise";
-    else if (decibels > 70) volumeDesc = "Normal Conversation";
-    else if (decibels > 50) volumeDesc = "Quiet Noise";
-    else if (decibels >= 25) volumeDesc = "Whispers";
-    else if (decibels < 25) volumeDesc = "Silent";
-
-    statVolume.textContent = `${decibels} dB (${volumeDesc})`;
+    statVolume.textContent = getVolumeDescription(decibels);
 
     // Highlight changes from previous stats
     if (previousStats) {
@@ -681,6 +684,22 @@ function modifyDieSize(currentSize, steps) {
     newIndex = Math.max(0, Math.min(newIndex, dieSizes.length - 1));
 
     return dieSizes[newIndex];
+}
+
+// Helper function for volume description
+function getVolumeDescription(decibels) {
+    let volumeDesc = "Quiet";
+    if (decibels > 140) volumeDesc = "Deafening";
+    else if (decibels > 125) volumeDesc = "Very Loud";
+    else if (decibels > 120) volumeDesc = "Loud";
+    else if (decibels > 100) volumeDesc = "Noisy";
+    else if (decibels > 85) volumeDesc = "City Noise";
+    else if (decibels > 70) volumeDesc = "Conversation";
+    else if (decibels > 50) volumeDesc = "Quiet Noise";
+    else if (decibels >= 25) volumeDesc = "Whispers";
+    else if (decibels < 25) volumeDesc = "Silent";
+    
+    return `${decibels} dB (${volumeDesc})`;
 }
 
 // Highlight changes in the UI
@@ -814,6 +833,150 @@ function importGun() {
     };
     
     input.click();
+}
+
+// Function to save gun configuration
+function saveGun() {
+    const name = prompt("Enter a name for this gun configuration:");
+    if (!name) return;
+    
+    // Compute stats directly
+    const weaponCat = currentConfig.weapon.category;
+    const weaponName = currentConfig.weapon.selection;
+    const weapon = weaponData[weaponCat].find(w => w.name === weaponName);
+    
+    if (!weapon) return;
+    
+    // Start with weapon stats
+    let damage = weapon.damage;
+    let range = weapon.range;
+    let ammo = weapon.ammo;
+    let weight = weapon.weight;
+    let decibels = weapon.decibels;
+    let accuracy = weapon.accuracy;
+    
+    // Parse base damage
+    let [baseDiceCount, baseDieSize] = weapon.damage.split('d').map(Number);
+    let currentDiceCount = baseDiceCount;
+    let currentDieSize = baseDieSize;
+    
+    // Apply attachments
+    Object.entries(currentConfig.attachments).forEach(([category, attachmentName]) => {
+        const attachment = attachmentData[category].find(a => a.name === attachmentName);
+        if (!attachment) return;
+        
+        // Damage handling
+        if (attachment.damage) {
+            const diceCountMatch = attachment.damage.match(/([+-]?\d+)\s*dice/i);
+            const dieSizeMatch = attachment.damage.match(/([+-]?\d+)\s*die\s*size/i);
+            
+            if (diceCountMatch) currentDiceCount += parseInt(diceCountMatch[1]);
+            if (dieSizeMatch) currentDieSize = modifyDieSize(currentDieSize, parseInt(dieSizeMatch[1]));
+            
+            const combinedMatch = attachment.damage.match(/\+(\d+)\s*dice\s*-\s*(\d+)\s*die\s*size/i);
+            if (combinedMatch) {
+                currentDiceCount += parseInt(combinedMatch[1]);
+                currentDieSize = modifyDieSize(currentDieSize, -parseInt(combinedMatch[2]));
+            }
+        }
+        
+        // Range handling
+        if (attachment.range && attachment.range.includes('%')) {
+            const rangeParts = range.split('/');
+            const modParts = attachment.range.split('/');
+            
+            range = rangeParts.map((part, i) => {
+                const baseVal = parseInt(part);
+                const mod = modParts[i] || modParts[0];
+                const percentMatch = mod.match(/([+-]?\d+)%/);
+                
+                return percentMatch 
+                    ? Math.round(baseVal * (1 + parseInt(percentMatch[1])/100))
+                    : baseVal;
+            }).join('/');
+        }
+        else if (attachment.range) {
+            if (attachment.range.startsWith("+") || attachment.range.startsWith("-")) {
+                const mods = attachment.range.split('/');
+                const baseParts = range.split('/');
+                
+                const newValues = [];
+                for (let i = 0; i < 3; i++) {
+                    const baseVal = i < baseParts.length ? Number(baseParts[i]) : 0;
+                    let change = 0;
+                    if (i < mods.length) {
+                        const num = parseInt(mods[i]);
+                        if (!isNaN(num)) {
+                            change = num;
+                        }
+                    }
+                    newValues.push(baseVal + change);
+                }
+                range = newValues.join('/');
+            }
+        }
+
+        // Other stats
+        if (attachment.ammo && attachment.ammo !== "0") {
+            if (attachment.ammo.includes('%')) {
+                const percent = parseInt(attachment.ammo);
+                if (!isNaN(percent)) {
+                    ammo = Math.round(ammo * (1 + percent / 100));
+                }
+            }
+            else {
+                const fixed = parseInt(attachment.ammo);
+                if (!isNaN(fixed)) {
+                    ammo += fixed;
+                }
+            }
+        }
+
+        if (attachment.decibels && attachment.decibels !== "0") {
+            if (attachment.decibels.includes('%')) {
+                const percent = parseInt(attachment.decibels);
+                if (!isNaN(percent)) {
+                    decibels = Math.round(decibels * (1 + percent / 100));
+                }
+            }
+            else {
+                const fixed = parseInt(attachment.decibels);
+                if (!isNaN(fixed)) {
+                    decibels += fixed;
+                }
+            }
+        }
+
+        if (attachment.weight) {
+            weight += attachment.weight;
+        }
+
+        if (attachment.accuracy) {
+            accuracy += attachment.accuracy;
+        }
+    });
+    
+    // Format stats for saving
+    const stats = {
+        damage: `${currentDiceCount}d${currentDieSize}`,
+        range: `${range} ft`,
+        ammo: `${ammo} shots`,
+        accuracy: `${accuracy >= 0 ? '+' : ''}${accuracy}`,
+        weight: `${weight.toFixed(1)} lb`,
+        volume: getVolumeDescription(decibels)
+    };
+    
+    const savedGuns = JSON.parse(localStorage.getItem('savedGuns') || '[]');
+    
+    savedGuns.push({
+        name,
+        timestamp: new Date().toISOString(),
+        config: currentConfig,
+        stats: stats
+    });
+    
+    localStorage.setItem('savedGuns', JSON.stringify(savedGuns));
+    addChange(`Gun configuration saved as "${name}"`);
 }
 
 // Cybernetics Data
@@ -1660,6 +1823,68 @@ function importCybernetics() {
     };
     
     input.click();
+}
+
+// Function to save cybernetics configuration
+function saveCybernetics() {
+    const name = prompt("Enter a name for this cybernetics configuration:");
+    if (!name) return;
+    
+    // Always ensure effects array exists
+    const effects = [];
+    installedCybernetics.forEach(cyber => {
+        if (cyber.effects && Array.isArray(cyber.effects)) {
+            effects.push(...cyber.effects);
+        }
+    });
+    
+    // Aggregate effects
+    const effectMap = new Map();
+    effects.forEach(effect => {
+        const numericMatch = effect.match(/([+-]\d+)/);
+        let value = 0;
+        let description = effect;
+        
+        if (numericMatch) {
+            value = parseInt(numericMatch[1]);
+            description = effect.replace(numericMatch[0], '').trim();
+        }
+        
+        if (!effectMap.has(description)) {
+            effectMap.set(description, { total: value, sources: [name] });
+        } else {
+            const existing = effectMap.get(description);
+            existing.total += value;
+            existing.sources.push(name);
+        }
+    });
+    
+    // Format effect summaries
+    const effectSummaries = [];
+    effectMap.forEach((data, description) => {
+        let displayValue = '';
+        if (data.total !== 0) {
+            displayValue = data.total > 0 ? `+${data.total}` : data.total;
+        }
+        effectSummaries.push(`${description}: ${displayValue}`);
+    });
+    
+    const savedCybernetics = JSON.parse(localStorage.getItem('savedCybernetics') || '[]');
+    
+    savedCybernetics.push({
+        name,
+        timestamp: new Date().toISOString(),
+        config: {
+            installed: installedCybernetics.map(c => c.name),
+            currentCapacity,
+            humanityLoss
+        },
+        installedCybernetics: installedCybernetics,  // Store full objects
+        effects: effectSummaries
+    });
+    
+    localStorage.setItem('savedCybernetics', JSON.stringify(savedCybernetics));
+    addChange(`Cybernetics configuration saved as "${name}"`);
 }
 
 // Initialize the builder
