@@ -223,7 +223,7 @@ const CHARACTER_DB = [
         desc: "An incredibly proud nationalist with a high approval rating. He is the main proponent for a Neo-Neprad first, who cares about anyone else, mentality."
     },
     {
-        name:"Usamu Ben HLhaden", loc:"Astral Sea", faction:"Neo-Neprad", affiliation:"Voices", race:"Human", status:"Active",
+        name:"Usamu Ben Hlhaden", loc:"Astral Sea", faction:"Neo-Neprad", affiliation:"Voices", race:"Human", status:"Active",
         desc: "An incredibly religious person who, despite being a Voice, supports the majority of Lantern decisions."
     },
     {
