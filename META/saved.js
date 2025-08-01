@@ -108,11 +108,17 @@ function createGunElement(gun, index, isShared) {
                 `).join('')}
             </div>
         </div>
-        ${!isShared ? `
-            <button class="delete-button" data-type="gun" data-index="${index}" data-shared="${isShared}">
-                Delete
-            </button>
-        ` : ''}
+        <div class="build-actions">
+            ${isShared ? `
+                <button class="export-button" data-type="gun" data-index="${index}" data-shared="${isShared}">
+                    Export
+                </button>
+            ` : `
+                <button class="delete-button" data-type="gun" data-index="${index}" data-shared="${isShared}">
+                    Delete
+                </button>
+            `}
+        </div>
     `;
     
     return element;
@@ -163,11 +169,17 @@ function createCyberneticsElement(cyber, index, isShared) {
                 }
             </div>
         </div>
-        ${!isShared ? `
-            <button class="delete-button" data-type="cybernetics" data-index="${index}" data-shared="${isShared}">
-                Delete
-            </button>
-        ` : ''}
+        <div class="build-actions">
+            ${isShared ? `
+                <button class="export-button" data-type="cybernetics" data-index="${index}" data-shared="${isShared}">
+                    Export
+                </button>
+            ` : `
+                <button class="delete-button" data-type="cybernetics" data-index="${index}" data-shared="${isShared}">
+                    Delete
+                </button>
+            `}
+        </div>
     `;
     
     return element;
@@ -198,6 +210,47 @@ function deleteSavedItem(index, type, isShared) {
             else loadSavedCybernetics();
         }
     }
+}
+
+// Export build function
+function exportBuild(index, type, isShared) {
+    const savedData = JSON.parse(localStorage.getItem('savedData') || '{"private":[],"shared":[]}');
+    const list = isShared ? savedData.shared : savedData.private;
+    
+    // Find the build
+    const build = list[index];
+    if (!build) return;
+    
+    // Create a clean export object
+    const exportData = {
+        type: build.type,
+        name: build.name,
+        timestamp: build.timestamp,
+        config: build.config,
+        stats: build.stats || null,
+        installedCybernetics: build.installedCybernetics || null,
+        effects: build.effects || null
+    };
+    
+    // Create JSON string
+    const dataStr = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([dataStr], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    
+    // Create download link
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${build.name.replace(/\s+/g, '_')}_${build.type}.json`;
+    document.body.appendChild(a);
+    a.click();
+    
+    // Cleanup
+    setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }, 100);
+    
+    alert(`"${build.name}" exported successfully!`);
 }
 
 // Load initial tab
@@ -238,6 +291,15 @@ document.addEventListener('DOMContentLoaded', function() {
             const isShared = e.target.dataset.shared === 'true';
             
             deleteSavedItem(index, type, isShared);
+        }
+
+        // Export button handler
+        if (e.target.classList.contains('export-button')) {
+            const index = e.target.dataset.index;
+            const type = e.target.dataset.type;
+            const isShared = e.target.dataset.shared === 'true';
+            
+            exportBuild(index, type, isShared);
         }
     });
     
