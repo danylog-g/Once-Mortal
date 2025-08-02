@@ -44,6 +44,18 @@
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="%233e2723" stroke-width="0.5" opacity="0.1"/></svg>');
             border-radius: 8px;
         }
+
+        #header-container {
+            top: 0;
+            z-index: 10;
+            background-color: var(--parchment);
+            border: 2px solid var(--dark-brown);
+            box-shadow: 0 10px 30px var(--shadow);
+            padding: 1.2rem 2rem;
+            position: sticky;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="%233e2723" stroke-width="0.5" opacity="0.1"/></svg>');
+            border-radius: 8px;
+        }
         
         header {
             text-align: center;
@@ -58,6 +70,13 @@
             font-size: 2.5rem;
             letter-spacing: 1px;
             margin-bottom: 10px;
+        }
+
+        #a-h1 {
+            color: var(--dark-brown);
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+            font-weight: bold;
         }
         
         .sheet-section {
@@ -85,6 +104,15 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
+        }
+        
+        /* Make skills section wider */
+        .grid-container.skills-grid {
+            grid-template-columns: 1fr 1.5fr;
+        }
+
+        .grid-container.two-column {
+            grid-template-columns: repeat(2, 1fr);
         }
         
         .character-info {
@@ -324,6 +352,69 @@
             gap: 15px;
         }
         
+        .encumbrance-section {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px dashed var(--bronze);
+        }
+        
+        .encumbrance-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .encumbrance-item {
+            background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid var(--bronze);
+            text-align: center;
+        }
+        
+        .encumbrance-label {
+            font-weight: bold;
+            color: var(--dark-brown);
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .encumbrance-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--gold);
+        }
+        
+        .exhaustion-levels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        
+        .exhaustion-level {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            border: 2px solid var(--bronze);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .exhaustion-level.active {
+            background-color: #d32f2f;
+            color: white;
+            border-color: #b71c1c;
+        }
+        
+        .exhaustion-level:hover:not(.active) {
+            background-color: #e0e0e0;
+        }
+        
         .saved-characters {
             margin-top: 30px;
             display: none;
@@ -462,6 +553,18 @@
                 flex-direction: column;
                 gap: 10px;
             }
+            
+            .encumbrance-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .grid-container.skills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-container.two-column {
+                grid-template-columns: 1fr;
+            }
         }
         
         @media (max-width: 480px) {
@@ -480,6 +583,11 @@
     </style>
 </head>
 <body>
+    <header id="header-container">
+        <div>
+            <a id="a-h1" href="../index.html" class="logo">Once Mortal</a>
+        </div>
+    </header>
     <div class="container">
         <header>
             <h1>D&D Character Sheet</h1>
@@ -563,7 +671,7 @@
             </div>
         </div>
         
-        <div class="grid-container">
+        <div class="grid-container skills-grid">
             <div class="sheet-section">
                 <div class="section-title">Combat</div>
                 <div class="combat-stats">
@@ -588,6 +696,33 @@
                         <input type="number" id="proficiencyBonus" min="2" max="6" value="2">
                     </div>
                 </div>
+                
+                <div class="encumbrance-section">
+                    <div class="section-title" style="margin: 0 0 15px -10px; width: calc(100% + 20px);">Encumbrance</div>
+                    <div class="encumbrance-grid">
+                        <div class="encumbrance-item">
+                            <div class="encumbrance-label">Carrying Capacity</div>
+                            <div class="encumbrance-value" id="carryingCapacity">150 lb</div>
+                        </div>
+                        <div class="encumbrance-item">
+                            <div class="encumbrance-label">Current Load (lbs)</div>
+                            <input type="number" id="currentLoad" min="0" value="0" style="text-align: center; font-size: 1.2rem;">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="encumbrance-item">
+                            <div class="encumbrance-label">Exhaustion Level</div>
+                            <div class="exhaustion-levels">
+                                <div class="exhaustion-level" data-level="0">0</div>
+                                <div class="exhaustion-level" data-level="1">1</div>
+                                <div class="exhaustion-level" data-level="2">2</div>
+                                <div class="exhaustion-level" data-level="3">3</div>
+                                <div class="exhaustion-level" data-level="4">4</div>
+                                <div class="exhaustion-level" data-level="5">5</div>
+                                <div class="exhaustion-level" data-level="6">6</div>
+                            </div>
+                        </div>
+                </div>
             </div>
             
             <div class="sheet-section">
@@ -598,7 +733,7 @@
             </div>
         </div>
         
-        <div class="grid-container">
+        <div class="grid-container two-column">
             <div class="sheet-section">
                 <div class="section-title">Attacks & Spellcasting</div>
                 <div class="form-group">
@@ -665,7 +800,7 @@
         <input type="file" id="fileInput" style="display: none;">
         
         <footer class="sheet-footer">
-            <p>© 2025 Once Mortal | Character Sheet | Danylo Gula </p>
+            <p>© 2025 Once Mortal | Character Sheet / Builder | Danylo Gula </p>
         </footer>
     </div>
 
@@ -729,11 +864,36 @@
                     updateAbilityModifier(ability);
                     updatePassiveScores();
                     updateSkillModifiers();
+                    if (ability === 'str') {
+                        updateCarryingCapacity();
+                    }
                 });
                 
                 // Initialize on load
                 updateAbilityModifier(ability);
             });
+            
+            // Initialize encumbrance section
+            function initEncumbrance() {
+                // Set up exhaustion levels
+                document.querySelectorAll('.exhaustion-level').forEach(level => {
+                    level.addEventListener('click', function() {
+                        const selectedLevel = parseInt(this.getAttribute('data-level'));
+                        setExhaustionLevel(selectedLevel);
+                    });
+                });
+                
+                // Set default exhaustion level to 0
+                setExhaustionLevel(0);
+                
+                // Update carrying capacity based on strength
+                updateCarryingCapacity();
+                
+                // Update when current load changes
+                document.getElementById('currentLoad').addEventListener('change', function() {
+                    highlightEncumbranceStatus();
+                });
+            }
             
             function updateAbilityModifier(ability) {
                 const scoreInput = document.getElementById(`${ability}Score`);
@@ -751,6 +911,46 @@
                 document.getElementById('passivePerception').textContent = 10 + wisMod;
                 document.getElementById('passiveInsight').textContent = 10 + wisMod;
                 document.getElementById('passiveInvestigation').textContent = 10 + intMod;
+            }
+            
+            // NEW: Update carrying capacity
+            function updateCarryingCapacity() {
+                const strScore = parseInt(document.getElementById('strScore').value) || 10;
+                const carryingCapacity = strScore * 15; // 15 lbs per point of strength
+                document.getElementById('carryingCapacity').textContent = carryingCapacity + ' lb';
+                highlightEncumbranceStatus();
+            }
+            
+            // NEW: Highlight encumbrance status
+            function highlightEncumbranceStatus() {
+                const currentLoad = parseInt(document.getElementById('currentLoad').value) || 0;
+                const carryingCapacity = parseInt(document.getElementById('carryingCapacity').textContent) || 150;
+                const capacityElement = document.getElementById('carryingCapacity');
+                
+                // Reset color
+                capacityElement.style.color = '';
+                capacityElement.style.fontWeight = '';
+                
+                if (currentLoad > carryingCapacity) {
+                    capacityElement.style.color = '#d32f2f';
+                    capacityElement.style.fontWeight = 'bold';
+                } else if (currentLoad > carryingCapacity * 0.66) {
+                    capacityElement.style.color = '#ff9800';
+                    capacityElement.style.fontWeight = 'bold';
+                } else if (currentLoad > carryingCapacity * 0.33) {
+                    capacityElement.style.color = '#4caf50';
+                }
+            }
+            
+            // NEW: Set exhaustion level
+            function setExhaustionLevel(level) {
+                document.querySelectorAll('.exhaustion-level').forEach(el => {
+                    if (parseInt(el.getAttribute('data-level')) === level) {
+                        el.classList.add('active');
+                    } else {
+                        el.classList.remove('active');
+                    }
+                });
             }
             
             // Update skill modifiers based on proficiency and expertise
@@ -884,6 +1084,10 @@
                 // Currency
                 data.crowns = document.getElementById('crowns').value;
                 
+                // NEW: Encumbrance data
+                data.currentLoad = document.getElementById('currentLoad').value;
+                data.exhaustionLevel = document.querySelector('.exhaustion-level.active')?.getAttribute('data-level') || 0;
+                
                 return data;
             }
             
@@ -930,9 +1134,18 @@
                 // Currency
                 document.getElementById('crowns').value = characterData.crowns || '';
                 
+                // NEW: Encumbrance data
+                if (characterData.currentLoad) {
+                    document.getElementById('currentLoad').value = characterData.currentLoad;
+                }
+                if (characterData.exhaustionLevel) {
+                    setExhaustionLevel(parseInt(characterData.exhaustionLevel));
+                }
+                
                 // Update calculated fields
                 updatePassiveScores();
                 updateSkillModifiers();
+                updateCarryingCapacity();
             }
             
             // Save character to local storage
@@ -1013,6 +1226,8 @@
                                 <div class="stat-item"><strong>Hit Dice:</strong> ${char.hitDice || '1d8'}</div>
                                 <div class="stat-item"><strong>Proficiency:</strong> +${char.proficiencyBonus || '2'}</div>
                                 <div class="stat-item"><strong>Crowns:</strong> ${char.crowns || '0'}</div>
+                                <div class="stat-item"><strong>Load:</strong> ${char.currentLoad || '0'} lb</div>
+                                <div class="stat-item"><strong>Exhaustion:</strong> ${char.exhaustionLevel || '0'}</div>
                             </div>
                         </div>
                         <div class="char-actions">
@@ -1071,6 +1286,7 @@
             // Initialize
             updatePassiveScores();
             updateSkillModifiers();
+            initEncumbrance();
             loadSavedCharacters();
         });
     </script>
