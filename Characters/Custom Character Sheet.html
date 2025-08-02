@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Once Mortal: Character Sheet</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --parchment: #f5ecd9;
+            --dark-brown: #3e2723;
+            --gold: #c9a227;
+            --bronze: #8d6e63;
+            --light-gold: #e6d7a8;
+            --shadow: rgba(0, 0, 0, 0.15);
+            --teal: #008080;
+            --forest: #2e7d32;
+            --royal: #1976d2;
+            --plum: #6a1b9a;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(to bottom right, #5d4037, #3e2723);
+            color: var(--dark-brown);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: var(--parchment);
+            border: 2px solid var(--dark-brown);
+            box-shadow: 0 10px 30px var(--shadow);
+            padding: 20px;
+            position: relative;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="%233e2723" stroke-width="0.5" opacity="0.1"/></svg>');
+            border-radius: 8px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 3px double var(--bronze);
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        h1 {
+            color: var(--dark-brown);
+            font-size: 2.5rem;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+        
+        .sheet-section {
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: rgba(210, 180, 140, 0.1);
+            border: 1px solid var(--bronze);
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .section-title {
+            background-color: var(--dark-brown);
+            color: var(--light-gold);
+            padding: 8px 15px;
+            margin: -15px -15px 15px -15px;
+            border-radius: 3px 3px 0 0;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .character-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--dark-brown);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--bronze);
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .ability-scores {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 15px;
+        }
+        
+        .ability-card {
+            background-color: white;
+            border: 1px solid var(--gold);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .ability-name {
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            color: var(--dark-brown);
+        }
+        
+        .ability-score {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 10px 0;
+            background: var(--light-gold);
+            border-radius: 8px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--gold);
+        }
+        
+        .ability-modifier {
+            font-size: 1.2rem;
+            background-color: var(--gold);
+            color: var(--dark-brown);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            margin: 0 auto;
+            font-weight: bold;
+            border: 1px solid var(--bronze);
+        }
+        
+        .skills-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .skill-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            padding: 5px;
+            border-bottom: 1px dashed var(--bronze);
+        }
+        
+        .skill-name {
+            flex: 1;
+            font-weight: 500;
+        }
+        
+        .skill-modifier {
+            width: 40px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--dark-brown);
+        }
+        
+        .skill-proficiency {
+            display: flex;
+            gap: 5px;
+            margin-left: 10px;
+        }
+        
+        .skill-proficiency input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .passive-scores {
+            display: flex;
+            justify-content: space-around;
+            background: linear-gradient(to right, var(--light-gold), #e1d2a9);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border: 1px solid var(--gold);
+            gap: 10px;
+        }
+        
+        .passive-score {
+            text-align: center;
+            padding: 10px;
+            min-width: 100px;
+            border-radius: 5px;
+            background: var(--parchment);
+            border: 1px solid var(--bronze);
+        }
+        
+        .passive-label {
+            font-weight: bold;
+            color: var(--dark-brown);
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .passive-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--gold);
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0 20px;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 10px 20px;
+            border: 1px solid var(--dark-brown);
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #f0f0f0;
+            color: var(--dark-brown);
+        }
+        
+        .save-btn {
+            background-color: #e8f5e9;
+            border-color: #2e7d32;
+        }
+        
+        .share-btn {
+            background-color: #e3f2fd;
+            border-color: #1976d2;
+        }
+        
+        .export-btn {
+            background-color: #e0f7fa;
+            border-color: #008080;
+        }
+        
+        .import-btn {
+            background-color: #f3e5f5;
+            border-color: #6a1b9a;
+        }
+        
+        .action-btn:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .sheet-footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--bronze);
+            color: var(--dark-brown);
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+        
+        .currency-section {
+            background: var(--light-gold);
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid var(--gold);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .currency-icon {
+            font-size: 2rem;
+            color: var(--gold);
+        }
+        
+        .crowns-input {
+            flex: 1;
+        }
+        
+        .crowns-label {
+            font-weight: bold;
+            color: var(--dark-brown);
+        }
+        
+        .combat-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .saved-characters {
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .saved-characters.active {
+            display: block;
+        }
+        
+        .saved-chars-title {
+            background-color: var(--dark-brown);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+        
+        .saved-chars-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        
+        .saved-item {
+            background-color: #f9f9f9;
+            border: 1px solid var(--bronze);
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .saved-item h3 {
+            color: var(--dark-brown);
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--gold);
+            padding-bottom: 5px;
+        }
+        
+        .char-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .char-detail {
+            display: flex;
+        }
+        
+        .char-detail strong {
+            width: 80px;
+            display: inline-block;
+            color: var(--dark-brown);
+        }
+        
+        .char-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .char-btn {
+            flex: 1;
+            padding: 6px 10px;
+            border: 1px solid var(--dark-brown);
+            border-radius: 3px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            transition: background-color 0.2s;
+        }
+        
+        .char-btn:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .load-btn {
+            background-color: #e8f5e9;
+            border-color: #2e7d32;
+        }
+        
+        .delete-btn {
+            background-color: #ffebee;
+            border-color: #c62828;
+        }
+        
+        .details-container {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            display: none;
+        }
+        
+        .details-container.active {
+            display: block;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .stat-item {
+            background-color: #f0f0f0;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .stat-item strong {
+            display: block;
+            margin-bottom: 3px;
+        }
+        
+        @media (max-width: 768px) {
+            .ability-scores {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .skills-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .combat-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .passive-scores {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .ability-scores {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>D&D Character Sheet</h1>
+            <p>Create, customize, and manage your character</p>
+        </header>
+        
+        <div class="sheet-section">
+            <div class="section-title">Character Information</div>
+            <div class="character-info">
+                <div class="form-group">
+                    <label for="characterName">Character Name</label>
+                    <input type="text" id="characterName" placeholder="Aragorn">
+                </div>
+                <div class="form-group">
+                    <label for="playerName">Player Name</label>
+                    <input type="text" id="playerName" placeholder="Your Name">
+                </div>
+                <div class="form-group">
+                    <label for="race">Race</label>
+                    <input type="text" id="race" placeholder="Human">
+                </div>
+                <div class="form-group">
+                    <label for="alignment">Alignment</label>
+                    <input type="text" id="alignment" placeholder="Lawful Good">
+                </div>
+                <div class="form-group">
+                    <label for="level">Level</label>
+                    <input type="number" id="level" min="1" max="20" value="1">
+                </div>
+            </div>
+        </div>
+        
+        <div class="sheet-section">
+            <div class="section-title">Ability Scores</div>
+            <div class="ability-scores">
+                <div class="ability-card">
+                    <div class="ability-name">Strength</div>
+                    <input type="number" class="ability-score" id="strScore" min="1" max="30" value="10">
+                    <div class="ability-modifier" id="strMod">+0</div>
+                </div>
+                <div class="ability-card">
+                    <div class="ability-name">Dexterity</div>
+                    <input type="number" class="ability-score" id="dexScore" min="1" max="30" value="10">
+                    <div class="ability-modifier" id="dexMod">+0</div>
+                </div>
+                <div class="ability-card">
+                    <div class="ability-name">Constitution</div>
+                    <input type="number" class="ability-score" id="conScore" min="1" max="30" value="10">
+                    <div class="ability-modifier" id="conMod">+0</div>
+                </div>
+                <div class="ability-card">
+                    <div class="ability-name">Intelligence</div>
+                    <input type="number" class="ability-score" id="intScore" min="1" max="30" value="10">
+                    <div class="ability-modifier" id="intMod">+0</div>
+                </div>
+                <div class="ability-card">
+                    <div class="ability-name">Wisdom</div>
+                    <input type="number" class="ability-score" id="wisScore" min="1" max="30" value="10">
+                    <div class="ability-modifier" id="wisMod">+0</div>
+                </div>
+                <div class="ability-card">
+                    <div class="ability-name">Charisma</div>
+                    <input type="number" class="ability-score" id="chaScore" min="1" max="30" value="10">
+                    <div class="ability-modifier" id="chaMod">+0</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="passive-scores">
+            <div class="passive-score">
+                <div class="passive-label">Passive Perception</div>
+                <div class="passive-value" id="passivePerception">10</div>
+            </div>
+            <div class="passive-score">
+                <div class="passive-label">Passive Insight</div>
+                <div class="passive-value" id="passiveInsight">10</div>
+            </div>
+            <div class="passive-score">
+                <div class="passive-label">Passive Investigation</div>
+                <div class="passive-value" id="passiveInvestigation">10</div>
+            </div>
+        </div>
+        
+        <div class="grid-container">
+            <div class="sheet-section">
+                <div class="section-title">Combat</div>
+                <div class="combat-stats">
+                    <div class="form-group">
+                        <label for="armorClass">Armor Class</label>
+                        <input type="number" id="armorClass" min="10" max="30" value="10">
+                    </div>
+                    <div class="form-group">
+                        <label for="speed">Speed</label>
+                        <input type="number" id="speed" min="0" value="30">
+                    </div>
+                    <div class="form-group">
+                        <label for="hitPoints">Hit Points</label>
+                        <input type="number" id="hitPoints" min="0" value="10">
+                    </div>
+                    <div class="form-group">
+                        <label for="hitDice">Hit Dice</label>
+                        <input type="text" id="hitDice" placeholder="1d8" value="1d8">
+                    </div>
+                    <div class="form-group">
+                        <label for="proficiencyBonus">Proficiency Bonus</label>
+                        <input type="number" id="proficiencyBonus" min="2" max="6" value="2">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sheet-section">
+                <div class="section-title">Skills</div>
+                <div class="skills-list">
+                    <!-- Skills will be generated dynamically -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="grid-container">
+            <div class="sheet-section">
+                <div class="section-title">Attacks & Spellcasting</div>
+                <div class="form-group">
+                    <label for="attacks">Attacks</label>
+                    <textarea id="attacks" placeholder="Longsword: +5 to hit, 1d8+3 damage"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="spellcasting">Spellcasting</label>
+                    <textarea id="spellcasting" placeholder="Spell save DC: 13, Spell attack bonus: +5"></textarea>
+                </div>
+            </div>
+            
+            <div class="sheet-section">
+                <div class="section-title">Equipment</div>
+                <div class="form-group">
+                    <label for="equipment">Equipment List</label>
+                    <textarea id="equipment" placeholder="Longsword, shield, backpack, bedroll..."></textarea>
+                </div>
+                
+                <div class="currency-section">
+                    <div class="currency-icon">👑</div>
+                    <div class="crowns-input">
+                        <label class="crowns-label">Crowns</label>
+                        <input type="number" id="crowns" min="0" value="0">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="sheet-section">
+            <div class="section-title">Features & Traits</div>
+            <div class="form-group">
+                <label for="features">Features & Traits</label>
+                <textarea id="features" placeholder="Brave: Advantage on saving throws against being frightened"></textarea>
+            </div>
+        </div>
+        
+        <div class="button-group">
+            <button class="action-btn save-btn" id="saveBtn">
+                <i class="fas fa-save"></i>
+                Save Character
+            </button>
+            <button class="action-btn share-btn" id="shareBtn">
+                <i class="fas fa-share-alt"></i>
+                Share Character
+            </button>
+            <button class="action-btn export-btn" id="exportBtn">
+                <i class="fas fa-file-export"></i>
+                Export to File
+            </button>
+            <button class="action-btn import-btn" id="importBtn">
+                <i class="fas fa-file-import"></i>
+                Import from File
+            </button>
+        </div>
+        
+        <div class="saved-characters" id="savedCharacters">
+            <div class="saved-chars-title">Saved Characters</div>
+            <div class="saved-chars-container" id="savedCharsContainer">
+                <!-- Saved characters will appear here -->
+            </div>
+        </div>
+        
+        <input type="file" id="fileInput" style="display: none;">
+        
+        <footer class="sheet-footer">
+            <p>© 2025 Once Mortal | Character Sheet | Danylo Gula </p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Define skills and their associated abilities
+            const skills = [
+                { id: 'acrobatics', name: 'Acrobatics', ability: 'dex' },
+                { id: 'animalHandling', name: 'Animal Handling', ability: 'wis' },
+                { id: 'arcana', name: 'Arcana', ability: 'int' },
+                { id: 'athletics', name: 'Athletics', ability: 'str' },
+                { id: 'deception', name: 'Deception', ability: 'cha' },
+                { id: 'history', name: 'History', ability: 'int' },
+                { id: 'insight', name: 'Insight', ability: 'wis' },
+                { id: 'intimidation', name: 'Intimidation', ability: 'cha' },
+                { id: 'investigation', name: 'Investigation', ability: 'int' },
+                { id: 'medicine', name: 'Medicine', ability: 'wis' },
+                { id: 'nature', name: 'Nature', ability: 'int' },
+                { id: 'perception', name: 'Perception', ability: 'wis' },
+                { id: 'performance', name: 'Performance', ability: 'cha' },
+                { id: 'persuasion', name: 'Persuasion', ability: 'cha' },
+                { id: 'religion', name: 'Religion', ability: 'int' },
+                { id: 'sleightOfHand', name: 'Sleight of Hand', ability: 'dex' },
+                { id: 'stealth', name: 'Stealth', ability: 'dex' },
+                { id: 'survival', name: 'Survival', ability: 'wis' }
+            ];
+            
+            // Create the skills list
+            const skillsList = document.querySelector('.skills-list');
+            
+            skills.forEach(skill => {
+                const skillItem = document.createElement('div');
+                skillItem.className = 'skill-item';
+                
+                skillItem.innerHTML = `
+                    <div class="skill-name">${skill.name} (${skill.ability.substring(0, 3).toUpperCase()})</div>
+                    <div class="skill-modifier" id="${skill.id}Mod">+0</div>
+                    <div class="skill-proficiency">
+                        <label title="Proficient">
+                            <input type="checkbox" id="${skill.id}Prof">
+                            P
+                        </label>
+                        <label title="Expertise">
+                            <input type="checkbox" id="${skill.id}Expert">
+                            E
+                        </label>
+                    </div>
+                `;
+                
+                skillsList.appendChild(skillItem);
+            });
+            
+            // Calculate ability modifiers
+            const abilityScores = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+            
+            abilityScores.forEach(ability => {
+                const scoreInput = document.getElementById(`${ability}Score`);
+                const modElement = document.getElementById(`${ability}Mod`);
+                
+                scoreInput.addEventListener('change', function() {
+                    updateAbilityModifier(ability);
+                    updatePassiveScores();
+                    updateSkillModifiers();
+                });
+                
+                // Initialize on load
+                updateAbilityModifier(ability);
+            });
+            
+            function updateAbilityModifier(ability) {
+                const scoreInput = document.getElementById(`${ability}Score`);
+                const modElement = document.getElementById(`${ability}Mod`);
+                const score = parseInt(scoreInput.value) || 0;
+                const modifier = Math.floor((score - 10) / 2);
+                modElement.textContent = modifier >= 0 ? `+${modifier}` : modifier;
+            }
+            
+            // Update passive scores
+            function updatePassiveScores() {
+                const wisMod = parseInt(document.getElementById('wisMod').textContent) || 0;
+                const intMod = parseInt(document.getElementById('intMod').textContent) || 0;
+                
+                document.getElementById('passivePerception').textContent = 10 + wisMod;
+                document.getElementById('passiveInsight').textContent = 10 + wisMod;
+                document.getElementById('passiveInvestigation').textContent = 10 + intMod;
+            }
+            
+            // Update skill modifiers based on proficiency and expertise
+            function updateSkillModifiers() {
+                const proficiencyBonus = parseInt(document.getElementById('proficiencyBonus').value) || 0;
+                
+                skills.forEach(skill => {
+                    const abilityMod = parseInt(document.getElementById(`${skill.ability}Mod`).textContent) || 0;
+                    const proficient = document.getElementById(`${skill.id}Prof`).checked;
+                    const expert = document.getElementById(`${skill.id}Expert`).checked;
+                    
+                    let modifier = abilityMod;
+                    
+                    if (proficient) modifier += proficiencyBonus;
+                    if (expert) modifier += proficiencyBonus; // Expertise adds proficiency bonus again
+                    
+                    const modifierElement = document.getElementById(`${skill.id}Mod`);
+                    modifierElement.textContent = modifier >= 0 ? `+${modifier}` : modifier;
+                    modifierElement.style.color = expert ? '#c62828' : proficient ? '#2e7d32' : '#333';
+                });
+            }
+            
+            // Add event listeners for proficiency changes
+            skills.forEach(skill => {
+                document.getElementById(`${skill.id}Prof`).addEventListener('change', function() {
+                    // If unchecking proficiency, also uncheck expertise
+                    if (!this.checked) {
+                        document.getElementById(`${skill.id}Expert`).checked = false;
+                    }
+                    updateSkillModifiers();
+                });
+                
+                document.getElementById(`${skill.id}Expert`).addEventListener('change', function() {
+                    // If checking expertise, also check proficiency
+                    if (this.checked) {
+                        document.getElementById(`${skill.id}Prof`).checked = true;
+                    }
+                    updateSkillModifiers();
+                });
+            });
+            
+            // Proficiency bonus tied to level
+            document.getElementById('level').addEventListener('change', function() {
+                const level = parseInt(this.value) || 1;
+                let proficiencyBonus = 2;
+                
+                if (level >= 5) proficiencyBonus = 3;
+                if (level >= 9) proficiencyBonus = 4;
+                if (level >= 13) proficiencyBonus = 5;
+                if (level >= 17) proficiencyBonus = 6;
+                
+                document.getElementById('proficiencyBonus').value = proficiencyBonus;
+                document.getElementById('hitDice').value = level + 'd8';
+                
+                updateSkillModifiers();
+            });
+            
+            // Export functionality
+            document.getElementById('exportBtn').addEventListener('click', function() {
+                const characterData = collectCharacterData();
+                const dataStr = JSON.stringify(characterData, null, 2);
+                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                
+                const exportFileDefaultName = `${characterData.characterName || 'character'}.json`;
+                
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', exportFileDefaultName);
+                linkElement.click();
+            });
+            
+            // Import functionality
+            document.getElementById('importBtn').addEventListener('click', function() {
+                document.getElementById('fileInput').click();
+            });
+            
+            document.getElementById('fileInput').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const characterData = JSON.parse(e.target.result);
+                        populateCharacterData(characterData);
+                    } catch (error) {
+                        alert('Error parsing character file: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+            });
+            
+            // Collect character data
+            function collectCharacterData() {
+                const data = {};
+                
+                // Character info
+                data.characterName = document.getElementById('characterName').value;
+                data.playerName = document.getElementById('playerName').value;
+                data.race = document.getElementById('race').value;
+                data.alignment = document.getElementById('alignment').value;
+                data.level = document.getElementById('level').value;
+                
+                // Ability scores
+                abilityScores.forEach(ability => {
+                    data[`${ability}Score`] = document.getElementById(`${ability}Score`).value;
+                });
+                
+                // Combat stats
+                data.armorClass = document.getElementById('armorClass').value;
+                data.speed = document.getElementById('speed').value;
+                data.hitPoints = document.getElementById('hitPoints').value;
+                data.hitDice = document.getElementById('hitDice').value;
+                data.proficiencyBonus = document.getElementById('proficiencyBonus').value;
+                
+                // Skills proficiency and expertise
+                data.skills = {};
+                skills.forEach(skill => {
+                    data.skills[skill.id] = {
+                        proficient: document.getElementById(`${skill.id}Prof`).checked,
+                        expert: document.getElementById(`${skill.id}Expert`).checked
+                    };
+                });
+                
+                // Other sections
+                data.attacks = document.getElementById('attacks').value;
+                data.spellcasting = document.getElementById('spellcasting').value;
+                data.equipment = document.getElementById('equipment').value;
+                data.features = document.getElementById('features').value;
+                
+                // Currency
+                data.crowns = document.getElementById('crowns').value;
+                
+                return data;
+            }
+            
+            // Populate character data
+            function populateCharacterData(characterData) {
+                // Character info
+                document.getElementById('characterName').value = characterData.characterName || '';
+                document.getElementById('playerName').value = characterData.playerName || '';
+                document.getElementById('race').value = characterData.race || '';
+                document.getElementById('alignment').value = characterData.alignment || '';
+                document.getElementById('level').value = characterData.level || '';
+                
+                // Ability scores
+                abilityScores.forEach(ability => {
+                    const scoreInput = document.getElementById(`${ability}Score`);
+                    scoreInput.value = characterData[`${ability}Score`] || '';
+                    updateAbilityModifier(ability);
+                });
+                
+                // Combat stats
+                document.getElementById('armorClass').value = characterData.armorClass || '';
+                document.getElementById('speed').value = characterData.speed || '';
+                document.getElementById('hitPoints').value = characterData.hitPoints || '';
+                document.getElementById('hitDice').value = characterData.hitDice || '';
+                document.getElementById('proficiencyBonus').value = characterData.proficiencyBonus || '2';
+                
+                // Skills
+                if (characterData.skills) {
+                    for (const skillId in characterData.skills) {
+                        const skillData = characterData.skills[skillId];
+                        if (document.getElementById(`${skillId}Prof`)) {
+                            document.getElementById(`${skillId}Prof`).checked = skillData.proficient || false;
+                            document.getElementById(`${skillId}Expert`).checked = skillData.expert || false;
+                        }
+                    }
+                }
+                
+                // Other sections
+                document.getElementById('attacks').value = characterData.attacks || '';
+                document.getElementById('spellcasting').value = characterData.spellcasting || '';
+                document.getElementById('equipment').value = characterData.equipment || '';
+                document.getElementById('features').value = characterData.features || '';
+                
+                // Currency
+                document.getElementById('crowns').value = characterData.crowns || '';
+                
+                // Update calculated fields
+                updatePassiveScores();
+                updateSkillModifiers();
+            }
+            
+            // Save character to local storage
+            document.getElementById('saveBtn').addEventListener('click', function() {
+                saveCharacter(false);
+            });
+            
+            // Share character via URL
+            document.getElementById('shareBtn').addEventListener('click', function() {
+                saveCharacter(true);
+            });
+            
+            function saveCharacter(isShared) {
+                const name = prompt(`Enter a name for this ${isShared ? 'shared' : 'saved'} character:`);
+                if (!name) return;
+                
+                const characterData = collectCharacterData();
+                characterData.timestamp = new Date().toISOString();
+                characterData.type = 'character';
+                
+                const savedData = JSON.parse(localStorage.getItem('savedCharacters') || '[]');
+                
+                // Check if character with this name already exists
+                const existingIndex = savedData.findIndex(char => 
+                    char.characterName === name && 
+                    char.type === 'character' &&
+                    char.isShared === isShared
+                );
+                
+                if (existingIndex !== -1) {
+                    savedData[existingIndex] = characterData;
+                } else {
+                    characterData.isShared = isShared;
+                    savedData.push(characterData);
+                }
+                
+                localStorage.setItem('savedCharacters', JSON.stringify(savedData));
+                alert(`Character "${name}" ${isShared ? 'shared' : 'saved'} successfully!`);
+                loadSavedCharacters();
+            }
+            
+            // Load saved characters from local storage
+            function loadSavedCharacters() {
+                const savedData = JSON.parse(localStorage.getItem('savedCharacters') || '[]');
+                const container = document.getElementById('savedCharsContainer');
+                container.innerHTML = '';
+                
+                // Filter only character data
+                const characterBuilds = savedData.filter(build => build.type === 'character');
+                
+                if (characterBuilds.length === 0) {
+                    document.getElementById('savedCharacters').classList.remove('active');
+                    return;
+                }
+                
+                document.getElementById('savedCharacters').classList.add('active');
+                
+                characterBuilds.forEach((char, index) => {
+                    const charElement = document.createElement('div');
+                    charElement.className = 'saved-item';
+                    
+                    charElement.innerHTML = `
+                        <h3>${char.characterName || 'Unnamed Character'} ${char.isShared ? '<span style="color:#25D366;">(Shared)</span>' : ''}</h3>
+                        <div class="char-details">
+                            <div class="char-detail"><strong>Race:</strong> ${char.race || '-'}</div>
+                            <div class="char-detail"><strong>Level:</strong> ${char.level || '1'}</div>
+                            <div class="char-detail"><strong>Alignment:</strong> ${char.alignment || '-'}</div>
+                            <div class="char-detail"><strong>Player:</strong> ${char.playerName || '-'}</div>
+                        </div>
+                        <button class="toggle-details" data-index="${index}">
+                            Show Details
+                        </button>
+                        <div class="details-container" id="details-${index}">
+                            <div class="stats-grid">
+                                <div class="stat-item"><strong>AC:</strong> ${char.armorClass || '10'}</div>
+                                <div class="stat-item"><strong>HP:</strong> ${char.hitPoints || '10'}</div>
+                                <div class="stat-item"><strong>Speed:</strong> ${char.speed || '30'} ft</div>
+                                <div class="stat-item"><strong>Hit Dice:</strong> ${char.hitDice || '1d8'}</div>
+                                <div class="stat-item"><strong>Proficiency:</strong> +${char.proficiencyBonus || '2'}</div>
+                                <div class="stat-item"><strong>Crowns:</strong> ${char.crowns || '0'}</div>
+                            </div>
+                        </div>
+                        <div class="char-actions">
+                            <button class="char-btn load-btn" data-index="${index}">Load</button>
+                            <button class="char-btn delete-btn" data-index="${index}">Delete</button>
+                        </div>
+                    `;
+                    
+                    container.appendChild(charElement);
+                });
+                
+                // Add event listeners
+                document.querySelectorAll('.toggle-details').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = this.getAttribute('data-index');
+                        const details = document.getElementById(`details-${index}`);
+                        details.classList.toggle('active');
+                        this.textContent = details.classList.contains('active') ? 
+                            'Hide Details' : 'Show Details';
+                    });
+                });
+                
+                document.querySelectorAll('.load-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = this.getAttribute('data-index');
+                        const savedData = JSON.parse(localStorage.getItem('savedCharacters') || '[]');
+                        const characterBuilds = savedData.filter(build => build.type === 'character');
+                        populateCharacterData(characterBuilds[index]);
+                        window.scrollTo(0, 0);
+                    });
+                });
+                
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = this.getAttribute('data-index');
+                        if (confirm("Are you sure you want to delete this character?")) {
+                            const savedData = JSON.parse(localStorage.getItem('savedCharacters') || '[]');
+                            const characterBuilds = savedData.filter(build => build.type === 'character');
+                            // Find the actual index in the savedData array
+                            const charToDelete = characterBuilds[index];
+                            const globalIndex = savedData.findIndex(item => 
+                                item.characterName === charToDelete.characterName && 
+                                item.timestamp === charToDelete.timestamp
+                            );
+                            
+                            if (globalIndex !== -1) {
+                                savedData.splice(globalIndex, 1);
+                                localStorage.setItem('savedCharacters', JSON.stringify(savedData));
+                                loadSavedCharacters();
+                            }
+                        }
+                    });
+                });
+            }
+            
+            // Initialize
+            updatePassiveScores();
+            updateSkillModifiers();
+            loadSavedCharacters();
+        });
+    </script>
+</body>
+</html>
