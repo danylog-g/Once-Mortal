@@ -143,7 +143,7 @@ const CHARACTER_DB = [
         "After founding The Council with his twin sister, Beelzebub, they pose one of the greatest threats to the Divine Realm."
     },
     {
-        name: "Beelzebub", loc: "Endless City", faction: "The Council", affiliation: "The Council", race: "Devil", subrace: "Lord", status: "Active",
+        name: "Be'llelzebub", loc: "Endless City", faction: "The Council", affiliation: "The Council", race: "Devil", subrace: "Lord", status: "Active",
         desc: "The most powerful member of The Council. She can become a Wild God, but chooses not to. As becoming a God would put a target on her."+
         "After founding The Council with her twin brother, Lucifer, she left to enjoy the luxuries of The Endless City."
     },
@@ -206,7 +206,7 @@ const CHARACTER_DB = [
             "He believes in feudalism, has nobles which manage his territory, knights who command soldiers, and peasants who do the undesireable jobs."
     },
     {
-        name: "Gabriel Capulet", loc: "Endless City", faction: "Trapped", affiliation: "Chiraq", race: "Nephilim", subrace: "None", status: "Active",
+        name: "Gabriel Capulet", loc: "Endless City", faction: "Trapped", affiliation: "Chiraq", race: "Nephilim", subrace: "None", status: "Deceased (Murdered by Wy Enn)",
         desc: "A Half-Angel who believes the Endless City is the corpse of a deceased God. " +
             "He believes that with enough prayer towards the City, or prayer directed towards the Stalkers, they can get free."
     },

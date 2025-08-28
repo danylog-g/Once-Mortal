@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Once Mortal: Lore</title>
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    <style>
+        #lore {
+            transition: opacity 1.5s ease-in-out;
+            opacity: 0; /* Start invisible */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="#" class="logo">Once Mortal</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="dashboard-title">
+            <h1>Campaign Lore</h1>
+            <p>Main page for viewing somewhat-meta information about the Campaign's Lore.</p>
+        </div>
+
+        <div class="dashboard-balls">
+            <div class="accordion card-description">
+                <div class="accordion-item">
+                    <div class="accordion-header">Section 1</div>
+                    <div class="accordion-content">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas aliquam justo ac semper facilisis.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container card-description" id="lore">
+    </div>
+
+    <footer>
+        <p>© 2025 Once Mortal | Campaign | Lore | Danylo Gula </p>
+    </footer>
+
+    <script src="../helper.js"></script>
+    <script src="lore.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const headers = document.querySelectorAll('.accordion-header');
+            
+            headers.forEach(header => {
+                header.addEventListener('click', () => {
+                    const item = header.parentNode;
+                    const content = header.nextElementSibling;
+                    
+                    // Close other open items
+                    document.querySelectorAll('.accordion-item').forEach(otherItem => {
+                        if (otherItem !== item) {
+                            otherItem.querySelector('.accordion-header').classList.remove('active');
+                            otherItem.querySelector('.accordion-content').style.maxHeight = null;
+                        }
+                    });
+                    
+                    // Toggle current item
+                    header.classList.toggle('active');
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

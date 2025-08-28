@@ -76,37 +76,28 @@ const LORE = {
 
 // Function to endlessly show lore snippets
 function LoreDisplay() {
-    const container = document.getElementById("lore");
-    if (!container) return; // edge case
+  const container = document.getElementById("lore");
+  if (!container) return;
 
+  // Fade out current snippet
+  container.style.opacity = 0;
+
+  setTimeout(() => {
     // Get Realm and Lore
     const realm = LORE._length[_math.GetRnd(LORE._length.length)];
     const lore = LORE[realm];
-
-    if (!lore) return; // edge case
+    
+    if (!lore) return;
     
     // Get Snippet and update
     const snippet = lore[_math.GetRnd(lore.length)];
     container.textContent = snippet;
+    
+    // Fade in new snippet
+    container.style.opacity = 1;
 
     // Schedule next update
-    setTimeout(LoreDisplay, 15000)
+    setTimeout(LoreDisplay, 15000);
+  }, 1000); // Wait for fade-out to complete
 }
 LoreDisplay();
-
-/*
-document.addEventListener('DOMContentLoaded', () => {
-    const realm = LORE[Math.random() * LORE._length.length];
-    const snippetContainer = document.getElementById('lore');
-    
-    if (LORE[realm]) {
-      const randomSnippet = LORE[realm][Math.floor(Math.random() * LORE[realm].length)];
-      snippetContainer.textContent = randomSnippet;
-      
-      // Auto-remove after animation
-      setTimeout(() => {
-        snippetContainer.remove();
-      }, 16000);
-    }
-  });
-  */
