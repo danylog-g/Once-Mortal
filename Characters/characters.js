@@ -206,7 +206,7 @@ const CHARACTER_DB = [
             "He believes in feudalism, has nobles which manage his territory, knights who command soldiers, and peasants who do the undesireable jobs."
     },
     {
-        name: "Gabriel Capulet", loc: "Endless City", faction: "Trapped", affiliation: "Chiraq", race: "Nephilim", subrace: "None", status: "Deceased (Murdered by Wy Enn)",
+        name: "Gabriel Capulet", loc: "Endless City", faction: "Trapped", affiliation: "Chiraq", race: "Nephilim", subrace: "None", status: "Deceased",
         desc: "A Half-Angel who believes the Endless City is the corpse of a deceased God. " +
             "He believes that with enough prayer towards the City, or prayer directed towards the Stalkers, they can get free."
     },
@@ -329,41 +329,6 @@ tableHeaders.forEach(header => {
         sortCharacters(sortField);
     });
 });
-
-// Filter and sort characters
-function filterCharacters() {
-    const searchTerm = searchInput.value.toLowerCase();
-    const locationValue = locationFilter.value;
-    const factionValue = factionFilter.value;
-    const affiliationValue = affiliationFilter.value;
-    const raceValue = raceFilter.value;
-    const statusValue = statusFilter.value;
-    const sortValue = sortSelect.value;
-
-    let filtered = CHARACTER_DB.filter(char => {
-        const matchesSearch =
-            char.name.toLowerCase().includes(searchTerm) ||
-            (char.race && char.race.toLowerCase().includes(searchTerm)) ||
-            (char.affiliation && char.affiliation.toLowerCase().includes(searchTerm)) ||
-            (char.faction && char.faction.toLowerCase().includes(searchTerm)) ||
-            (char.status && char.status.toLowerCase().includes(searchTerm)) ||
-            (char.loc && char.loc.toLowerCase().includes(searchTerm)) ||
-            (char.subrace && char.subrace.toLowerCase().includes(searchTerm));
-
-        const matchesLocation = locationValue ? char.loc === locationValue : true;
-        const matchesFaction = factionValue ? char.faction === factionValue : true;
-        const matchesAffiliation = affiliationValue ? char.affiliation === affiliationValue : true;
-        const matchesRace = raceValue ? char.race === raceValue : true;
-        const matchesStatus = statusValue ? char.status === statusValue : true;
-
-        return matchesSearch && matchesLocation && matchesFaction && matchesAffiliation && matchesRace && matchesStatus;
-    });
-
-    // Apply sorting
-    sortCharactersFromValue(filtered, sortValue);
-
-    renderCharacters(filtered);
-}
 
 // Sort characters based on sort value
 function sortCharactersFromValue(chars, sortValue) {
@@ -488,6 +453,82 @@ function closeModal() {
     beastModal.style.display = 'none';
 }
 
+// Initialize dynamic character stuff
+function InitFilters() {
+    // Get all unique values from character data
+    const factions = [...new Set(characters.map(char => char.faction))];
+    const affiliations = [...new Set(characters.map(char => char.affiliation))];
+    const races = [...new Set(characters.map(char => char.race))];
+    const statuses = [...new Set(characters.map(char => char.status))];
+
+    // Populate faction filter
+    factions.forEach(faction => {
+        const option = document.createElement('option');
+        option.value = faction;
+        option.textContent = faction;
+        factionFilter.appendChild(option);
+    });
+
+    // Populate affiliation filter
+    affiliations.forEach(affiliation => {
+        const option = document.createElement('option');
+        option.value = affiliation;
+        option.textContent = affiliation === "None" ? "No Affiliation" : affiliation;
+        affiliationFilter.appendChild(option);
+    });
+
+    // Populate race filter
+    races.forEach(race => {
+        const option = document.createElement('option');
+        option.value = race;
+        option.textContent = race;
+        raceFilter.appendChild(option);
+    });
+
+    // Populate status filter
+    statuses.forEach(status => {
+        const option = document.createElement('option');
+        option.value = status;
+        option.textContent = status;
+        statusFilter.appendChild(option);
+    });
+}
+
+// Filter and sort characters
+function filterCharacters() {
+    const searchTerm = searchInput.value.toLowerCase();
+    const locationValue = locationFilter.value;
+    const factionValue = factionFilter.value;
+    const affiliationValue = affiliationFilter.value;
+    const raceValue = raceFilter.value;
+    const statusValue = statusFilter.value;
+    const sortValue = sortSelect.value;
+
+    let filtered = CHARACTER_DB.filter(char => {
+        const matchesSearch =
+            char.name.toLowerCase().includes(searchTerm) ||
+            (char.race && char.race.toLowerCase().includes(searchTerm)) ||
+            (char.affiliation && char.affiliation.toLowerCase().includes(searchTerm)) ||
+            (char.faction && char.faction.toLowerCase().includes(searchTerm)) ||
+            (char.status && char.status.toLowerCase().includes(searchTerm)) ||
+            (char.loc && char.loc.toLowerCase().includes(searchTerm)) ||
+            (char.subrace && char.subrace.toLowerCase().includes(searchTerm));
+
+        const matchesLocation = locationValue ? char.loc === locationValue : true;
+        const matchesFaction = factionValue ? char.faction === factionValue : true;
+        const matchesAffiliation = affiliationValue ? char.affiliation === affiliationValue : true;
+        const matchesRace = raceValue ? char.race === raceValue : true;
+        const matchesStatus = statusValue ? char.status === statusValue : true;
+
+        return matchesSearch && matchesLocation && matchesFaction && matchesAffiliation && matchesRace && matchesStatus;
+    });
+
+    // Apply sorting
+    sortCharactersFromValue(filtered, sortValue);
+
+    renderCharacters(filtered);
+}
+
 // Reset filters
 function resetFilters() {
     searchInput.value = '';
@@ -498,6 +539,7 @@ function resetFilters() {
     statusFilter.value = '';
     sortSelect.value = 'name-asc';
 
+    InitFilters();
     filterCharacters();
 }
 
