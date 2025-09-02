@@ -456,10 +456,10 @@ function closeModal() {
 // Initialize dynamic character stuff
 function InitFilters() {
     // Get all unique values from character data
-    const factions = [...new Set(characters.map(char => char.faction))];
-    const affiliations = [...new Set(characters.map(char => char.affiliation))];
-    const races = [...new Set(characters.map(char => char.race))];
-    const statuses = [...new Set(characters.map(char => char.status))];
+    const factions = [...new Set(CHARACTER_DB.map(char => char.faction))];
+    const affiliations = [...new Set(CHARACTER_DB.map(char => char.affiliation))];
+    const races = [...new Set(CHARACTER_DB.map(char => char.race))];
+    const statuses = [...new Set(CHARACTER_DB.map(char => char.status))];
 
     // Populate faction filter
     factions.forEach(faction => {
