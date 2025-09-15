@@ -7,6 +7,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from typing import List, Optional, Dict, Any, Union
 from bson import ObjectId
 from dotenv import load_dotenv
+from collections import defaultdict
 import os
 
 app = FastAPI()
@@ -17,6 +18,7 @@ app.add_middleware(
     allow_origins=["*"],   # change to ["http://192.168.1.x:port"] for security
     allow_methods=["*"],
     allow_headers=["*"],
+    allow_credentials=True
 )
 # Mongo client (async)
 load_dotenv()  # optional .env for MONGODB_URI
@@ -39,7 +41,7 @@ class PyObjectId(ObjectId):
         return ObjectId(v)
 
     @classmethod
-    def __modify_schema__(cls, field_schema):
+    def __get_pydantic_json_schema__(cls, field_schema):
         field_schema.update(type="string")
 # # # # # # # # # #
 # # Dumb Models # #
@@ -65,52 +67,6 @@ class Speed(BaseModel):
 class Trait(BaseModel):
     name: str
     description: str
-class SubclassFeature(BaseModel):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-    name: str
-    description: str
-    level: int
-    source: str
-
-    class Config:
-        allow_population_by_field_name = True
-        arbitrary_types_allowed = True
-        json_encoders = {ObjectId: str}
-class Subclass(BaseModel):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-    name: str
-    short_name: str
-    source: str
-    page: Optional[int] = None
-    description: Optional[str] = None
-    features: List[SubclassFeature] = []
-    additional_spells: Optional[Dict[str, Any]] = None
-
-    class Config:
-        allow_population_by_field_name = True
-        arbitrary_types_allowed = True
-        json_encoders = {ObjectId: str}
-class ClassFeature(BaseModel):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-    name: str
-    description: str
-    level: int
-    source: str
-
-    class Config:
-        allow_population_by_field_name = True
-        arbitrary_types_allowed = True
-        json_encoders = {ObjectId: str}
-class ClassLevel(BaseModel):
-    level: int
-    cantrips_known: int
-    spells_known: int
-    spell_slots: List[int]
-
-    class Config:
-        allow_population_by_field_name = True
-        arbitrary_types_allowed = True
-        json_encoders = {ObjectId: str}
 class AbilityChoice(BaseModel):
     choose: Dict[str, Any]
 class Feat(BaseModel):
@@ -137,24 +93,67 @@ class AdditionalSpells(BaseModel):
     ability: str
     innate: Dict[str, InnateSpells]
     known: Dict[str, List[SpellChoice]]
-class TableRow(BaseModel):
-    cells: List[Any]
 class Table(BaseModel):
     type: str = "table"
     caption: str
     colLabels: List[str]
     colStyles: List[str]
-    rows: List[TableRow]
+    rows: List[List[str]]
 class ListItem(BaseModel):
     type: str = "list"
     items: List[str]
 class Section(BaseModel):
     type: str = "section"
-    entries: List[Dict[str, Any]]
+    name: str
+    entries: List[Any]
 class Entry(BaseModel):
-    type: str
+    type: str = "entries"
     name: Optional[str] = None
     entries: Optional[List[Any]] = None
+class Consumes(BaseModel):
+    name: str
+    amount: Optional[int] = None
+class SkillProficiencies(BaseModel):
+    acrobatics: Optional[bool] = False
+    athletics: Optional[bool] = False
+    deception: Optional[bool] = False
+    persuasion: Optional[bool] = False
+    intimidation: Optional[bool] = False
+    performance: Optional[bool] = False
+    # Add other skills as needed
+class Sense(BaseModel):
+    blindsight: Optional[int] = None
+    darkvision: Optional[int] = None
+    tremorsense: Optional[int] = None
+    truesight: Optional[int] = None
+class Cost(BaseModel):
+    min: int
+    max: int
+class Concentration(BaseModel):
+    duration: int
+    unit: str
+class Mode(BaseModel):
+    cost: Optional[Cost] = None
+    name: str
+    entries: List[str]
+    concentration: Optional[Concentration] = None
+    submodes: Optional[List['Mode']] = None  # For nested modes
+# Helper function to extract text from entries
+def extract_text_from_entries(entries):
+    text_parts = []
+    for entry in entries:
+        if isinstance(entry, str):
+            text_parts.append(entry)
+        elif isinstance(entry, dict):
+            if entry.get("type") == "list" and "items" in entry:
+                for item in entry["items"]:
+                    if isinstance(item, str):
+                        text_parts.append(item)
+                    elif isinstance(item, dict) and "entries" in item:
+                        for sub_entry in item["entries"]:
+                            if isinstance(sub_entry, str):
+                                text_parts.append(sub_entry)
+    return " ".join(text_parts)
 # # # # # # # # # #
 # # Cybernetics # #
 # # # # # # # # # #
@@ -349,6 +348,53 @@ async def get_race(race_id: str):
 # # # # # # # # # #
 # # # Classes # # #
 # # # # # # # # # #
+class SubclassFeature(BaseModel):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    name: str
+    description: str
+    level: int
+    source: str
+
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+class Subclass(BaseModel):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    name: str
+    short_name: str
+    source: str
+    page: Optional[int] = None
+    description: Optional[str] = None
+    features: List[SubclassFeature] = []
+    additional_spells: Optional[Dict[str, Any]] = None
+
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+class ClassFeature(BaseModel):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    name: str
+    description: str
+    level: int
+    source: str
+    is_subclass_feature: bool = False
+
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+class ClassLevel(BaseModel):
+    level: int
+    cantrips_known: int
+    spells_known: int
+    spell_slots: List[int]
+
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
 class DnDClass(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     name: str
@@ -366,6 +412,18 @@ class DnDClass(BaseModel):
         allow_population_by_field_name = True
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
+# Helper function to parse feature strings
+def parse_feature_string(feature_str):
+    """Parse feature string in format: Name|Class|Source|Level"""
+    parts = feature_str.split("|")
+    if len(parts) >= 4:
+        return {
+            "name": parts[0],
+            "class_name": parts[1],
+            "source": parts[2],
+            "level": int(parts[3]) if parts[3].isdigit() else 0
+        }
+    return None
 # GET endpoint to list all classes
 @app.get("/api/classes", response_model=List[DnDClass])
 async def get_classes(
@@ -448,18 +506,60 @@ async def get_subclass(class_id: PyObjectId, subclass_id: str):
 # GET endpoint to list all features from class id
 @app.get("/api/classes/{class_id}/features", response_model=List[ClassFeature])
 async def get_class_features(class_id: PyObjectId):
-    class_obj = await DnDClass.get(class_id)
-    if not class_obj:
-        raise HTTPException(status_code=404, detail="Class not found")
-    return class_obj.features
-# GET endpoint to list all features from a level and class id
-@app.get("/api/classes/{class_id}/features/{level}", response_model=List[ClassFeature])
-async def get_class_features_by_level(class_id: PyObjectId, level: int):
-    class_obj = await DnDClass.get(class_id)
+    if not ObjectId.is_valid(class_id):
+        raise HTTPException(status_code=400, detail="Invalid class ID")
+    
+    class_obj = await compendia.find_one({"_id": ObjectId(class_id), "key": "class"})
     if not class_obj:
         raise HTTPException(status_code=404, detail="Class not found")
     
-    return [feature for feature in class_obj.features if feature.level == level]
+    # Extract features from normalized data
+    if "normalized" in class_obj and "classFeatures" in class_obj["normalized"]:
+        return class_obj["normalized"]["classFeatures"]
+    return []
+# GET endpoint to list all features from a level and class id
+@app.get("/api/classes/{class_id}/features/{level}", response_model=List[ClassFeature])
+async def get_class_features_by_level(class_id: PyObjectId, level: int):
+    if not ObjectId.is_valid(class_id):
+        raise HTTPException(status_code=400, detail="Invalid class ID")
+    
+    class_obj = await compendia.find_one({"_id": ObjectId(class_id), "key": "class"})
+    if not class_obj:
+        raise HTTPException(status_code=404, detail="Class not found")
+    
+    # Extract class features from the raw data
+    class_features = []
+    raw_features = class_obj.get("raw", {}).get("classFeatures", [])
+    
+    for feature in raw_features:
+        feature_data = {}
+        is_subclass = False
+        
+        # Handle both string and object formats
+        if isinstance(feature, str):
+            parsed = parse_feature_string(feature)
+            if parsed and parsed["level"] == level:
+                feature_data = parsed
+        elif isinstance(feature, dict):
+            if "classFeature" in feature:
+                parsed = parse_feature_string(feature["classFeature"])
+                if parsed and parsed["level"] == level:
+                    feature_data = parsed
+                    is_subclass = feature.get("gainSubclassFeature", False)
+        
+        # Create ClassFeature object if we found a matching feature
+        if feature_data:
+            # In a real implementation, you'd fetch the full feature description from another collection
+            class_features.append(ClassFeature(
+                _id=ObjectId(),
+                name=feature_data["name"],
+                description=f"Description for {feature_data['name']}",
+                level=feature_data["level"],
+                source=feature_data["source"],
+                is_subclass_feature=is_subclass
+            ))
+    
+    return class_features
 # # # # # # # # # #
 # # Backgrounds # #
 # # # # # # # # # #
@@ -508,7 +608,7 @@ def transform_background(background: Dict) -> Dict:
     }
 # GET endpoint to list all backgrounds
 @app.get("/api/backgrounds", response_model=List[Background])
-async def get_bg(
+async def get_bgs(
     skip: int = 0,
     limit: int = 1000,
     name: Optional[str] = None,
@@ -1048,15 +1148,643 @@ async def get_feats_by_ability(ability: str, limit: int = Query(50, ge=1, le=100
         ))
     
     return feat_summaries
+class OptionalFeatureRaw(BaseModel):
+    name: str
+    source: str
+    isClassFeatureVariant: Optional[bool] = False
+    featureType: List[str]
+    prerequisite: List[Prerequisite] = []
+    additionalSpells: List[AdditionalSpells] = []
+    consumes: Optional[Consumes] = None
+    skillProficiencies: Optional[SkillProficiencies] = None
+    senses: Optional[Sense] = None
+    entries: List[Union[str, ListItem, Table, Section, Entry]]
+    otherSources: Optional[List[Dict[str, Any]]] = None
+class OptionalFeatureNormalized(BaseModel):
+    id: str
+    name: str
+    raw: OptionalFeatureRaw
+    description: str
+    features: List[Feature]
+class OptionalFeature(BaseModel):
+    id: str
+    key: str
+    name: str
+    normalized: OptionalFeatureNormalized
+    raw: OptionalFeatureRaw
+    source: str
+class OptionalFeatureSummary(BaseModel):
+    id: str
+    name: str
+    source: str
+    description: str
+    feature_types: List[str]
+    prerequisites: List[str]
+# GET endpoint to get all optional features with optional filtering
+@app.get("/api/optional-features", response_model=List[OptionalFeatureSummary])
+async def get_optional_features(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=1000),
+    name: Optional[str] = None,
+    source: Optional[str] = None,
+    feature_type: Optional[str] = None
+):
+    # Build query filter
+    query_filter = {"key": "optionalfeatures"}
+    
+    if name:
+        query_filter["name"] = {"$regex": name, "$options": "i"}
+    
+    if source:
+        query_filter["raw.source"] = source
+    
+    if feature_type:
+        query_filter["raw.featureType"] = {"$in": [feature_type]}
+    
+    # Get optional features from database
+    features_cursor = compendia.find(query_filter).skip(skip).limit(limit)
+    features = await features_cursor.to_list(length=limit)
+    
+    # Convert to summary models
+    feature_summaries = []
+    for feature in features:
+        # Extract prerequisites
+        prerequisites = []
+        for prereq in feature.get("raw", {}).get("prerequisite", []):
+            if "level" in prereq:
+                level_info = prereq["level"]
+                class_info = level_info.get("class", {})
+                class_name = class_info.get("name", "Unknown Class")
+                level_num = level_info.get("level", 0)
+                prerequisites.append(f"Level {level_num} {class_name}")
+            
+            if "spell" in prereq:
+                spells = prereq["spell"]
+                if isinstance(spells, list):
+                    prerequisites.append(f"Spell: {', '.join(spells)}")
+                else:
+                    prerequisites.append(f"Spell: {spells}")
+            
+            if "pact" in prereq:
+                prerequisites.append(f"Pact: {prereq['pact']}")
+            
+            if "item" in prereq:
+                items = prereq["item"]
+                prerequisites.append(f"Item: {', '.join(items)}")
+            
+            if "optionalfeature" in prereq:
+                features = prereq["optionalfeature"]
+                prerequisites.append(f"Requires: {', '.join(features)}")
+        
+        feature_summaries.append(OptionalFeatureSummary(
+            id=feature.get("id"),
+            name=feature.get("name"),
+            source=feature.get("raw", {}).get("source", ""),
+            page=feature.get("raw", {}).get("page", 0),
+            description=feature.get("normalized", {}).get("description", ""),
+            feature_types=feature.get("raw", {}).get("featureType", []),
+            prerequisites=prerequisites
+        ))
+    
+    return feature_summaries
+# GET endpoint to get a specific optional feature by ID
+@app.get("/api/optional-features/{feature_id}", response_model=OptionalFeature)
+async def get_optional_feature(feature_id: str):
+    # Try to find by MongoDB ID first
+    if ObjectId.is_valid(feature_id):
+        feature = await compendia.find_one({"_id": ObjectId(feature_id), "key": "optionalfeatures"})
+        if feature:
+            return feature
+    
+    # If not found by MongoDB ID, try by feature ID
+    feature = await compendia.find_one({"id": feature_id, "key": "optionalfeatures"})
+    if not feature:
+        raise HTTPException(status_code=404, detail="Optional feature not found")
+    
+    return feature
+# GET endpoint to search optional features by name
+@app.get("/api/optional-features/search/{name}", response_model=List[OptionalFeatureSummary])
+async def search_optional_features(name: str, limit: int = Query(10, ge=1, le=50)):
+    # Search for optional features with name matching the query
+    features_cursor = compendia.find({
+        "key": "optionalfeatures",
+        "name": {"$regex": name, "$options": "i"}
+    }).limit(limit)
+    
+    features = await features_cursor.to_list(length=limit)
+    
+    # Convert to summary models
+    feature_summaries = []
+    for feature in features:
+        # Extract prerequisites
+        prerequisites = []
+        for prereq in feature.get("raw", {}).get("prerequisite", []):
+            if "level" in prereq:
+                level_info = prereq["level"]
+                class_info = level_info.get("class", {})
+                class_name = class_info.get("name", "Unknown Class")
+                level_num = level_info.get("level", 0)
+                prerequisites.append(f"Level {level_num} {class_name}")
+            
+            if "spell" in prereq:
+                spells = prereq["spell"]
+                if isinstance(spells, list):
+                    prerequisites.append(f"Spell: {', '.join(spells)}")
+                else:
+                    prerequisites.append(f"Spell: {spells}")
+            
+            if "pact" in prereq:
+                prerequisites.append(f"Pact: {prereq['pact']}")
+            
+            if "item" in prereq:
+                items = prereq["item"]
+                prerequisites.append(f"Item: {', '.join(items)}")
+            
+            if "optionalfeature" in prereq:
+                features = prereq["optionalfeature"]
+                prerequisites.append(f"Requires: {', '.join(features)}")
+        
+        feature_summaries.append(OptionalFeatureSummary(
+            id=feature.get("id"),
+            name=feature.get("name"),
+            source=feature.get("raw", {}).get("source", ""),
+            page=feature.get("raw", {}).get("page", 0),
+            description=feature.get("normalized", {}).get("description", ""),
+            feature_types=feature.get("raw", {}).get("featureType", []),
+            prerequisites=prerequisites
+        ))
+    
+    return feature_summaries
+# GET endpoint to get optional features by type
+@app.get("/api/optional-features/type/{feature_type}", response_model=List[OptionalFeatureSummary])
+async def get_optional_features_by_type(feature_type: str, limit: int = Query(50, ge=1, le=100)):
+    # Get optional features of a specific type
+    features_cursor = compendia.find({
+        "key": "optionalfeatures",
+        "raw.featureType": {"$in": [feature_type]}
+    }).limit(limit)
+    
+    features = await features_cursor.to_list(length=limit)
+    
+    # Convert to summary models
+    feature_summaries = []
+    for feature in features:
+        # Extract prerequisites
+        prerequisites = []
+        for prereq in feature.get("raw", {}).get("prerequisite", []):
+            if "level" in prereq:
+                level_info = prereq["level"]
+                class_info = level_info.get("class", {})
+                class_name = class_info.get("name", "Unknown Class")
+                level_num = level_info.get("level", 0)
+                prerequisites.append(f"Level {level_num} {class_name}")
+            
+            if "spell" in prereq:
+                spells = prereq["spell"]
+                if isinstance(spells, list):
+                    prerequisites.append(f"Spell: {', '.join(spells)}")
+                else:
+                    prerequisites.append(f"Spell: {spells}")
+            
+            if "pact" in prereq:
+                prerequisites.append(f"Pact: {prereq['pact']}")
+            
+            if "item" in prereq:
+                items = prereq["item"]
+                prerequisites.append(f"Item: {', '.join(items)}")
+            
+            if "optionalfeature" in prereq:
+                features = prereq["optionalfeature"]
+                prerequisites.append(f"Requires: {', '.join(features)}")
+        
+        feature_summaries.append(OptionalFeatureSummary(
+            id=feature.get("id"),
+            name=feature.get("name"),
+            source=feature.get("raw", {}).get("source", ""),
+            page=feature.get("raw", {}).get("page", 0),
+            description=feature.get("normalized", {}).get("description", ""),
+            feature_types=feature.get("raw", {}).get("featureType", []),
+            prerequisites=prerequisites
+        ))
+    
+    return feature_summaries
+# GET endpoint to get all available feature types
+@app.get("/api/optional-features/types")
+async def get_optional_feature_types():
+    # Get distinct feature types
+    feature_types = await compendia.distinct(
+        "raw.featureType", 
+        {"key": "optionalfeatures"}
+    )
+    
+    # Flatten the list of lists
+    flattened_types = []
+    for type_list in feature_types:
+        if isinstance(type_list, list):
+            flattened_types.extend(type_list)
+        else:
+            flattened_types.append(type_list)
+    
+    # Remove duplicates
+    unique_types = list(set(flattened_types))
+    
+    return {"feature_types": unique_types}
 # # # # # # # # # #
-# # #  Feats  # # #
+# # # Psionic # # #
 # # # # # # # # # #
+class PsionicBase(BaseModel):
+    name: str
+    source: str
+    type: str  # "D" for discipline, "T" for talent
+    order: Optional[str] = None  # Only for disciplines
+    entries: List[str]
+    focus: Optional[str] = None  # Only for disciplines
+    modes: Optional[List[Mode]] = None  # Only for disciplines
+class PsionicInDB(PsionicBase):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
 
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+class Psionic(PsionicBase):
+    class Settings:
+        name = "psionics"
+        use_state_management = True
+    class Config:
+        schema_extra = {
+            "example": {
+                "name": "Adaptive Body",
+                "source": "UATheMysticClass",
+                "type": "D",
+                "order": "Immortal",
+                "entries": ["You can alter your body..."],
+                "focus": "While focused on this discipline...",
+                "modes": [],
+            }
+        }
+# GET endpoint to list all psionics
+@app.get("/api/psionics", response_model=List[Psionic])
+async def get_psionics(
+    skip: int = 0,
+    limit: int = 100,
+    type: Optional[str] = None,
+    order: Optional[str] = None,
+    source: Optional[str] = None
+):
+    query = {"key": "psionics"}
+    if type:
+        query["type"] = type
+    if order:
+        query["order"] = order
+    if source:
+        query["source"] = source
+        
+    psionics = await compendia.find(query).skip(skip).limit(limit).to_list()
+    return psionics
+# GET endpoint to find psionic by id
+@app.get("/api/psionics/{psionic_id}", response_model=Psionic)
+async def get_psionic(psionic_id: str):
+    psionic = await compendia.get(psionic_id)
+    if not psionic:
+        raise HTTPException(status_code=404, detail="Psionic not found")
+    return psionic
+# GET endpoint to get psionic by name
+@app.get("/api/psionics/name/{name}", response_model=Psionic)
+async def get_psionic_by_name(name: str):
+    psionic = await compendia.find_one(compendia.name == name)
+    if not psionic:
+        raise HTTPException(status_code=404, detail="Psionic not found")
+    return psionic
+# # # # # # # # # #
+# # #  Sense  # # #
+# # # # # # # # # #
+class SenseVersion(BaseModel):
+    source: str
+    entries: List[Any]
+    reprintedAs: Optional[List[str]] = None
+class Sense(BaseModel):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    name: str
+    versions: List[SenseVersion]
+    description: str  # Merged description from all versions
+    source: Optional[str] = None
+    key: Optional[str] = None
 
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+# GET endpoint to list all senses
+@app.get("/api/senses", response_model=List[Sense])
+async def get_all_senses():
+    """Get all senses, merging entries for senses with the same name"""
+    senses_map = {}
+    
+    # Query all sense documents from MongoDB
+    query = {"key": "senses"}
+    cursor = compendia.find(query)
+    
+    async for doc in cursor:
+        name = doc["name"]
+        
+        # Create sense version from the document
+        version = SenseVersion(
+            source=doc["raw"]["source"],
+            entries=doc["raw"]["entries"],
+            reprintedAs=doc["raw"].get("reprintedAs")
+        )
+        
+        if name not in senses_map:
+            # Create new sense entry
+            merged_description = " ".join([
+                entry if isinstance(entry, str) else 
+                " ".join([item for item in entry.get("items", []) if isinstance(item, dict)])
+                for entry in doc["raw"]["entries"]
+            ])
+            
+            senses_map[name] = Sense(
+                _id=doc["_id"],
+                name=name,
+                versions=[version],
+                description=merged_description,
+                source=doc.get("source"),
+                key=doc.get("key")
+            )
+        else:
+            # Add version to existing sense and update description
+            senses_map[name].versions.append(version)
+            
+            # Update description with new entries
+            new_entries = []
+            for entry in doc["raw"]["entries"]:
+                if isinstance(entry, str):
+                    new_entries.append(entry)
+                elif isinstance(entry, dict) and "items" in entry:
+                    for item in entry["items"]:
+                        if isinstance(item, dict) and "entries" in item:
+                            for sub_entry in item["entries"]:
+                                if isinstance(sub_entry, str):
+                                    new_entries.append(sub_entry)
+            
+            senses_map[name].description += " " + " ".join(new_entries)
+    
+    return list(senses_map.values())
+# GET endpoint to get sense from name
+@app.get("/api/senses/{name}", response_model=Sense)
+async def get_sense_by_name(name: str):
+    """Get a specific sense by name, merging all versions"""
+    senses = []
+    query = {"key": "senses", "name": name}
+    cursor = compendia.find(query)
+    
+    async for doc in cursor:
+        senses.append(doc)
+    
+    if not senses:
+        raise HTTPException(status_code=404, detail="Sense not found")
+    
+    # Create merged sense
+    merged_versions = []
+    merged_description_parts = []
+    
+    for doc in senses:
+        version = SenseVersion(
+            source=doc["raw"]["source"],
+            entries=doc["raw"]["entries"],
+            reprintedAs=doc["raw"].get("reprintedAs")
+        )
+        merged_versions.append(version)
+        
+        # Add to description
+        for entry in doc["raw"]["entries"]:
+            if isinstance(entry, str):
+                merged_description_parts.append(entry)
+            elif isinstance(entry, dict) and "items" in entry:
+                for item in entry["items"]:
+                    if isinstance(item, dict) and "entries" in item:
+                        for sub_entry in item["entries"]:
+                            if isinstance(sub_entry, str):
+                                merged_description_parts.append(sub_entry)
+    
+    # Use the first document as the base
+    base_doc = senses[0]
+    
+    return Sense(
+        _id=base_doc["_id"],
+        name=name,
+        versions=merged_versions,
+        description=" ".join(merged_description_parts),
+        source=base_doc.get("source"),
+        key=base_doc.get("key")
+    )
+# # # # # # # # # #
+# # #  Skill  # # #
+# # # # # # # # # #
+class SkillVersion(BaseModel):
+    source: str
+    ability: str
+    entries: List[Any]
+    reprintedAs: Optional[List[str]] = None
+class Skill(BaseModel):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    name: str
+    ability: str
+    versions: List[SkillVersion]
+    description: str  # Merged description from all versions
+    source: Optional[str] = None
+    key: Optional[str] = None
 
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+# GET endpoint to list all skills
+@app.get("/api/skills", response_model=List[Skill])
+async def get_all_skills():
+    """Get all skills, merging entries for skills with the same name"""
+    skills_map = {}
+    
+    # Query all skill documents from MongoDB
+    query = {"key": "skills"}
+    cursor = compendia.find(query)
+    
+    async for doc in cursor:
+        name = doc["name"]
+        
+        # Create skill version from the document
+        version = SkillVersion(
+            source=doc["raw"]["source"],
+            ability=doc["raw"]["ability"],
+            entries=doc["raw"]["entries"],
+            reprintedAs=doc["raw"].get("reprintedAs")
+        )
+        
+        if name not in skills_map:
+            # Create new skill entry
+            merged_description = extract_text_from_entries(doc["raw"]["entries"])
+            
+            skills_map[name] = Skill(
+                _id=doc["_id"],
+                name=name,
+                ability=doc["raw"]["ability"],
+                versions=[version],
+                description=merged_description,
+                source=doc.get("source"),
+                key=doc.get("key")
+            )
+        else:
+            # Add version to existing skill and update description
+            skills_map[name].versions.append(version)
+            
+            # Update description with new entries
+            new_description = extract_text_from_entries(doc["raw"]["entries"])
+            skills_map[name].description += " " + new_description
+    
+    return list(skills_map.values())
+# GET endpoint to get skill from name
+@app.get("/api/skills/{name}", response_model=Skill)
+async def get_skill_by_name(name: str):
+    """Get a specific skill by name, merging all versions"""
+    skills = []
+    query = {"key": "skills", "name": name}
+    cursor = compendia.find(query)
+    
+    async for doc in cursor:
+        skills.append(doc)
+    
+    if not skills:
+        raise HTTPException(status_code=404, detail="Skill not found")
+    
+    # Create merged skill
+    merged_versions = []
+    merged_description_parts = []
+    
+    for doc in skills:
+        version = SkillVersion(
+            source=doc["raw"]["source"],
+            ability=doc["raw"]["ability"],
+            entries=doc["raw"]["entries"],
+            reprintedAs=doc["raw"].get("reprintedAs")
+        )
+        merged_versions.append(version)
+        
+        # Add to description
+        description_part = extract_text_from_entries(doc["raw"]["entries"])
+        merged_description_parts.append(description_part)
+    
+    # Use the first document as the base
+    base_doc = skills[0]
+    
+    return Skill(
+        _id=base_doc["_id"],
+        name=name,
+        ability=base_doc["raw"]["ability"],
+        versions=merged_versions,
+        description=" ".join(merged_description_parts),
+        source=base_doc.get("source"),
+        key=base_doc.get("key")
+    )
+# GET endpoint to list all skills by ability
+@app.get("/api/skills/ability/{ability}", response_model=List[Skill])
+async def get_skills_by_ability(ability: str):
+    """Get all skills for a specific ability score"""
+    skills = []
+    
+    query = {"key": "senses", "raw.ability": ability}
+    cursor = compendia.find(query)
+    
+    skills_map = {}
+    
+    async for doc in cursor:
+        skills.append(doc)
 
+    if not skills:
+        raise HTTPException(status_code=404, detail="Skill not found")
+        
+    for doc in skills:
+        name = doc["name"]
+        
+        # Create skill version from the document
+        version = SkillVersion(
+            source=doc["raw"]["source"],
+            ability=doc["raw"]["ability"],
+            entries=doc["raw"]["entries"],
+            reprintedAs=doc["raw"].get("reprintedAs")
+        )
+        
+        if name not in skills_map:
+            # Create new skill entry
+            merged_description = extract_text_from_entries(doc["raw"]["entries"])
+            
+            skills_map[name] = Skill(
+                _id=doc["_id"],
+                name=name,
+                ability=doc["raw"]["ability"],
+                versions=[version],
+                description=merged_description,
+                source=doc.get("source"),
+                key=doc.get("key")
+            )
+        else:
+            # Add version to existing skill and update description
+            skills_map[name].versions.append(version)
+            
+            # Update description with new entries
+            new_description = extract_text_from_entries(doc["raw"]["entries"])
+            skills_map[name].description += " " + new_description
+    
+    return list(skills_map.values())
+# # # # # # # # # #
+#  Variant Rules  #
+# # # # # # # # # #
+class RuleEntry(BaseModel):
+    type: Optional[str] = None
+    name: Optional[str] = None
+    source: Optional[str] = None
+    entries: Optional[List[Any]] = None
+class RawRule(BaseModel):
+    name: str
+    source: str
+    ruleType: str
+    entries: List[Union[str, RuleEntry]]
+    reprintedAs: Optional[List[str]] = None
+    additionalSources: Optional[List[Any]] = None
+class VariantRule(BaseModel):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    rule_id: str = Field(alias="id")
+    key: str
+    v: int = Field(alias="__v")
+    name: str
 
-
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {
+            ObjectId: str
+        }
+# GET endpoint to list all rules
+@app.get("/api/variant-rules", response_model=VariantRule)
+async def get_all_rules():
+    if (rules := await compendia.find({"key": "variantrules"}).to_list()) is not None:
+        return rules
+    raise HTTPException(status_code=404, detail="Variant rules not found")
+# GET endpoint to get a rule obj from its name
+@app.get("/api/variant-rules/{name}", response_model=VariantRule)
+async def get_variant_rule(name: str):
+    if (rule := await compendia.find_one({"key": "variantrules", "name": name})) is not None:
+        return rule
+    raise HTTPException(status_code=404, detail="Variant rule not found")
+# GET endpoint to list all rules by source
+@app.get("/api/variant-rules/source/{source}", response_model=List[VariantRule])
+async def get_rules_by_source(source: str):
+    rules = await compendia.find({"key": "variantrules", "normalized.raw.source": source}).to_list()
+    return rules
+# GET endpoint to list all rules by type
+@app.get("/api/variant-rules/type/{rule_type}", response_model=List[VariantRule])
+async def get_rules_by_type(rule_type: str):
+    rules = await compendia.find({"key": "variantrules", "normalized.raw.ruleType": rule_type}).to_list()
+    return rules
 
 
 
