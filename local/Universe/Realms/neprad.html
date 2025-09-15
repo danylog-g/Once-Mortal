@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Once Mortal: Neo-Neprad</title>
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <a href="sea.html" class="logo">Neo-Neprad</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="dashboard-title">
+            <h1>Wiki</h1>
+            <p>Main page for viewing information about Neo-Neprad.</p>
+        </div>
+
+        <div class="dashboard-balls">
+            <img class="card-icon" src="../../ico/cyber gun.png" alt="Gun Icon"></img>
+            <h3 class="card-title">Guns</h3>
+            <p class="card-description">Design Gun.</p>
+
+            <div class="category-selector">
+                <div class="selector-group">
+                    <label for="weaponCategory">Weapon Category</label>
+                    <select id="weaponCategory">
+                        <option value="pistols">Pistols</option>
+                        <option value="rifles">Rifles</option>
+                        <option value="shotguns">Shotguns</option>
+                        <option value="snipers">Snipers</option>
+                        <option value="lmgs">Machine Guns</option>
+                        <option value="atws">Anti-Tank</option>
+                    </select>
+                </div>
+
+                <div class="selector-group">
+                    <label for="attachmentCategory">Attachment Category</label>
+                    <select id="attachmentCategory">
+                        <option value="silencer">Silencer</option>
+                        <option value="frame">Frame</option>
+                        <option value="stock">Stock</option>
+                        <option value="grip">Grip</option>
+                        <option value="barrel">Barrel</option>
+                        <option value="magazine">Magazine</option>
+                        <option value="scope">Scope</option>
+                        <option value="sight">Sight</option>
+                        <option value="bullet">Bullet</option>
+                        <option value="light">Light</option>
+                        <option value="switch">Switch</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="builder-container">
+                <div class="panel">
+                    <h2>Weapon Options</h2>
+                    <div id="weaponOptions" class="options">
+                        <!-- Weapon options will be generated here -->
+                    </div>
+
+                    <h2>Attachment Options</h2>
+                    <div id="attachmentOptions" class="options">
+                        <!-- Attachment options will be generated here -->
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>Firearm Stats</h2>
+
+                    <div class="stats">
+                        <div class="stat-row">
+                            <span class="stat-name">Damage:</span>
+                            <span class="stat-value" id="statDamage">1d10</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Range:</span>
+                            <span class="stat-value" id="statRange">30/90 ft</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Ammo Capacity:</span>
+                            <span class="stat-value" id="statAmmo">6 shots</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Accuracy:</span>
+                            <span class="stat-value" id="statAccuracy">+0</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Volume:</span>
+                            <span class="stat-value" id="statVolume">140 dB (Loud)</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Weight:</span>
+                            <span class="stat-value" id="statWeight">3.0 lb</span>
+                        </div>
+                    </div>
+
+                    <h2>Current Setup</h2>
+                    <div class="attachment-list" id="attachmentList">
+                        <div class="attachment-item">
+                            <div class="attachment-header">
+                                <span class="attachment-name">Standard Pistol</span>
+                                <span class="attachment-category">Weapon</span>
+                            </div>
+                            <div class="attachment-effects">Base stats</div>
+                        </div>
+                    </div>
+
+                    <h2>Recent Changes</h2>
+                    <div class="changes-container">
+                        <div id="changesList">
+                            <div class="change-item change-neutral">
+                                Standard Pistol selected
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-cock">
+                <button onclick="generateRandomGun()">Randomize Gun</button>
+                <button onclick="exportGun()">Export Gun</button>
+                <button onclick="importGun()">Import Gun</button>
+                <button onclick="saveGun()">Save Gun</button>
+            </div> <br>
+
+            <div class="dashboard-balls">
+                <h2>Firearms Rules</h2>
+                <p class="card-description">
+                    <strong>Burst Fire</strong>: 
+                    As an action, you can expend 5 pieces of a Burst Fire weapon's ammunition to spray shots at n number of targets (proficiency modifier) within the weapon's normal range. 
+                    Each creature in that area must succeed on a DC 12 + (Dexterity Modifier + Proficiency Bonus) Dexterity saving throw or take damage. 
+                    Roll the weapon's damage once, and apply it to each creature that failed the save.
+                    <br>
+                    <strong>Fully Automatic</strong>: As an action, you can expend the entirity of a Fully Automatic weapon's ammunition to spray shots at n number of targets (number of bullets) within the weapon's normal range. 
+                    Each creature in that area must succeed on a DC 8 + (Dexterity Modifier + Proficiency Bonus) Dexterity saving throw or take damage. 
+                    Each target which fails the saving throw ends up taking damage equal to the number of bullets fired at them, or up to three instances of weapon damage.
+                    <br>
+                    <strong>Reload</strong>: You can make a limited number of shots with a Reload weapon. You must then reload the weapon as an action or a Bonus Action. 
+                    All non-energy weapons have a specified number of shots per reload, see Ammo Capacity.
+                </p>
+            </div>
+        </div> <br>
+
+        <div class="dashboard-balls">
+            <img class="card-icon" src="../../ico/cyber guy.png" alt="Gun Icon"></img>
+            <h3 class="card-title">Characters</h3>
+            <p class="card-description">Create a Character</p>
+
+            <div class="cybernetics-container">
+                <div class="cybernetics-categories">
+                    <h3>Cybernetics Categories</h3>
+                    <div class="cyber-category active" data-category="neural">Neural Enhancements</div>
+                    <div class="cyber-category" data-category="sensory">Sensory Systems</div>
+                    <div class="cyber-category" data-category="limbs">Limb Enhancements</div>
+                    <div class="cyber-category" data-category="internal">Internal Systems</div>
+                    <div class="cyber-category" data-category="dermal">Dermal Modifications</div>
+                    <div class="cyber-category" data-category="special">Special Systems</div>
+                </div>
+
+                <div class="cybernetics-options">
+                    <!-- Options will be generated here -->
+                </div>
+            </div>
+
+            <div class="installed-cybernetics">
+                <h3>Installed Cybernetics</h3>
+                <label for="level">Level: </label>
+                <input type="number" id="level" min="1" value="3">
+                <div id="cyberneticsList">
+                    <!-- Installed cybernetics will be generated here -->
+                </div>
+
+                <div class="cyber-effects-summary">
+                    <h3>Active Effects</h3>
+                    <div id="effectsSummary">
+                        <div class="effect-item">
+                            <span class="effect-name">Cybernetics Capacity:</span>
+                            <span class="effect-value" id="capacityValue">0/12</span>
+                        </div>
+                        <div class="effect-item">
+                            <span class="effect-name">Humanity Loss:</span>
+                            <span class="effect-value" id="humanityValue">0%</span>
+                        </div>
+                        <!-- Effects will be generated here -->
+                    </div>
+                    <div class="cybernetics-cost">
+                        Total Cost: <span id="totalCost">0</span> ₵
+                    </div>
+                </div>
+            </div> <br>
+
+            <div class="dashboard-cock">
+                <button onclick="generateRandomCybernetics()">Randomize Cybernetics</button>
+                <button onclick="exportCybernetics()">Export Cybernetics</button>
+                <button onclick="importCybernetics()">Import Cybernetics</button>
+                <button onclick="saveCybernetics()">Save Cybernetics</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 Once Mortal | Astral Sea | Neo-Neprad | Danylo Gula </p>
+    </footer>
+
+    <script src="neprad.js"></script>
+</body>
+
+</html>

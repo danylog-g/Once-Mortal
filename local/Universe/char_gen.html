@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Generator</title>
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../misc.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="universe.html" class="logo">Once Mortal</a>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="dashboard-title">
+            <h1>Character Generator</h1>
+            <p>Blah Blah Blah.</p>
+        </div>
+        
+        <div class="dashboard-balls">
+            <div class="controls">
+                <div class="location-selector">
+                    <svg class="location-icon" viewBox="0 0 24 24">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+                    </svg>
+                    <select id="locationSelect">
+                        <option value="Garna">Garna</option>
+                        <option value="Jotunheim">Jotunheim</option>
+                        <option value="Endless City">Endless City</option>
+                        <option value="Felled Realm">Felled Realm</option>
+                        <option value="Feywild">Feywild</option>
+                        <option value="Aerialis">Aerialis</option>
+                        <option value="Kyofu">Kyofu</option>
+                        <option value="Realm of Beasts">Realm of Beasts</option>
+                        <option value="Astral Sea">Astral Sea</option>
+                        <option value="Neo-Neprad">Neo-Neprad</option>
+                        <option value="Divine Realm">Divine Realm</option>
+                    </select>
+                </div>
+                <button class="btn" id="generateBtn">Generate Character</button>
+                <button class="btn btn-outline" id="saveBtn">Save Character</button>
+            </div>
+            <div class="character-header">
+                <div class="character-info">
+                    <div>
+                        <h1 class="character-name" id="charName">Elandra Moonshadow</h1>
+                        <div class="detail-item">
+                            <span class="detail-label">Race</span>
+                            <span class="detail-value" id="charRace">Elf</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Class</span>
+                            <span class="detail-value" id="charClass">Rogue</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Level</span>
+                            <span class="detail-value" id="charLevel">5</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Background</span>
+                            <span class="detail-value" id="charBackground">Urchin</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Alignment</span>
+                            <span class="detail-value" id="charAlignment">Chaotic Good</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Location</span>
+                            <span class="detail-value" id="charLocation">Garna</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="character-traits">
+                            <span class="trait-badge" id="charHitPoints">HP: 32/42</span>
+                            <span class="trait-badge">AC: <span id="charArmorClass">16</span></span>
+                            <span class="trait-badge">Speed: <span id="charSpeed">30</span> ft</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="character-sheet">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Attributes</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="stat-grid" id="attributesGrid">
+                            <!-- Attributes will be generated here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Combat Stats</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="form-label">Hit Points</label>
+                            <div class="hp-bar">
+                                <div class="hp-fill"></div>
+                                <div class="hp-text" id="hpText">32 / 42</div>
+                            </div>
+                        </div>
+                        <div class="stat-grid">
+                            <div class="stat-box">
+                                <div class="stat-value" id="initiative">+3</div>
+                                <div class="stat-label">Initiative</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value" id="proficiency">+3</div>
+                                <div class="stat-label">Proficiency</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value" id="passivePerception">14</div>
+                                <div class="stat-label">Passive Perception</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Equipment</h2>
+                        <div class="location-badge" id="equipmentLocation">Garna</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="equipment-grid" id="equipmentGrid">
+                            <!-- Equipment will be generated here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Class Features</h2>
+                    </div>
+                    <div class="card-body">
+                        <ul class="abilities-list" id="featuresList">
+                            <!-- Features will be generated here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2025 Once Mortal | Universe | Danylo Gula </p>
+    </footer>
+
+    <script src="char_gen.js"></script>
+</body>
+</html>
