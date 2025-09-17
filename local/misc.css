@@ -407,6 +407,13 @@
     box-shadow: 0 0 7px var(--green-light),
                 0 0 21px var(--green-dark);
 }
+#race-fairy {
+    padding: 1.33rem;
+    border-radius: 2.5rem;
+    border: 1px solid var(--green-light);
+    box-shadow: 0 0 7px var(--green-dark),
+                0 0 21px var(--purple-dark);
+}
 #race-birdman {
     padding: 1.33rem;
     border-radius: 2.5rem;

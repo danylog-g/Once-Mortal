@@ -35,7 +35,7 @@ class PyObjectId(ObjectId):
         yield cls.validate
 
     @classmethod
-    def validate(cls, v):
+    def validate(cls, v, field=None):
         if not ObjectId.is_valid(v):
             raise ValueError("Invalid objectid")
         return ObjectId(v)
@@ -263,29 +263,34 @@ class Race(BaseModel):
 def transform_race_data(db_race: Dict) -> Race:
     """Transform raw race data from database to simplified model"""
     raw = db_race.get("raw", {})
+    
     # get traits from entries
     traits = []
     for entry in raw.get("entries", []):
-        if entry.get("type") == "entries" and "name" in entry:
+        if isinstance(entry, dict) and entry.get("type") == "entries" and "name" in entry:
             description = " ".join([
                 e for e in entry.get("entries", []) 
                 if isinstance(e, str)
             ])
             traits.append(Trait(name=entry["name"], description=description))
+    
     # get size as string (take first element from array)
     size = raw.get("size", ["M"])[0] if raw.get("size") else "M"
+    
     # get speed
     speed_data = raw.get("speed", {})
     if isinstance(speed_data, dict):
         speed = Speed(**speed_data)
     else:
         speed = speed_data  # assuming int
+    
     # get age information
     age_data = {}
     if "age" in raw:
         if isinstance(raw["age"], dict):
             age_data = raw["age"]
         # might need more logic here based on how age is represented
+    
     # get senses
     senses_data = {}
     if "darkvision" in raw: # will optimize
@@ -296,6 +301,34 @@ def transform_race_data(db_race: Dict) -> Race:
         senses_data["tremorsense"] = raw["tremorsense"]
     if "truesight" in raw:
         senses_data["truesight"] = raw["truesight"]
+    
+    # Handle proficiencies - convert dict format to list of strings
+    proficiencies = []
+    skill_proficiencies = raw.get("skillProficiencies", [])
+    if skill_proficiencies and isinstance(skill_proficiencies, list):
+        for item in skill_proficiencies:
+            if isinstance(item, dict):
+                # Extract skill names from dict format like {"intimidation": True}
+                proficiencies.extend(item.keys())
+            elif isinstance(item, str):
+                proficiencies.append(item)
+    
+    # Handle resistances
+    resistances = []
+    resist_data = raw.get("resist", [])
+    if resist_data and isinstance(resist_data, list):
+        for item in resist_data:
+            if isinstance(item, str):
+                resistances.append(item)
+    
+    # Handle languages
+    languages = []
+    languages_data = raw.get("languages", [])
+    if languages_data and isinstance(languages_data, list):
+        for item in languages_data:
+            if isinstance(item, str):
+                languages.append(item)
+    
     # return race obj
     return Race(
         _id=db_race["_id"],
@@ -305,9 +338,9 @@ def transform_race_data(db_race: Dict) -> Race:
         speed=speed,
         age=Age(**age_data) if age_data else None,
         senses=Senses(**senses_data) if senses_data else None,
-        resistances=raw.get("resist", []),
-        proficiencies=raw.get("skillProficiencies", []),
-        languages=[],  # Would need to extract from raw data
+        resistances=resistances,
+        proficiencies=proficiencies,
+        languages=languages,
         traits=traits,
         spells=raw.get("additionalSpells", [])
     )
@@ -351,7 +384,6 @@ async def get_race(race_id: str):
 class SubclassFeature(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     name: str
-    description: str
     level: int
     source: str
 
@@ -365,7 +397,6 @@ class Subclass(BaseModel):
     short_name: str
     source: str
     page: Optional[int] = None
-    description: Optional[str] = None
     features: List[SubclassFeature] = []
     additional_spells: Optional[Dict[str, Any]] = None
 
@@ -376,7 +407,6 @@ class Subclass(BaseModel):
 class ClassFeature(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     name: str
-    description: str
     level: int
     source: str
     is_subclass_feature: bool = False
@@ -563,50 +593,149 @@ async def get_class_features_by_level(class_id: PyObjectId, level: int):
 # # # # # # # # # #
 # # Backgrounds # #
 # # # # # # # # # #
-class BackgroundEntry(BaseModel):
-    type: str
-    name: Optional[str] = None
-    entry: Optional[str] = None
 class Background(BaseModel):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-    background_id: str = Field(alias="id")
-    file: str
+    id_: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    id: str
     name: str
     source: str
-    ability: List[AbilityChoice]
-    feats: List[Feat]
-    skillProficiencies: List[SkillProficiency]
-    toolProficiencies: List[ToolProficiency]
-    entries: List[BackgroundEntry]
+    ability: Optional[List[Dict[str, Any]]] = None
+    feats: Optional[List[Any]] = None
+    skill_proficiencies: Optional[List[str]] = None
+    tool_proficiencies: Optional[List[str]] = None
+    language_proficiencies: Optional[List[str]] = None
+    description: str
 
     class Config:
         allow_population_by_field_name = True
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
-class BackgroundResponse(BaseModel):
-    id: str
-    name: str
-    source: str
-    ability: List[Dict[str, Any]]
-    feats: List[str]
-    skill_proficiencies: List[str]
-    tool_proficiencies: List[str]
-    description: str
-
-    class Config:
-        allow_population_by_field_name = True
-def transform_background(background: Dict) -> Dict:
-    return {
-        "id": background["id"],
-        "name": background["name"],
-        "source": background["source"],
-        "ability": background["raw"]["ability"],
-        "feats": [list(feat.keys())[0] for feat in background["raw"]["feats"]],
-        "skill_proficiencies": list(background["raw"]["skillProficiencies"][0].keys()),
-        "tool_proficiencies": list(background["raw"]["toolProficiencies"][0].keys()),
-        "description": background["normalized"]["description"]
-    }
-# GET endpoint to list all backgrounds
+def transform_background(bg: Union[Dict, List[Dict]]) -> Union[Dict, List[Dict]]:
+    """Transform background document(s) to response format"""
+    def transform_single_bg(background: Dict) -> Dict:
+        """Helper function to transform a single background obj"""
+        raw = background.get("raw", {})
+        # Extract ability increases
+        ability = raw.get("ability", [])
+        # Extract all feats
+        feats = []
+        for i in range(min(4, len(raw.get("entries", [])))):
+            if (isinstance(raw["entries"][i], dict) and 
+                "name" in raw["entries"][i] and 
+                "Feature: " in raw["entries"][i]["name"]):
+                feats.append(raw["entries"][i])
+        for i in range(min(1, len(raw.get("feats", [])))):
+            if isinstance(raw["feats"][i], dict):
+                feats.append(raw["feats"][i])
+        if raw.get("_copy", []):
+            if isinstance(raw["_copy"], dict):
+                if isinstance(raw["_copy"]["_mod"], dict):
+                    if isinstance(raw["_copy"]["_mod"]["entries"], dict):
+                        if isinstance(raw["_copy"]["_mod"]["entries"]["items"], dict):
+                           feats.append(raw["_copy"]["_mod"]["entries"]["items"])
+                    if isinstance(raw["_copy"]["_mod"]["entries"], list):
+                        if len(raw["_copy"]["_mod"]["entries"]) > 1 and isinstance(raw["_copy"]["_mod"]["entries"][0], dict):
+                            if isinstance(raw["_copy"]["_mod"]["entries"][0]["mode"], dict) and "Feature: " in raw["_copy"]["_mod"]["entries"][0]["mode"]:
+                                if isinstance(raw["_copy"]["_mod"]["entries"][0]["items"], dict):
+                                    feats.append(raw["_copy"]["_mod"]["entries"][0]["items"])
+                        if len(raw["_copy"]["_mod"]["entries"]) > 2 and isinstance(raw["_copy"]["_mod"]["entries"][1], dict):
+                            if isinstance(raw["_copy"]["_mod"]["entries"][1]["items"], dict):
+                                feats.append(raw["_copy"]["_mod"]["entries"][1]["items"])
+        # Extract skill proficiencies
+        skill_proficiencies = []
+        for skill_prof in raw.get("skillProficiencies", []):
+            if isinstance(skill_prof, dict):
+                skill_proficiencies.extend(list(skill_prof.keys()))
+        # Extract tool proficiencies
+        tool_proficiencies = []
+        for tool_prof in raw.get("toolProficiencies", []):
+            if isinstance(tool_prof, dict):
+                tool_proficiencies.extend(list(tool_prof.keys()))
+        # Extract language proficiencies
+        language_proficiencies = []
+        for lang_prof in raw.get("languageProficiencies", []):
+            if isinstance(lang_prof, dict):
+                if "anyStandard" in lang_prof:
+                    language_proficiencies.append(f"Any {lang_prof['anyStandard']}")
+                else:
+                    language_proficiencies.extend(list(lang_prof.keys()))
+        # Extract proper description from raw entries using the specific logic provided
+        description = ""
+        if raw.get("entries", []):
+            # Check if entries is a list with at least 2 elements
+            if isinstance(raw["entries"], list) and len(raw["entries"]) > 1:
+                # entries 1
+                if isinstance(raw["entries"][1], dict) and "entries" in raw["entries"][1]:
+                    entries1 = raw["entries"][1]["entries"]
+                    if len(entries1) > 0 and isinstance(entries1[0], str):
+                        description += entries1[0] + "\n\n"
+                    if len(entries1) > 1 and isinstance(entries1[1], str):
+                        description += entries1[1] + "\n\n"
+                # entries 2
+                if len(raw["entries"]) > 2 and isinstance(raw["entries"][2], dict) and "entries" in raw["entries"][2]:
+                    entries2 = raw["entries"][2]["entries"]
+                    for i in range(min(4, len(entries2))):
+                        if isinstance(entries2[i], str):
+                            description += entries2[i] + "\n\n"
+                # entries 3
+                if len(raw["entries"]) > 3 and isinstance(raw["entries"][3], dict) and "entries" in raw["entries"][3]:
+                    entries3 = raw["entries"][3]["entries"]
+                    if len(entries3) > 0 and isinstance(entries3[0], str):
+                        description += entries3[0] + "\n\n"
+                # entries 4
+                if len(raw["entries"]) > 4 and isinstance(raw["entries"][4], dict) and "entries" in raw["entries"][4]:
+                    entries4 = raw["entries"][4]["entries"]
+                    for i in range(min(2, len(entries4))):
+                        if isinstance(entries4[i], str):
+                            description += entries4[i] + "\n\n"
+                # entries 5
+                if len(raw["entries"]) > 5 and isinstance(raw["entries"][5], dict) and "entries" in raw["entries"][5]:
+                    entries5 = raw["entries"][5]["entries"]
+                    for i in range(min(2, len(entries5))):
+                        if isinstance(entries5[i], str):
+                            description += entries5[i] + "\n\n"
+            
+        if description == "":
+            description = "No description available."
+        return {
+            "id": background.get("id"),
+            "name": background.get("name"),
+            "source": raw.get("source"),
+            "ability": ability,
+            "feats": feats,
+            "skill_proficiencies": skill_proficiencies,
+            "tool_proficiencies": tool_proficiencies,
+            "language_proficiencies": language_proficiencies,
+            "description": description.strip()
+        }
+    # Handle both single background and array cases
+    if isinstance(bg, list):
+        return [transform_single_bg(background) for background in bg]
+    return transform_single_bg(bg)
+def merge_bgs(base_doc: Dict[str, Any], new_doc: Dict[str, Any]) -> Dict[str, Any]:
+    """Merge two backgrounds, using base document's valid fields where new document's are broken"""
+    merged_doc = new_doc.copy()
+    base_raw = base_doc.get("raw", {})
+    new_raw = new_doc.get("raw", {})
+    
+    # Merge language proficiencies
+    if not new_raw.get("languageProficiencies") and base_raw.get("languageProficiencies"):
+        merged_doc["raw"]["languageProficiencies"] = base_raw["languageProficiencies"]
+    
+    # Merge description if new doc has invalid description
+    merged_doc["raw"]["entries"] = base_raw.get("entries")
+    
+    # Merge reprintedAs array
+    if base_raw.get("reprintedAs"):
+        merged_doc["raw"].setdefault("reprintedAs", []).extend(base_raw["reprintedAs"])
+        # Remove duplicates while preserving order
+        seen = set()
+        merged_doc["raw"]["reprintedAs"] = [
+            x for x in merged_doc["raw"]["reprintedAs"] 
+            if not (x in seen or seen.add(x))
+        ]
+    
+    return merged_doc
+# GET endpoint to list all backgrounds (merged by name)
 @app.get("/api/backgrounds", response_model=List[Background])
 async def get_bgs(
     skip: int = 0,
@@ -622,16 +751,70 @@ async def get_bgs(
     if source:
         query["raw.source"] = {"$regex": source, "$options": "i"}
     
+    # Fetch all matching backgrounds
     bg_cursor = compendia.find(query).skip(skip).limit(limit)
-    bg = []
     
-    async for background in bg_cursor:
-        bg.append(transform_background(background))
+    # Group backgrounds by name for merging
+    backgrounds_by_name = defaultdict(list)
+    async for bg in bg_cursor:
+        backgrounds_by_name[bg["name"].lower()].append(bg)
     
-    return bg
-# GET endpoint to get specific background from id
+    # Merge backgrounds with the same name
+    merged_backgrounds = []
+    for name_key, bg_list in backgrounds_by_name.items():
+        if len(bg_list) == 1:
+            # Single background, no need to merge
+            merged_backgrounds.append(transform_background(bg_list[0]))
+        else:
+            # Multiple backgrounds with same name, merge them
+            # Identify base document (has reprintedAs)
+            base_doc = None
+            other_docs = []
+            
+            for bg in bg_list:
+                if bg.get("raw", {}).get("reprintedAs"):
+                    base_doc = bg
+                else:
+                    other_docs.append(bg)
+            
+            # If we found a base document, merge all others into it
+            if base_doc:
+                merged_doc = base_doc
+                for other_doc in other_docs:
+                    merged_doc = merge_bgs(merged_doc, other_doc)
+                merged_backgrounds.append(transform_background(merged_doc))
+            else:
+                # No base document found, just transform the first one
+                merged_backgrounds.append(transform_background(bg_list[0]))
+    
+    return merged_backgrounds
+# GET endpoint to get specific background by name (merged)
+@app.get("/api/backgrounds/name/{name}", response_model=Background)
+async def get_bg_by_name(name: str):
+    query = {"key": "backgrounds", "name": name}
+    
+    backgrounds = []
+    async for background in compendia.find(query):
+        if background.get("raw", {}).get("reprintedAs"):
+            continue
+        backgrounds.append(background)
+    
+    if not backgrounds:
+        raise HTTPException(status_code=404, detail="Background not found")
+    
+    return merge_backgrounds(backgrounds)
+# GET endpoint to get specific background by str id
+@app.get("/api/backgrounds/id/{sid}", response_model=Background)
+async def get_bg_by_id(sid: str):
+    bg = await compendia.find_one({"key": "backgrounds", "id": sid})
+    
+    if not bg:
+        raise HTTPException(status_code=404, detail="Background not found")
+    
+    return transform_background(bg)
+# GET endpoint to get specific background from obj id
 @app.get("/api/backgrounds/{bg_id}", response_model=Background)
-async def get_bg(bg_id: str):
+async def get_bg_by_objid(bg_id: str):
     if not ObjectId.is_valid(bg_id):
         raise HTTPException(status_code=400, detail="Invalid background ID")
     
@@ -639,7 +822,7 @@ async def get_bg(bg_id: str):
     if not bg:
         raise HTTPException(status_code=404, detail="Background not found")
     
-    return transform_background(bg)
+    return bg
 # # # # # # # # # #
 # # # Actions # # #
 # # # # # # # # # #
