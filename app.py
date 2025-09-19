@@ -79,12 +79,12 @@ class ToolProficiency(BaseModel):
 class Prerequisite(BaseModel):
     other: Optional[str] = None
 class AbilityIncrease(BaseModel):
-    con: Optional[int] = None
-    str: Optional[int] = None
-    dex: Optional[int] = None
-    int: Optional[int] = None
-    wis: Optional[int] = None
-    cha: Optional[int] = None
+    constitution: Optional[int] = None
+    strength: Optional[int] = None
+    dexterity: Optional[int] = None
+    intelligence: Optional[int] = None
+    wisdom: Optional[int] = None
+    charisma: Optional[int] = None
 class SpellChoice(BaseModel):
     choose: str
 class InnateSpells(BaseModel):

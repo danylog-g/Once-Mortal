@@ -637,7 +637,7 @@ DND_API.Guns = {
             range: "10/75",
             ammo: 6,
             weight: 9,
-            decibels: 180,
+            decibels: 120,
             accuracy: -2
         },
         {
@@ -693,7 +693,7 @@ DND_API.Guns = {
             range: "50/300",
             ammo: 30,
             weight: 18,
-            decibels: 185,
+            decibels: 125,
             accuracy: -3
         },
         {
@@ -740,7 +740,7 @@ DND_API.Guns = {
             range: "0/50",
             ammo: 2,
             weight: 20,
-            decibels: 185,
+            decibels: 125,
             accuracy: -4
         },
         {
@@ -917,7 +917,7 @@ DND_API.Guns = {
             range: "40/1400",
             ammo: 1,
             weight: 69,
-            decibels: 200,
+            decibels: 160,
             accuracy: -6
         },
         {
