@@ -989,10 +989,10 @@ DND_API.GAttachments = {
         { name: "RC-Ab D-Belt", ammo: "+25%", damage: "+3 dice", weight: 12.6 },
         { name: "DEW-Battery", ammo: "0", damage: "0", weight: 3 },
         { name: "DEW-ECB", ammo: "+2.5%", damage: "0", weight: 6 },
-        { name: "DEW-DCG", ammo: "+101", damage: "+2 dice", weight: 18 },
+        { name: "DEW-DCG", ammo: "+101", damage: "-2 dice", weight: 18 },
         { name: "DEW-RVC", ammo: "+5%", damage: "0", weight: 9 },
-        { name: "DEW-PPB", ammo: "+25%", damage: "+2 die +1 die size", weight: 27 },
-        { name: "DEW-NRB", ammo: "+100%", damage: "+4 die +1 die size", weight: 64 },
+        { name: "DEW-PPB", ammo: "+25%", damage: "-2 die -1 die size", weight: 27 },
+        { name: "DEW-NRB", ammo: "+100%", damage: "-4 die -1 die size", weight: 64 },
     ],
     scope: [
         { name: "RC-Sc Standard", range: "0", weight: 0, accuracy: 0 },
