@@ -971,9 +971,9 @@ DND_API.GAttachments = {
         { name: "RC-B Heavy", damage: "+1 die size", range: "+20/40/10%", decibels: "-10", weight: 4 },
         { name: "RC-B Alloy", damage: "0", range: "+20/40/80", decibels: "0", weight: 2 },
         { name: "RC-B Tungsten", damage: "+1 die size", range: "+20/40/10%", decibels: "-20", weight: 6 },
-        { name: "RC-B Spec-Ops", damage: "-1 die", range: "-10/0/0", decibels: "-20", weight: 1 },
+        { name: "RC-B Spec-Ops", damage: "-1 dice", range: "-10/0/0", decibels: "-20", weight: 1 },
         { name: "RC-B Insulating", damage: "-1 die size", range: "+10/0/0", decibels: "-25", weight: 2 },
-        { name: "RC-B Streamlinedd", damage: "+1 die", range: "-10/+10/-20", decibels: "+5", weight: 3 },
+        { name: "RC-B Streamlinedd", damage: "+1 dice", range: "-10/+10/-20", decibels: "+5", weight: 3 },
     ],
     magazine: [
         { name: "RC-M Standard", ammo: "0", damage: "0", weight: 0 },
