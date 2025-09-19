@@ -263,6 +263,20 @@ function updateGun() {
                 }
             }
 
+            // Clamp range values to be non-negative
+            if (typeof range === 'string') {
+                const rangeParts = range.split('/');
+                range = rangeParts.map(part => {
+                    const num = parseInt(part);
+                    return isNaN(num) ? 0 : Math.max(0, num);
+                }).join('/');
+            } else {
+                range = Math.max(0, range);
+            }
+
+            // Clamp dice count to minimum of 1
+            currentDiceCount = Math.max(1, currentDiceCount);
+
             if (attachment.ammo && attachment.ammo !== "0") {
                 if (attachment.ammo.includes('%')) {
                     const percent = parseInt(attachment.ammo);
@@ -587,6 +601,20 @@ async function saveGun() {
                 range = newValues.join('/');
             }
         }
+
+        // Clamp range values to be non-negative
+        if (typeof range === 'string') {
+            const rangeParts = range.split('/');
+            range = rangeParts.map(part => {
+                const num = parseInt(part);
+                return isNaN(num) ? 0 : Math.max(0, num);
+            }).join('/');
+        } else {
+            range = Math.max(0, range);
+        }
+
+        // Clamp dice count to minimum of 1
+        currentDiceCount = Math.max(1, currentDiceCount);
 
         // Other stats
         if (attachment.ammo && attachment.ammo !== "0") {
