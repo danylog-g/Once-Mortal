@@ -269,3 +269,10 @@
     background: linear-gradient(to bottom, var(--text), #0055aa);
     box-shadow: 0 0 10px var(--primary-lighter);
 }
+
+.ballsack {
+    background-color: var(--crust);
+    border-color: var(--crust);
+    padding: 2px;
+    border-radius: 100px;
+}

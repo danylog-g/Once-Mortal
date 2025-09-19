@@ -328,7 +328,7 @@ function updateGun() {
     statWeight.textContent = `${weight.toFixed(1)} lb`;
 
     // Get volume description based on decibels
-    statVolume.textContent = `${getVolumeDescription(decibels)[0]} <br> ${getVolumeDescription(decibels)[1]}`;
+    statVolume.innerHTML = `${getVolumeDescription(decibels)[0]} <hr class="ballsack"> ${getVolumeDescription(decibels)[1]}`;
 
     // Highlight changes from previous stats
     if (previousStats) {
