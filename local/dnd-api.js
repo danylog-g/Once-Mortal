@@ -633,7 +633,7 @@ DND_API.Guns = {
         },
         {
             name: "FN-P - Prop-Pulse",
-            damage: "1d6",
+            damage: "1d8",
             range: "10/75",
             ammo: 6,
             weight: 9,
