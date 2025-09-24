@@ -254,6 +254,7 @@ class Race(BaseModel):
     languages: Optional[List[str]] = None
     traits: List[Trait]
     spells: Optional[List[Dict[str, Any]]] = None
+    description: Union[str, List[Any]] = None
 
     class Config:
         allow_population_by_field_name = True
@@ -263,6 +264,7 @@ class Race(BaseModel):
 def transform_race_data(db_race: Dict) -> Race:
     """Transform raw race data from database to simplified model"""
     raw = db_race.get("raw", {})
+    normal = db_race.get("normalized", {})
     
     # get traits from entries
     traits = []
@@ -293,14 +295,10 @@ def transform_race_data(db_race: Dict) -> Race:
     
     # get senses
     senses_data = {}
-    if "darkvision" in raw: # will optimize
-        senses_data["darkvision"] = raw["darkvision"]
-    if "blindsight" in raw:
-        senses_data["blindsight"] = raw["blindsight"]
-    if "tremorsense" in raw:
-        senses_data["tremorsense"] = raw["tremorsense"]
-    if "truesight" in raw:
-        senses_data["truesight"] = raw["truesight"]
+    if "darkvision" in raw: senses_data["darkvision"] = raw["darkvision"]
+    if "blindsight" in raw: senses_data["blindsight"] = raw["blindsight"]
+    if "tremorsense" in raw: senses_data["tremorsense"] = raw["tremorsense"]
+    if "truesight" in raw: senses_data["truesight"] = raw["truesight"]
     
     # Handle proficiencies - convert dict format to list of strings
     proficiencies = []
@@ -342,7 +340,8 @@ def transform_race_data(db_race: Dict) -> Race:
         proficiencies=proficiencies,
         languages=languages,
         traits=traits,
-        spells=raw.get("additionalSpells", [])
+        spells=raw.get("additionalSpells", []),
+        description=normal.get("description", "")
     )
 # GET endpoint to list all races
 @app.get("/api/races", response_model=List[Race])
@@ -396,9 +395,8 @@ class Subclass(BaseModel):
     name: str
     short_name: str
     source: str
-    page: Optional[int] = None
     features: List[SubclassFeature] = []
-    additional_spells: Optional[Dict[str, Any]] = None
+    additional_spells: Optional[Union[Dict[str, Any], List[Any]]] = None
 
     class Config:
         allow_population_by_field_name = True
@@ -417,9 +415,9 @@ class ClassFeature(BaseModel):
         json_encoders = {ObjectId: str}
 class ClassLevel(BaseModel):
     level: int
-    cantrips_known: int
-    spells_known: int
-    spell_slots: List[int]
+    cantrips_known: Union[int, Dict[str, Any]]
+    spells_known: Union[int, Dict[str, Any]]
+    spell_slots: List[Union[int, Dict[str, Any]]]
 
     class Config:
         allow_population_by_field_name = True
@@ -430,7 +428,7 @@ class DnDClass(BaseModel):
     name: str
     source: str
     hit_dice: str
-    primary_ability: List[str]
+    primary_ability: List[Union[str, Dict[str, Any]]]
     proficiencies: List[str]
     saving_throws: List[str]
     spellcasting_ability: Optional[str] = None
@@ -454,6 +452,127 @@ def parse_feature_string(feature_str):
             "level": int(parts[3]) if parts[3].isdigit() else 0
         }
     return None
+# Helper function to transform classes
+def transform_class_data(db_class: Dict) -> DnDClass:
+    """Transform raw class data from database to DnDClass model"""
+    raw = db_class.get("raw", {})
+    
+    # Extract primary_ability - handle both string list and dict format
+    primary_ability = []
+    raw_primary_ability = raw.get("primaryAbility", [])
+    if isinstance(raw_primary_ability, list):
+        for item in raw_primary_ability:
+            if isinstance(item, str):
+                primary_ability.append(item)
+            elif isinstance(item, dict):
+                # Extract ability names from dict format like {"cha": True}
+                primary_ability.extend(item.keys())
+    
+    # Extract features
+    features = []
+    if "classFeatures" in raw:
+        for feature in raw["classFeatures"]:
+            if isinstance(feature, str):
+                parsed = parse_feature_string(feature)
+                if parsed:
+                    features.append(ClassFeature(
+                        _id=ObjectId(),
+                        name=parsed["name"],
+                        level=parsed["level"],
+                        source=parsed["source"],
+                        is_subclass_feature=False
+                    ))
+    
+    # Extract subclasses
+    subclasses = []
+    if "subclasses" in raw:
+        for subclass in raw["subclasses"]:
+            # Handle additional_spells field - it's a list in your data
+            additional_spells = subclass.get("additionalSpells")
+            
+            subclasses.append(Subclass(
+                _id=ObjectId(),
+                name=subclass.get("name", ""),
+                short_name=subclass.get("shortName", subclass.get("name", "")),
+                source=subclass.get("source", ""),
+                features=[],
+                additional_spells=additional_spells  # Keep as list to match your data
+            ))
+    
+    # Extract levels - handle different data structures
+    levels = []
+    if "classTableGroups" in raw:
+        for group in raw["classTableGroups"]:
+            if "rows" in group:
+                for i, row in enumerate(group["rows"]):
+                    if i > 0:  # Skip header row
+                        # Handle different data structures for cantrips_known and spells_known
+                        cantrips_known = 0
+                        if len(row) > 1:
+                            if isinstance(row[1], dict) and "value" in row[1]:
+                                cantrips_known = row[1]["value"]
+                            elif isinstance(row[1], (int, str)):
+                                try:
+                                    cantrips_known = int(row[1])
+                                except (ValueError, TypeError):
+                                    cantrips_known = 0
+                        
+                        spells_known = 0
+                        if len(row) > 2:
+                            if isinstance(row[2], dict) and "value" in row[2]:
+                                spells_known = row[2]["value"]
+                            elif isinstance(row[2], (int, str)):
+                                try:
+                                    spells_known = int(row[2])
+                                except (ValueError, TypeError):
+                                    spells_known = 0
+                        
+                        # Handle spell slots
+                        spell_slots = []
+                        if len(row) > 3:
+                            for slot in row[3:]:
+                                if isinstance(slot, dict) and "value" in slot:
+                                    spell_slots.append(slot["value"])
+                                elif isinstance(slot, (int, str)):
+                                    try:
+                                        spell_slots.append(int(slot))
+                                    except (ValueError, TypeError):
+                                        spell_slots.append(0)
+                        
+                        levels.append(ClassLevel(
+                            level=i,
+                            cantrips_known=cantrips_known,
+                            spells_known=spells_known,
+                            spell_slots=spell_slots
+                        ))
+    
+    # Handle hit dice - it might be a dict with "faces" property
+    hit_dice = "d6"  # default
+    raw_hit_dice = raw.get("hd", {})
+    if isinstance(raw_hit_dice, dict) and "faces" in raw_hit_dice:
+        hit_dice = f"d{raw_hit_dice['faces']}"
+    elif isinstance(raw_hit_dice, str):
+        hit_dice = raw_hit_dice
+    
+    # Handle spellcasting ability
+    spellcasting_ability = None
+    raw_spellcasting = raw.get("spellcasting", {})
+    if isinstance(raw_spellcasting, dict):
+        spellcasting_ability = raw_spellcasting.get("ability")
+    
+    return DnDClass(
+        _id=db_class["_id"],
+        name=raw.get("name", ""),
+        source=raw.get("source", ""),
+        hit_dice=hit_dice,
+        primary_ability=primary_ability,
+        proficiencies=raw.get("proficiencies", []),
+        saving_throws=raw.get("savingThrows", []),
+        spellcasting_ability=spellcasting_ability,
+        levels=levels,
+        features=features,
+        subclasses=subclasses
+    )
 # GET endpoint to list all classes
 @app.get("/api/classes", response_model=List[DnDClass])
 async def get_classes(
@@ -473,8 +592,14 @@ async def get_classes(
     classes_cursor = compendia.find(query).skip(skip).limit(limit)
     classes = []
     
-    async for classez in classes_cursor:
-        classes.append(classez)
+    async for class_doc in classes_cursor:
+        # Transform the MongoDB document to match DnDClass model
+        try:
+            class_data = transform_class_data(class_doc)
+            classes.append(class_data)
+        except Exception as e:
+            print(f"Error transforming class data: {e}")
+            continue
     
     return classes
 # GET endpoint to fetch class from id
