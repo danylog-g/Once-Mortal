@@ -258,7 +258,7 @@ DND_API.Character = {
         "truesight": 0,
     },
     skills: { // skills object
-        "Acrobatics": [], // int, int (1,2,3)
+        "Acrobatics": [], // int, int (0,1,2)
         "Animal Handling": [],
         "Arcana": [],
         "Athletics": [],
@@ -5139,6 +5139,10 @@ DND_API.getSkill = function(str) {
     else if (str === "any" || str === "all") {
         return DND_API.Skills;
     }
+    // If parameter is an object inside of Skills dataset
+    else if (DND_API.Skills.includes(str)) {
+        return DND_API.Skills.find(s => s.name === str.name);
+    }
     // If string is anything else, return an error
     else {
         console.error("DND_API.getSkill(str) Error. Invalid string passed.");
@@ -5153,7 +5157,7 @@ DND_API.getSkillMod = function(character, skill) {
         return;
     }
     const abilityMod = DND_API.getAbilityMod(character.abilities[skill.ability.long]);
-    const proficiency = character.skills[skill.name][1] || 1;
+    const proficiency = character.skills[skill.name][1] || 0;
     const profBonus = character.profBonus || 2; // Default to 2 if not set
     return abilityMod + (proficiency * profBonus);
 }
@@ -5171,7 +5175,7 @@ DND_API.updateCharacterSkill = function(character, skill, proficiency) {
     let mod = Math.floor((character.abilities[skill.ability.long] - 10) / 2);
     // Update skill proficiency in character schema
     if (proficiency) { character.skills[skill.name][1] = proficiency; }
-    else { proficiency = character.skills[skill.name][1] || 1 }
+    else { proficiency = character.skills[skill.name][1] || 0 }
     // Update skill modifier in character schema
     character.skills[skill][0] = mod + (proficiency * character.profBonus || 2);
 }
