@@ -202,6 +202,7 @@ DND_API.Character = {
         hair: "", // colour
         skin: "", // colour
         age: 0, // int
+        flavour: "", // long str
     },
     // gameplay stuff
     level: 1, // level of character, int, no maximum
@@ -3396,9 +3397,99 @@ DND_API.getLanguage = function(str) {
 DND_API.Locations = [
     // Once-Mortal Specific Locations
     {
-
-    }
+        name: "The City",
+        source: {
+            short: "OMP",
+            long: "Once Mortal Primer"
+        },
+        realm: "Divine Realm",
+        rules: [ "noClass" ],
+    },
+    {
+        name: "Celestial Heaven",
+        source: {
+            short: "OMP",
+            long: "Once Mortal Primer"
+        },
+        realm: "Divine Realm",
+        rules: [  ],
+    },
+    {
+        name: "Infernal Hell",
+        source: {
+            short: "OMP",
+            long: "Once Mortal Primer"
+        },
+        realm: "Divine Realm",
+        rules: [  ],
+    },
+    {
+        name: "The Empire of Shaire",
+        source: {
+            short: "OMP",
+            long: "Once Mortal Primer"
+        },
+        realm: "Astral Sea",
+        rules: [  ],
+    },
+    {
+        name: "Neo-Neprad",
+        source: {
+            short: "OMP",
+            long: "Once Mortal Primer"
+        },
+        realm: "Astral Sea",
+        rules: [ "noClass", "noBackground" ],
+    },
+    {
+        name: "Realm of Beasts",
+        source: {
+            short: "OMP",
+            long: "Once Mortal Primer"
+        },
+        realm: "Realm of Beasts",
+        rules: [ "noBackground" ],
+    },
+    {
+        name: "Stronghold",
+        source: {
+            short: "OMP",
+            long: "Once Mortal Primer"
+        },
+        realm: "Realm of Beasts",
+        rules: [  ],
+    },
 ];
+// Location Functions
+DND_API.getLocation = function(str) {
+    // If string is the name of a location
+    if (DND_API.Locations.find(l => l.name === str)) {
+        return DND_API.Locations.find(l => l.name === str);
+    }
+    // If string is the source of a location
+    else if (DND_API.Locations.find(l => l.source.short === str || l.source.long === str)) {
+        return DND_API.Locations.find(l => l.source.short === str || l.source.long === str);
+    }
+    // If string is the name of a realm
+    else if (DND_API.Locations.find(l => l.realm === str)) {
+        return DND_API.Locations.find(l => l.realm === str);
+    }
+    // If string is looking for any/all locations
+    else if (str === "any" || str === "all") {
+        return DND_API.Locations;
+    }
+    // If string is not passed or looking for all names
+    else if (!str || str === "allNames") {
+        let locations = [];
+        DND_API.Locations.forEach(l => { locations.push(l.name); });
+        return locations;
+    }
+    // If string is anything else, return an error
+    else {
+        console.error("DND_API.getLocation(str) Error. Invalid string passed.");
+        return;
+    }
+}
 // Races Dataset
 DND_API.Races = [
     {
@@ -5177,5 +5268,5 @@ DND_API.updateCharacterSkill = function(character, skill, proficiency) {
     if (proficiency) { character.skills[skill.name][1] = proficiency; }
     else { proficiency = character.skills[skill.name][1] || 0 }
     // Update skill modifier in character schema
-    character.skills[skill][0] = mod + (proficiency * character.profBonus || 2);
+    character.skills[skill.name][0] = mod + (proficiency * (character.profBonus || 2));
 }
