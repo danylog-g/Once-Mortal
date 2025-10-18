@@ -10,7 +10,7 @@ document.querySelectorAll('.tab-button').forEach(button => {
         document.getElementById(`${button.dataset.tab}-list`).classList.add('active');
 
         // Load content if needed
-        if (button.dataset.tab === 'guns') loadSavedGuns();
+        if (button.dataset.tab === 'gun') loadSavedGuns();
         else if (button.dataset.tab === 'cybernetics') loadSavedCybernetics();
     });
 });
@@ -57,10 +57,14 @@ async function loadSavedGuns() {
     container.innerHTML = '<p>Loading guns...</p>';
 
     try {
-        const response = await fetch('http://192.168.2.201:8000/api/guns');
-
-        let gunBuilds = [];
-        if (response.ok) {
+        //const response = await fetch('http://192.168.2.201:8000/api/guns');
+        
+        // Fallback to localStorage
+            let gunBuilds = getFromLocalStorage('savedGuns') || [];
+            if (gunBuilds.length > 0) {
+                console.log('Loaded guns from localStorage');
+            }
+        /*if (response.ok) {
             gunBuilds = await response.json();
         } else {
             // Fallback to localStorage
@@ -68,7 +72,7 @@ async function loadSavedGuns() {
             if (gunBuilds.length > 0) {
                 console.log('Loaded guns from localStorage');
             }
-        }
+        }*/
 
         if (gunBuilds.length === 0) {
             container.innerHTML = '<p>No saved guns found.</p>';
