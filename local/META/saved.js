@@ -15,6 +15,42 @@ document.querySelectorAll('.tab-button').forEach(button => {
     });
 });
 
+function isApiAvailable() {
+    return window.location.hostname !== '' && window.location.hostname !== 'localhost';
+}
+
+async function apiRequest(url, options = {}) {
+    if (isApiAvailable()) {
+        try {
+            const response = await fetch(url, options);
+            if (response.ok) return response;
+        } catch (error) {
+            console.warn('API unavailable, falling back to localStorage:', error);
+        }
+    }
+    return { ok: false };
+}
+
+function getFromLocalStorage(key) {
+    try {
+        const item = localStorage.getItem(key);
+        return item ? JSON.parse(item) : null;
+    } catch (error) {
+        console.error('Error reading from localStorage:', error);
+        return null;
+    }
+}
+
+function saveToLocalStorage(key, data) {
+    try {
+        localStorage.setItem(key, JSON.stringify(data));
+        return true;
+    } catch (error) {
+        console.error('Error saving to localStorage:', error);
+        return false;
+    }
+}
+
 // Load saved guns from MongoDB
 async function loadSavedGuns() {
     const container = document.getElementById('guns-list');
@@ -22,11 +58,17 @@ async function loadSavedGuns() {
 
     try {
         const response = await fetch('http://192.168.2.201:8000/api/guns');
-        if (!response.ok) {
-            throw new Error(`Failed to fetch guns: ${response.statusText}`);
-        }
 
-        const gunBuilds = await response.json();
+        let gunBuilds = [];
+        if (response.ok) {
+            gunBuilds = await response.json();
+        } else {
+            // Fallback to localStorage
+            gunBuilds = getFromLocalStorage('savedGuns') || [];
+            if (gunBuilds.length > 0) {
+                console.log('Loaded guns from localStorage');
+            }
+        }
 
         if (gunBuilds.length === 0) {
             container.innerHTML = '<p>No saved guns found.</p>';
@@ -35,12 +77,22 @@ async function loadSavedGuns() {
 
         container.innerHTML = '';
         gunBuilds.forEach((gun, index) => {
-            const element = createGunElement(gun, index, false);
+            const element = createGunElement(gun, index);
             container.appendChild(element);
         });
     } catch (error) {
         console.error('Error loading guns:', error);
-        container.innerHTML = `<p>Error loading guns: ${error.message}</p>`;
+        // Try localStorage as final fallback
+        const gunBuilds = getFromLocalStorage('savedGuns') || [];
+        if (gunBuilds.length === 0) {
+            container.innerHTML = `<p>Error loading guns: ${error.message}</p>`;
+        } else {
+            container.innerHTML = '';
+            gunBuilds.forEach((gun, index) => {
+                const element = createGunElement(gun, index);
+                container.appendChild(element);
+            });
+        }
     }
 }
 
@@ -51,11 +103,17 @@ async function loadSavedCybernetics() {
 
     try {
         const response = await fetch('http://192.168.2.201:8000/api/cybernetics');
-        if (!response.ok) {
-            throw new Error(`Failed to fetch cybernetics: ${response.statusText}`);
-        }
 
-        const cyberBuilds = await response.json();
+        let cyberBuilds = [];
+        if (response.ok) {
+            cyberBuilds = await response.json();
+        } else {
+            // Fallback to localStorage
+            cyberBuilds = getFromLocalStorage('savedCybernetics') || [];
+            if (cyberBuilds.length > 0) {
+                console.log('Loaded cybernetics from localStorage');
+            }
+        }
 
         if (cyberBuilds.length === 0) {
             container.innerHTML = '<p>No saved cybernetics found.</p>';
@@ -64,12 +122,22 @@ async function loadSavedCybernetics() {
 
         container.innerHTML = '';
         cyberBuilds.forEach((cyber, index) => {
-            const element = createCyberneticsElement(cyber, index, false);
+            const element = createCyberneticsElement(cyber, index);
             container.appendChild(element);
         });
     } catch (error) {
         console.error('Error loading cybernetics:', error);
-        container.innerHTML = `<p>Error loading cybernetics: ${error.message}</p>`;
+        // Try localStorage as final fallback
+        const cyberBuilds = getFromLocalStorage('savedCybernetics') || [];
+        if (cyberBuilds.length === 0) {
+            container.innerHTML = `<p>Error loading cybernetics: ${error.message}</p>`;
+        } else {
+            container.innerHTML = '';
+            cyberBuilds.forEach((cyber, index) => {
+                const element = createCyberneticsElement(cyber, index);
+                container.appendChild(element);
+            });
+        }
     }
 }
 
@@ -188,14 +256,33 @@ async function deleteSavedItem(name, type) {
             throw new Error(`Failed to delete: ${response.statusText}`);
         }
 
+        // Also delete from localStorage for consistency
+        const key = type === 'gun' ? 'savedGuns' : 'savedCybernetics';
+        const savedItems = getFromLocalStorage(key) || [];
+        const updatedItems = savedItems.filter(item => item.name !== name);
+        saveToLocalStorage(key, updatedItems);
+
         // Reload the appropriate list
-        if (type === 'guns') loadSavedGuns();
-            else loadSavedCybernetics();
+        if (type === 'gun') loadSavedGuns();
+        else loadSavedCybernetics();
 
         alert('Configuration deleted successfully!');
     } catch (error) {
         console.error('Error deleting item:', error);
-        alert('Failed to delete configuration. See console for details.');
+
+        // Fallback to localStorage deletion
+        const key = type === 'gun' ? 'savedGuns' : 'savedCybernetics';
+        const savedItems = getFromLocalStorage(key) || [];
+        const updatedItems = savedItems.filter(item => item.name !== name);
+
+        if (saveToLocalStorage(key, updatedItems)) {
+            // Reload the appropriate list
+            if (type === 'gun') loadSavedGuns();
+            else loadSavedCybernetics();
+            alert('Configuration deleted from local storage!');
+        } else {
+            alert('Failed to delete configuration from both API and local storage.');
+        }
     }
 }
 
@@ -244,7 +331,7 @@ document.addEventListener('DOMContentLoaded', function () {
             button.classList.add('active');
             document.getElementById(`${button.dataset.tab}-list`).classList.add('active');
 
-            if (button.dataset.tab === 'guns') loadSavedGuns();
+            if (button.dataset.tab === 'gun') loadSavedGuns();
             else if (button.dataset.tab === 'cybernetics') loadSavedCybernetics();
         });
     });
@@ -265,7 +352,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (e.target.classList.contains('delete-button')) {
             const name = e.target.dataset.name;
             const type = e.target.dataset.type;
-
+            console.log(type);
             deleteSavedItem(name, type);
         }
 
@@ -279,21 +366,29 @@ document.addEventListener('DOMContentLoaded', function () {
             const container = document.getElementById(containerId);
             const buildElement = container.children[index];
 
-            // Extract the build data from the element (this is a simplified approach)
-            // In a real implementation, you might want to store the full build data in a data attribute
+            // Extract build name
             const buildName = buildElement.querySelector('h3').textContent.replace(' (Shared)', '').trim();
 
-            // Fetch the full build data from the server
-            fetch(`http://192.168.2.201:8000/api/${type}/${buildName}`)
-                .then(response => {
-                    if (!response.ok) throw new Error('Failed to fetch build data');
-                    return response.json();
-                })
-                .then(build => exportBuild(build))
-                .catch(error => {
-                    console.error('Error exporting build:', error);
-                    alert('Failed to export build. See console for details.');
-                });
+            // Try to get build data from localStorage first, then API
+            const key = type === 'gun' ? 'savedGuns' : 'savedCybernetics';
+            const savedItems = getFromLocalStorage(key) || [];
+            let build = savedItems.find(item => item.name === buildName);
+
+            if (build) {
+                exportBuild(build);
+            } else {
+                // Fallback to API
+                fetch(`http://192.168.2.201:8000/api/${type}/${buildName}`)
+                    .then(response => {
+                        if (!response.ok) throw new Error('Failed to fetch build data');
+                        return response.json();
+                    })
+                    .then(build => exportBuild(build))
+                    .catch(error => {
+                        console.error('Error exporting build:', error);
+                        alert('Failed to export build. See console for details.');
+                    });
+            }
         }
     });
 

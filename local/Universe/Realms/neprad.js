@@ -1,3 +1,38 @@
+function isApiAvailable() {
+    return window.location.hostname !== '' && window.location.hostname !== 'localhost';
+}
+async function apiRequest(url, options = {}) {
+    if (isApiAvailable()) {
+        try {
+            const response = await fetch(url, options);
+            if (response.ok) return response;
+        } catch (error) {
+            console.warn('API unavailable, falling back to localStorage:', error);
+        }
+    }
+    // Fallback to localStorage
+    return { ok: false };
+}
+// Local Storage helper functions
+function saveToLocalStorage(key, data) {
+    try {
+        localStorage.setItem(key, JSON.stringify(data));
+        return true;
+    } catch (error) {
+        console.error('Error saving to localStorage:', error);
+        return false;
+    }
+}
+function getFromLocalStorage(key) {
+    try {
+        const item = localStorage.getItem(key);
+        return item ? JSON.parse(item) : null;
+    } catch (error) {
+        console.error('Error reading from localStorage:', error);
+        return null;
+    }
+}
+
 // Weapon data - organized by category
 const weaponData = DND_API.Guns;
 
@@ -681,8 +716,19 @@ async function saveGun() {
         });
 
         if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Failed to save: ${errorText}`);
+            // Fallback to localStorage
+            const savedGuns = getFromLocalStorage('savedGuns') || [];
+            const existingIndex = savedGuns.findIndex(g => g.name === name);
+            if (existingIndex !== -1) {
+                savedGuns[existingIndex] = build;
+            } else {
+                savedGuns.push(build);
+            }
+            if (saveToLocalStorage('savedGuns', savedGuns)) {
+                addChange(`Gun configuration saved as "${name}" (local)`);
+            } else {
+                throw new Error('Failed to save to localStorage');
+            }
         }
 
         const saved = await response.json();
@@ -691,7 +737,19 @@ async function saveGun() {
 
     } catch (err) {
         console.error('Error saving gun:', err);
-        alert('Failed to save configuration. See console for details.');
+        // Fallback to localStorage
+        const savedGuns = getFromLocalStorage('savedGuns') || [];
+        const existingIndex = savedGuns.findIndex(g => g.name === name);
+        if (existingIndex !== -1) {
+            savedGuns[existingIndex] = build;
+        } else {
+            savedGuns.push(build);
+        }
+        if (saveToLocalStorage('savedGuns', savedGuns)) {
+            addChange(`Gun configuration saved as "${name}" (local)`);
+        } else {
+            throw new Error('Failed to save to localStorage');
+        }
     }
 }
 
@@ -1160,8 +1218,7 @@ async function saveCybernetics() {
         });
 
         if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Failed to save: ${errorText}`);
+            throw new Error('Failed to save to localStorage');
         }
 
         const saved = await response.json();
@@ -1170,7 +1227,21 @@ async function saveCybernetics() {
 
     } catch (err) {
         console.error('Error saving cybernetics:', err);
-        alert('Failed to save configuration. See console for details.');
+        // Fallback to localStorage
+        const savedCybernetics = getFromLocalStorage('savedCybernetics') || [];
+        const existingIndex = savedCybernetics.findIndex(c => c.name === name);
+
+        if (existingIndex !== -1) {
+            savedCybernetics[existingIndex] = build;
+        } else {
+            savedCybernetics.push(build);
+        }
+
+        if (saveToLocalStorage('savedCybernetics', savedCybernetics)) {
+            addChange(`Cybernetics configuration saved as "${name}" (local)`);
+        } else {
+            throw new Error('Failed to save to localStorage');
+        }
     }
 }
 
