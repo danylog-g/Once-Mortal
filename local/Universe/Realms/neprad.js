@@ -1116,9 +1116,9 @@ function importCybernetics() {
                     installedCybernetics = [];
                     currentCapacity = 0;
                     currentHumanityLoss = 0;
-                    level = data.level;
+                    level = data.level || 3;
                     maxCapacity = data.maxCapacity;
-                    maxHumanityLoss = data.maxHumanityLoss;
+                    maxHumanityLoss = data.maxHumanityLoss || 100;
 
                     // Look up each cybernetic by name
                     data.installed.forEach(name => {
