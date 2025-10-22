@@ -207,14 +207,14 @@ const names = {
 };
 function createFirstName(seed) {
     if (seed >= 0.5) {
-        return names.first.name[Math.floor(seed * names.first.name.length)];
+        return names.first.name[Math.floor((seed * 1.61803398875) % 1 * names.first.name.length)];
     }
-    const pref = names.first.prefix[Math.floor(seed * names.first.prefix.length)];
-    const suff = names.first.suffix[Math.floor(seed * names.first.suffix.length)];
+    const pref = names.first.prefix[Math.floor((seed * 2.718281828) % 1 * names.first.prefix.length)];
+    const suff = names.first.suffix[Math.floor((seed * 3.14159265359) % 1 * names.first.suffix.length)];
     return pref + suff;
 }
 function createLastName(seed) {
-    const pref = names.last.prefix[Math.floor(seed * names.last.prefix.length)];
+    const pref = names.last.prefix[Math.floor((seed * 2.718281828) * names.last.prefix.length)];
     const suff = names.last.suffix[Math.floor((seed * 1.61803398875) % 1 * names.last.suffix.length)];
     return pref + suff;
 }
@@ -243,10 +243,10 @@ const charInfo = {
 function createCharacter(seed, index) {
     const random = seed + "participant" + index;
 
-    const firstName = createFirstName(getSeededRandom(random + "first" + index * 7));
-    const lastName = createLastName(getSeededRandom(random + "last" + index * 13));
-    const title = createTitle(getSeededRandom(random + "title" + index * 7));
-    const race = charInfo.race[Math.floor(getSeededRandom(random + "race" + index * 17) * charInfo.race.length)];
+    const firstName = createFirstName(getSeededRandom(random + "first" + index * 7.321));
+    const lastName = createLastName(getSeededRandom(random + "last" + index * 13.456));
+    const title = createTitle(getSeededRandom(random + "title" + index * 7.789));
+    const race = charInfo.race[Math.floor(getSeededRandom(random + "race" + index * 17.123) * charInfo.race.length)];
     const charClass = charInfo.class[Math.floor(getSeededRandom(random + "class" + index * 3.33) * charInfo.class.length)];
 
     if (title != "") {
@@ -339,9 +339,11 @@ function getSeededRandom(seed) {
     for (let i = 0; i < seed.length; i++) {
         const char = seed.charCodeAt(i);
         hash = ((hash << 5) - hash) + char;
-        hash = hash & hash;
+        hash = hash & 0xFFFFFFFF; // Ensure 32-bit integer
     }
-    return Math.abs((hash * 0.0000000004656612873077392578125) % 1);
+
+    const x = Math.sin(hash) * 10000;
+    return x - Math.floor(x);
 }
 
 // Function to select a random event and type
