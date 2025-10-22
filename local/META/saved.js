@@ -190,6 +190,7 @@ function createGunElement(gun, index) {
 }
 
 // Helper function to create cybernetics element
+// Helper function to create cybernetics element
 function createCyberneticsElement(cyber, index) {
     const hasFullData = cyber.installedCybernetics && cyber.installedCybernetics.length > 0;
     const cost = hasFullData ?
@@ -207,8 +208,8 @@ function createCyberneticsElement(cyber, index) {
         </button>
         <div class="details-container" id="details-${index}">
             <div class="stats-grid">
-                <div class="stat-item"><strong>Capacity:</strong> ${cyber.config.currentCapacity}/18</div>
-                <div class="stat-item"><strong>Humanity Loss:</strong> ${cyber.config.currentHumanityLoss}%</div>
+                <div class="stat-item"><strong>Capacity:</strong> ${cyber.config?.currentCapacity || 'N/A'}/18</div>
+                <div class="stat-item"><strong>Humanity Loss:</strong> ${cyber.config?.currentHumanityLoss || 'N/A'}%</div>
                 <div class="stat-item"><strong>Total Cost:</strong> ${cost} ₵</div>
             </div>
             
@@ -217,21 +218,24 @@ function createCyberneticsElement(cyber, index) {
                 ${hasFullData ? cyber.installedCybernetics.map(item => `
                     <div class="cyber-item">
                         <strong>${item.name}</strong>
+                        ${item.cost ? `<span>Cost: ${item.cost} ₵</span>` : ''}
+                        ${item.capacity ? `<span>Capacity: ${item.capacity}</span>` : ''}
+                        ${item.humanityLoss ? `<span>Humanity: ${item.humanityLoss}%</span>` : ''}
                     </div>
-                `).join('') : cyber.config.installed.map(name => `
+                `).join('') : (cyber.config?.installed ? cyber.config.installed.map(name => `
                     <div class="cyber-item">
                         <strong>${name}</strong>
                         <p>Full details not available</p>
                     </div>
-                `).join('')}
+                `).join('') : '<p>No cybernetics data available</p>')}
             </div>
             
             <h4>Active Effects</h4>
             <div class="stats-grid">
-                ${cyber.effects && Array.isArray(cyber.effects) ?
-            cyber.effects.map(effect => `<p class="attachment-item">${effect}</p>`).join('') :
-            '<p>No effects data available</p>'
-        }
+                ${cyber.effects && Array.isArray(cyber.effects) && cyber.effects.length > 0 ?
+                    cyber.effects.map(effect => `<div class="attachment-item">${effect}</div>`).join('') :
+                    '<p>No active effects</p>'
+                }
             </div>
         </div>
         <div class="build-actions">
