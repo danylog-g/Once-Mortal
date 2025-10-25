@@ -3099,7 +3099,7 @@ DND_API.GAttachments = {
         { name: "DEW-RVC", ammo: "+5%", damage: "0", weight: 8 },
         { name: "DEW-PPB", ammo: "+25%", damage: "-1 dice -1 die size", weight: 24 },
         { name: "DEW-NRB", ammo: "+100%", damage: "-2 dice -1 die size", weight: 48 },
-        { name: "DEW-Release", ammo: "-99.9%", damage: "+2 dice", weight: 16 },
+        { name: "DEW-Release", ammo: "-99%", damage: "+4 dice", weight: 16 },
     ],
     scope: [
         { name: "RC-Sc Standard", range: "0", weight: 0, accuracy: 0 },
@@ -3151,7 +3151,7 @@ DND_API.GAttachments = {
         { name: "RC-W HEAT", ammo: "0", range: "+15%/0/0", damage: "+1 dice, +1 die size", decibels: "20%", weight: 2.0, type: "Force" },
         { name: "RC-W NF", ammo: "-50%", range: "0/0/0", damage: "0", decibels: "0", weight: 6.0, type: "Necrotic" },
         { name: "RC-W NG", ammo: "-25%", range: "0/0/0", damage: "0", decibels: "-15%", weight: -2.0, type: "Poison" },
-        { name: "RC-R-3O8", ammo: "0", range: "-10%/+50%/+25%", damage: "+2 dice", decibels: "+15%", weight: 0.4, type: "Thunder (x/3)" },
+        { name: "RC-R-3O8", ammo: "0", range: "-10%/+50%/+25%", damage: "+2 dice", decibels: "+15%", weight: 0.4, type: "Lightning" },
         { name: "RC-R-Sound", ammo: "0", range: "0/0/0", damage: "0", decibels: "+25%", weight: 0.8, type: "Thunder (decible)" },
     ],
     light: [
