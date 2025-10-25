@@ -205,25 +205,40 @@ const names = {
         ]
     },
 };
+function getRandomIndex(seedValue, arrayLength) {
+    return Math.floor((seedValue % 1) * arrayLength);
+}
+
 function createFirstName(seed) {
-    if (seed >= 0.5) {
-        return names.first.name[Math.floor((seed * 1.61803398875) % 1 * names.first.name.length)];
+    // Use different seeds for different parts to increase variance
+    const nameSeed = getSeededRandom(seed + "name");
+    const prefixSeed = getSeededRandom(seed + "prefix"); 
+    const suffixSeed = getSeededRandom(seed + "suffix");
+    
+    if (nameSeed >= 0.5) {
+        return names.first.name[getRandomIndex(nameSeed, names.first.name.length)];
     }
-    const pref = names.first.prefix[Math.floor((seed * 2.718281828) % 1 * names.first.prefix.length)];
-    const suff = names.first.suffix[Math.floor((seed * 3.14159265359) % 1 * names.first.suffix.length)];
+    const pref = names.first.prefix[getRandomIndex(prefixSeed, names.first.prefix.length)];
+    const suff = names.first.suffix[getRandomIndex(suffixSeed, names.first.suffix.length)];
     return pref + suff;
 }
 function createLastName(seed) {
-    const pref = names.last.prefix[Math.floor((seed * 2.718281828) * names.last.prefix.length)];
-    const suff = names.last.suffix[Math.floor((seed * 1.61803398875) % 1 * names.last.suffix.length)];
+    const prefixSeed = getSeededRandom(seed + "lastprefix");
+    const suffixSeed = getSeededRandom(seed + "lastsuffix");
+    
+    const pref = names.last.prefix[getRandomIndex(prefixSeed, names.last.prefix.length)];
+    const suff = names.last.suffix[getRandomIndex(suffixSeed, names.last.suffix.length)];
     return pref + suff;
 }
 function createTitle(seed) {
     if (seed < 0.8) {
         return "";
     }
-    const pref = names.title.prefix[Math.floor((seed * 0.809016994375) % 1 * names.title.prefix.length)];
-    const suff = names.title.suffix[Math.floor((seed * 1.61803398875) % 1 * names.title.suffix.length)];
+    const prefixSeed = getSeededRandom(seed + "titleprefix");
+    const suffixSeed = getSeededRandom(seed + "titlesuffix");
+    
+    const pref = names.title.prefix[getRandomIndex(prefixSeed, names.title.prefix.length)];
+    const suff = names.title.suffix[getRandomIndex(suffixSeed, names.title.suffix.length)];
     return pref + " " + suff;
 }
 // Define character info
@@ -243,17 +258,17 @@ const charInfo = {
 function createCharacter(seed, index) {
     const random = seed + "participant" + index;
 
+    // Use different seeds for each component to increase variance
     const firstName = createFirstName(getSeededRandom(random + "first" + index * 7.321));
     const lastName = createLastName(getSeededRandom(random + "last" + index * 13.456));
     const title = createTitle(getSeededRandom(random + "title" + index * 7.789));
-    const race = charInfo.race[Math.floor(getSeededRandom(random + "race" + index * 17.123) * charInfo.race.length)];
-    const charClass = charInfo.class[Math.floor(getSeededRandom(random + "class" + index * 3.33) * charInfo.class.length)];
+    const race = charInfo.race[getRandomIndex(getSeededRandom(random + "race" + index * 17.123), charInfo.race.length)];
+    const charClass = charInfo.class[getRandomIndex(getSeededRandom(random + "class" + index * 3.33), charInfo.class.length)];
 
-    if (title != "") {
+    if (title !== "") {
         console.log(`${firstName} ${lastName} (${race}, ${charClass}), ${title}`);
         return `${firstName} ${lastName} (${race}, ${charClass}), ${title}`;
-    }
-    else {
+    } else {
         console.log(`${firstName} ${lastName} (${race}, ${charClass})`);
         return `${firstName} ${lastName} (${race}, ${charClass})`;
     }
@@ -282,9 +297,9 @@ const monster = {
     ],
 };
 function createMonster(seed) {
-    const name = monster.names[Math.floor(seed * monster.names.length)];
-    const type = monster.types[Math.floor(seed * monster.types.length)];
-    const title = monster.title[Math.floor(seed * monster.title.length)];
+    const name = monster.names[getRandomIndex(seed, monster.names.length)];
+    const type = monster.types[getRandomIndex(seed, monster.types.length)];
+    const title = monster.title[getRandomIndex(seed, monster.title.length)];
     return `${name} ${title}, ${type}`;
 }
 // Define hardcoded teams for team-based events
