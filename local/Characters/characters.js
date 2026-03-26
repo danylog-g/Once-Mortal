@@ -143,7 +143,7 @@ const CHARACTER_DB = [
         "After founding The Council with his twin sister, Beelzebub, they pose one of the greatest threats to the Divine Realm."
     },
     {
-        name: "Be'llelzebub", loc: "Endless City", faction: "The Council", affiliation: "The Council", race: "Devil", subrace: "Lord", status: "Active",
+        name: "Be'llezebub", loc: "Endless City", faction: "The Council", affiliation: "The Council", race: "Devil", subrace: "Lord", status: "Active",
         desc: "The most powerful member of The Council. She can become a Wild God, but chooses not to. As becoming a God would put a target on her."+
         "After founding The Council with her twin brother, Lucifer, she left to enjoy the luxuries of The Endless City."
     },
